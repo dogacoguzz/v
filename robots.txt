@@ -1,0 +1,14 @@
+User-agent: *
+Allow: /
+
+# Allow Google AdMob crawler to access app-ads.txt
+User-agent: AdsBot-Google-Mobile-Apps
+Allow: /app-ads.txt
+
+# Allow Googlebot to access app-ads.txt
+User-agent: Googlebot
+Allow: /app-ads.txt
+
+# Allow Googlebot-Mobile to access app-ads.txt
+User-agent: Googlebot-Mobile
+Allow: /app-ads.txt 

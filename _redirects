@@ -1,0 +1,4 @@
+# Netlify redirects for serverless deployment
+# This file ensures /app-ads.txt route works correctly
+
+/app-ads.txt /app-ads.txt 200 
