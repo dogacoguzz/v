@@ -1,0 +1,12 @@
+Add your Velora app screenshots here:
+
+1. progress-dashboard.png - Weekly progress screen
+2. step-insights.png - Step tracking screen  
+3. workout-analytics.png - Workout analytics screen
+4. heart-rate-zones.png - Heart rate zones screen
+
+Image requirements:
+- Format: PNG or JPG
+- Aspect ratio: 9:16 (portrait, like a phone screen)
+- Size: Around 400x800px
+- Quality: High resolution 
