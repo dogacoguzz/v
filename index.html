@@ -139,6 +139,85 @@
             font-weight: 600;
         }
 
+        /* App Screenshots Section */
+        .screenshots-section {
+            padding: 80px 0;
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            margin-bottom: 60px;
+        }
+
+        .screenshots-section h2 {
+            font-size: 2.5rem;
+            font-weight: 600;
+            text-align: center;
+            margin-bottom: 20px;
+            color: white;
+        }
+
+        .screenshots-section>.container>p {
+            text-align: center;
+            font-size: 1.2rem;
+            color: rgba(255, 255, 255, 0.8);
+            margin-bottom: 60px;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .screenshots-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 40px;
+            margin-top: 40px;
+        }
+
+        .screenshot-card {
+            text-align: center;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 30px 20px;
+            backdrop-filter: blur(10px);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .screenshot-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.2);
+        }
+
+        .phone-frame {
+            position: relative;
+            width: 200px;
+            height: 400px;
+            margin: 0 auto 25px;
+            background: #1a1a1a;
+            border-radius: 25px;
+            padding: 8px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        .screenshot {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 17px;
+            background: #f0f0f0;
+        }
+
+        .screenshot-card h3 {
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: white;
+        }
+
+        .screenshot-card p {
+            font-size: 0.95rem;
+            color: rgba(255, 255, 255, 0.8);
+            line-height: 1.5;
+        }
+
         /* Hero Section */
         .hero {
             background: rgba(255, 255, 255, 0.1);
@@ -350,6 +429,24 @@
                 font-size: 1.1rem;
             }
 
+            .screenshots-section h2 {
+                font-size: 2rem;
+            }
+
+            .screenshots-section>.container>p {
+                font-size: 1rem;
+            }
+
+            .screenshots-grid {
+                grid-template-columns: 1fr;
+                gap: 30px;
+            }
+
+            .phone-frame {
+                width: 180px;
+                height: 360px;
+            }
+
             .hero h2 {
                 font-size: 2rem;
             }
@@ -443,6 +540,52 @@
                         <span class="store-name">App Store</span>
                     </div>
                 </a>
+            </div>
+        </section>
+
+        <!-- App Screenshots Section -->
+        <section class="screenshots-section">
+            <div class="container">
+                <h2>See Velora in Action</h2>
+                <p>Discover the beautiful, intuitive interface that makes fitness tracking effortless</p>
+
+                <div class="screenshots-grid">
+                    <!-- Screenshot 1: Progress Dashboard -->
+                    <div class="screenshot-card">
+                        <div class="phone-frame">
+                            <img src="images/progress-dashboard.png" alt="Velora Progress Dashboard" class="screenshot">
+                        </div>
+                        <h3>Weekly Progress</h3>
+                        <p>Clear, at-a-glance charts of your last seven days</p>
+                    </div>
+
+                    <!-- Screenshot 2: Step Insights -->
+                    <div class="screenshot-card">
+                        <div class="phone-frame">
+                            <img src="images/step-insights.png" alt="Velora Step Insights" class="screenshot">
+                        </div>
+                        <h3>Step Insights</h3>
+                        <p>Daily step count, distance, and 14-day trends</p>
+                    </div>
+
+                    <!-- Screenshot 3: Workout Analytics -->
+                    <div class="screenshot-card">
+                        <div class="phone-frame">
+                            <img src="images/workout-analytics.png" alt="Velora Workout Analytics" class="screenshot">
+                        </div>
+                        <h3>Workout Analytics</h3>
+                        <p>Every set, rep, and metric captured in one place</p>
+                    </div>
+
+                    <!-- Screenshot 4: Heart Rate Zones -->
+                    <div class="screenshot-card">
+                        <div class="phone-frame">
+                            <img src="images/heart-rate-zones.png" alt="Velora Heart Rate Zones" class="screenshot">
+                        </div>
+                        <h3>Heart Rate Zones</h3>
+                        <p>Color-coded zones show exactly how hard you're working</p>
+                    </div>
+                </div>
             </div>
         </section>
 
