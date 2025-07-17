@@ -1,8 +1,0 @@
-# Cloudflare Pages Configuration
-# This file is for Pages deployment, not Workers Sites
-
-name = "velora-website"
-compatibility_date = "2024-01-01"
-
-# Pages will automatically serve static files from the root directory
-# No need for [site] configuration or entry points 
