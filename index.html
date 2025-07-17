@@ -61,6 +61,84 @@
             line-height: 1.7;
         }
 
+        /* App Store Download Section */
+        .download-section {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .download-content {
+            display: inline-block;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 30px 40px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .download-content:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.15);
+        }
+
+        .download-content h3 {
+            font-size: 1.8rem;
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: #1a1a1a;
+        }
+
+        .download-content p {
+            font-size: 1rem;
+            color: #666;
+            margin-bottom: 25px;
+        }
+
+        .app-store-button {
+            display: inline-flex;
+            align-items: center;
+            background: linear-gradient(135deg, #000000, #333333);
+            color: white;
+            padding: 15px 25px;
+            border-radius: 12px;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+        }
+
+        .app-store-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 35px rgba(0, 0, 0, 0.3);
+            color: white;
+        }
+
+        .app-store-icon {
+            width: 32px;
+            height: 32px;
+            margin-right: 12px;
+            flex-shrink: 0;
+        }
+
+        .button-text {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            line-height: 1.2;
+        }
+
+        .download-text {
+            font-size: 0.8rem;
+            opacity: 0.8;
+            font-weight: 400;
+        }
+
+        .store-name {
+            font-size: 1.2rem;
+            font-weight: 600;
+        }
+
         /* Hero Section */
         .hero {
             background: rgba(255, 255, 255, 0.1);
@@ -250,6 +328,28 @@
                 font-size: 1.2rem;
             }
 
+            .download-content {
+                padding: 25px 20px;
+            }
+
+            .download-content h3 {
+                font-size: 1.5rem;
+            }
+
+            .app-store-button {
+                padding: 12px 20px;
+            }
+
+            .app-store-icon {
+                width: 28px;
+                height: 28px;
+                margin-right: 10px;
+            }
+
+            .store-name {
+                font-size: 1.1rem;
+            }
+
             .hero h2 {
                 font-size: 2rem;
             }
@@ -326,6 +426,25 @@
                 Friendly vibe, zero fluff.
             </p>
         </header>
+
+        <!-- App Store Download Section -->
+        <section class="download-section">
+            <div class="download-content">
+                <h3>Download Velora</h3>
+                <p>Get your fitness companion on the App Store</p>
+                <a href="https://apps.apple.com/tr/app/velora-health-companion/id6748447208" class="app-store-button"
+                    target="_blank" rel="noopener">
+                    <svg class="app-store-icon" viewBox="0 0 24 24" fill="currentColor">
+                        <path
+                            d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.81-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z" />
+                    </svg>
+                    <div class="button-text">
+                        <span class="download-text">Download on the</span>
+                        <span class="store-name">App Store</span>
+                    </div>
+                </a>
+            </div>
+        </section>
 
         <!-- Hero Section -->
         <section class="hero">
