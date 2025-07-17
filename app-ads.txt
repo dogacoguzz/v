@@ -5,13 +5,7 @@
 # Format: domain, publisher_id, relationship, certification_authority_id
 
 # Google AdMob (example)
-google.com, pub-0000000000000000, DIRECT, f08c47fec0942fa0
-
-# Facebook Audience Network (example)
-facebook.com, 000000000000000, DIRECT, 9a4c855b74a37caa
-
-# Unity Ads (example)
-unity3d.com, 000000, DIRECT, 96a41b81
+google.com, pub-7332332500526565, DIRECT, f08c47fec0942fa0
 
 # Note: Replace the above examples with actual ad network information
 # when implementing advertising in the Velora app 
