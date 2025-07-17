@@ -1,9 +1,0 @@
-# Velora App Ads.txt
-# This file contains authorized digital sellers for Velora app advertising
-# Following IAB Tech Lab's app-ads.txt specification
-# Last updated: 2025
-
-# Format: domain, publisher_id, relationship, certification_authority_id
-
-# Google AdMob
-google.com, pub-7332332500526565, DIRECT, f08c47fec0942fa0
