@@ -4,120 +4,231 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Velora - Your Fitness Buddy</title>
+    <meta name="description" id="meta-description"
+        content="Velora — the indie-built health companion for iPhone. Weekly progress, workouts, steps, heart-rate zones, and private HealthKit sync.">
+    <title>Velora — Health companion on the App Store</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,500&family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap"
+        rel="stylesheet">
     <style>
-        * {
+        :root {
+            --bg-deep: #0c0f12;
+            --bg-elevated: #141a1f;
+            --bg-card: rgba(255, 255, 255, 0.04);
+            --border: rgba(255, 255, 255, 0.08);
+            --text: #f4f6f8;
+            --text-muted: rgba(244, 246, 248, 0.65);
+            --text-soft: rgba(244, 246, 248, 0.45);
+            --accent: #3ecf8e;
+            --accent-dim: rgba(62, 207, 142, 0.15);
+            --accent-warm: #f0b429;
+            --glow: rgba(62, 207, 142, 0.35);
+            --radius-lg: 24px;
+            --radius-md: 16px;
+            --radius-sm: 10px;
+            --font-sans: 'Plus Jakarta Sans', system-ui, sans-serif;
+            --font-display: 'Fraunces', Georgia, serif;
+            --space-section: clamp(4rem, 10vw, 7rem);
+        }
+
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
             margin: 0;
             padding: 0;
-            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            html {
+                scroll-behavior: auto;
+            }
+
+            *,
+            *::before,
+            *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
         }
 
         body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            line-height: 1.6;
-            color: #1a1a1a;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            font-family: var(--font-sans);
+            line-height: 1.65;
+            color: var(--text);
+            background: var(--bg-deep);
             min-height: 100vh;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* Ambient background */
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            z-index: -1;
+            background:
+                radial-gradient(ellipse 80% 50% at 50% -20%, rgba(62, 207, 142, 0.18), transparent 55%),
+                radial-gradient(ellipse 60% 40% at 100% 50%, rgba(240, 180, 41, 0.06), transparent 50%),
+                radial-gradient(ellipse 50% 30% at 0% 80%, rgba(62, 207, 142, 0.08), transparent 45%),
+                var(--bg-deep);
+            pointer-events: none;
         }
 
         .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 20px;
+            width: min(1120px, 100% - 2.5rem);
+            margin-inline: auto;
         }
 
-        /* Header */
-        .header {
-            text-align: center;
-            padding: 80px 0 60px;
-            color: white;
+        /* Nav */
+        .site-nav {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            padding: 1rem 0;
+            background: rgba(12, 15, 18, 0.72);
+            backdrop-filter: blur(16px);
+            border-bottom: 1px solid var(--border);
         }
 
-        .header h1 {
-            font-size: 3.5rem;
-            font-weight: 700;
-            margin-bottom: 20px;
-            background: linear-gradient(45deg, #ffffff, #e0e7ff);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
+        .site-nav .container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1rem;
         }
 
-        .header .tagline {
-            font-size: 1.5rem;
-            font-weight: 300;
-            margin-bottom: 30px;
-            opacity: 0.9;
-        }
-
-        .header .description {
-            font-size: 1.1rem;
-            max-width: 600px;
-            margin: 0 auto;
-            opacity: 0.8;
-            line-height: 1.7;
-        }
-
-        /* App Store Download Section */
-        .download-section {
-            text-align: center;
-            margin-bottom: 40px;
-        }
-
-        .download-content {
-            display: inline-block;
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
-            border-radius: 20px;
-            padding: 30px 40px;
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-        }
-
-        .download-content:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.15);
-        }
-
-        .download-content h3 {
-            font-size: 1.8rem;
+        .brand {
+            font-family: var(--font-display);
             font-weight: 600;
-            margin-bottom: 10px;
-            color: #1a1a1a;
+            font-size: 1.35rem;
+            letter-spacing: -0.02em;
+            color: var(--text);
+            text-decoration: none;
         }
 
-        .download-content p {
-            font-size: 1rem;
-            color: #666;
-            margin-bottom: 25px;
+        .brand:hover {
+            color: var(--accent);
+        }
+
+        .nav-cta {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.55rem 1.1rem;
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: var(--bg-deep);
+            background: var(--accent);
+            border-radius: 999px;
+            text-decoration: none;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .nav-cta:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 8px 24px var(--glow);
+            color: var(--bg-deep);
+        }
+
+        .nav-cta:focus-visible {
+            outline: 2px solid var(--accent);
+            outline-offset: 3px;
+        }
+
+        /* Hero */
+        .hero {
+            padding: clamp(2.5rem, 6vw, 4.5rem) 0 var(--space-section);
+        }
+
+        .hero-grid {
+            display: grid;
+            gap: clamp(2.5rem, 5vw, 4rem);
+            align-items: center;
+        }
+
+        @media (min-width: 900px) {
+            .hero-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        .eyebrow {
+            display: inline-block;
+            font-size: 0.75rem;
+            font-weight: 600;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            color: var(--accent);
+            margin-bottom: 1rem;
+        }
+
+        .hero h1 {
+            font-family: var(--font-display);
+            font-weight: 700;
+            font-size: clamp(2.75rem, 6vw, 3.75rem);
+            line-height: 1.1;
+            letter-spacing: -0.03em;
+            margin-bottom: 0.75rem;
+        }
+
+        .hero .tagline {
+            font-size: clamp(1.15rem, 2.2vw, 1.35rem);
+            font-weight: 500;
+            color: var(--text-muted);
+            margin-bottom: 1.25rem;
+        }
+
+        .hero .lead {
+            font-size: 1.05rem;
+            color: var(--text-soft);
+            max-width: 36ch;
+            margin-bottom: 2rem;
+        }
+
+        .hero-cta-row {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 1rem 1.25rem;
+            margin-bottom: 1.5rem;
         }
 
         .app-store-button {
             display: inline-flex;
             align-items: center;
-            background: linear-gradient(135deg, #000000, #333333);
-            color: white;
-            padding: 15px 25px;
-            border-radius: 12px;
+            gap: 0.75rem;
+            background: #fff;
+            color: #0c0f12;
+            padding: 0.85rem 1.35rem;
+            border-radius: var(--radius-md);
             text-decoration: none;
-            font-weight: 500;
-            transition: all 0.3s ease;
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+            font-weight: 600;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            box-shadow: 0 4px 24px rgba(0, 0, 0, 0.25);
         }
 
         .app-store-button:hover {
             transform: translateY(-2px);
-            box-shadow: 0 12px 35px rgba(0, 0, 0, 0.3);
-            color: white;
+            box-shadow: 0 12px 40px rgba(255, 255, 255, 0.12);
+            color: #0c0f12;
+        }
+
+        .app-store-button:focus-visible {
+            outline: 2px solid var(--accent);
+            outline-offset: 3px;
         }
 
         .app-store-icon {
-            width: 32px;
-            height: 32px;
-            margin-right: 12px;
+            width: 28px;
+            height: 28px;
             flex-shrink: 0;
         }
 
@@ -129,527 +240,840 @@
         }
 
         .download-text {
-            font-size: 0.8rem;
-            opacity: 0.8;
-            font-weight: 400;
+            font-size: 0.7rem;
+            font-weight: 500;
+            opacity: 0.75;
         }
 
         .store-name {
-            font-size: 1.2rem;
-            font-weight: 600;
+            font-size: 1.05rem;
+            font-weight: 700;
         }
 
-        /* App Screenshots Section */
+        .hero-trust {
+            font-size: 0.85rem;
+            color: var(--text-soft);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+
+        .hero-trust svg {
+            width: 18px;
+            height: 18px;
+            opacity: 0.85;
+        }
+
+        .hero-visual {
+            position: relative;
+            min-height: 280px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .hero-orb {
+            position: absolute;
+            width: min(420px, 100%);
+            aspect-ratio: 1;
+            border-radius: 50%;
+            background: radial-gradient(circle at 35% 35%, var(--accent-dim), transparent 60%),
+                radial-gradient(circle at 70% 60%, rgba(240, 180, 41, 0.12), transparent 50%);
+            filter: blur(0px);
+        }
+
+        .hero-phone-stack {
+            position: relative;
+            display: flex;
+            justify-content: center;
+            gap: 0;
+        }
+
+        .hero-phone {
+            width: min(200px, 42vw);
+            border-radius: 28px;
+            border: 3px solid rgba(255, 255, 255, 0.12);
+            box-shadow:
+                0 24px 80px rgba(0, 0, 0, 0.45),
+                0 0 0 1px rgba(255, 255, 255, 0.06) inset;
+            overflow: hidden;
+            background: #1a1f26;
+        }
+
+        .hero-phone img {
+            display: block;
+            width: 100%;
+            height: auto;
+            aspect-ratio: 1179 / 2556;
+            object-fit: cover;
+        }
+
+        .hero-phone--back {
+            transform: translateX(12%) rotate(6deg) scale(0.92);
+            z-index: 0;
+            opacity: 0.85;
+        }
+
+        .hero-phone--front {
+            z-index: 1;
+            margin-left: -18%;
+        }
+
+        @media (max-width: 899px) {
+            .hero-phone--back {
+                display: none;
+            }
+
+            .hero-phone--front {
+                margin-left: 0;
+            }
+        }
+
+        /* Section titles */
+        .section-head {
+            text-align: center;
+            max-width: 640px;
+            margin: 0 auto var(--space-section);
+        }
+
+        .section-head h2 {
+            font-family: var(--font-display);
+            font-size: clamp(1.75rem, 4vw, 2.35rem);
+            font-weight: 600;
+            letter-spacing: -0.02em;
+            margin-bottom: 0.75rem;
+        }
+
+        .section-head p {
+            color: var(--text-muted);
+            font-size: 1.05rem;
+        }
+
+        /* Screenshots */
         .screenshots-section {
-            padding: 80px 0;
-            background: rgba(255, 255, 255, 0.05);
-            backdrop-filter: blur(10px);
-            margin-bottom: 60px;
-        }
-
-        .screenshots-section h2 {
-            font-size: 2.5rem;
-            font-weight: 600;
-            text-align: center;
-            margin-bottom: 20px;
-            color: white;
-        }
-
-        .screenshots-section>.container>p {
-            text-align: center;
-            font-size: 1.2rem;
-            color: rgba(255, 255, 255, 0.8);
-            margin-bottom: 60px;
-            max-width: 600px;
-            margin-left: auto;
-            margin-right: auto;
+            padding-bottom: var(--space-section);
         }
 
         .screenshots-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 40px;
-            margin-top: 40px;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: clamp(1.5rem, 3vw, 2rem);
         }
 
         .screenshot-card {
-            text-align: center;
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 20px;
-            padding: 30px 20px;
-            backdrop-filter: blur(10px);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: 1.75rem 1.5rem 2rem;
+            transition: border-color 0.25s ease, transform 0.25s ease;
         }
 
         .screenshot-card:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.2);
+            border-color: rgba(62, 207, 142, 0.35);
+            transform: translateY(-4px);
         }
 
         .phone-frame {
             position: relative;
-            width: 200px;
-            height: 400px;
-            margin: 0 auto 25px;
-            background: #1a1a1a;
-            border-radius: 25px;
-            padding: 8px;
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+            width: min(200px, 70%);
+            margin: 0 auto 1.5rem;
+            aspect-ratio: 1 / 2.05;
+            background: #0a0c0f;
+            border-radius: 28px;
+            padding: 7px;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4);
         }
 
         .screenshot {
             width: 100%;
             height: 100%;
             object-fit: cover;
-            border-radius: 17px;
-            background: #f0f0f0;
+            border-radius: 22px;
+            background: #222;
         }
 
         .screenshot-card h3 {
-            font-size: 1.3rem;
-            font-weight: 600;
-            margin-bottom: 10px;
-            color: white;
+            font-size: 0.8rem;
+            font-weight: 700;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: var(--accent);
+            margin-bottom: 0.5rem;
         }
 
         .screenshot-card p {
             font-size: 0.95rem;
-            color: rgba(255, 255, 255, 0.8);
-            line-height: 1.5;
+            color: var(--text-muted);
+            line-height: 1.55;
         }
 
-        /* Hero Section */
-        .hero {
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(10px);
-            border-radius: 24px;
-            padding: 40px;
-            margin-bottom: 60px;
+        /* Mid CTA strip */
+        .mid-cta {
             text-align: center;
-            color: white;
+            padding: clamp(2.5rem, 5vw, 3.5rem);
+            margin-bottom: var(--space-section);
+            background: linear-gradient(135deg, var(--accent-dim), transparent);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
         }
 
-        .hero h2 {
-            font-size: 2.5rem;
-            font-weight: 600;
-            margin-bottom: 20px;
+        .mid-cta p {
+            font-family: var(--font-display);
+            font-size: clamp(1.25rem, 2.5vw, 1.6rem);
+            font-weight: 500;
+            margin-bottom: 1.25rem;
+            color: var(--text);
         }
 
-        .hero p {
-            font-size: 1.2rem;
-            opacity: 0.9;
-            max-width: 500px;
-            margin: 0 auto;
-        }
-
-        /* Features Grid */
-        .features {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-            gap: 30px;
-            margin-bottom: 80px;
-        }
-
-        .feature-card {
-            background: white;
-            border-radius: 20px;
-            padding: 40px 30px;
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .feature-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 4px;
-            background: linear-gradient(90deg, #667eea, #764ba2);
-        }
-
-        .feature-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.15);
-        }
-
-        .feature-icon {
-            width: 60px;
-            height: 60px;
-            border-radius: 16px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-bottom: 25px;
-            font-size: 24px;
-        }
-
-        .feature-card:nth-child(1) .feature-icon {
-            background: linear-gradient(135deg, #ff6b6b, #ff8e8e);
-            color: white;
-        }
-
-        .feature-card:nth-child(2) .feature-icon {
-            background: linear-gradient(135deg, #4ecdc4, #44a08d);
-            color: white;
-        }
-
-        .feature-card:nth-child(3) .feature-icon {
-            background: linear-gradient(135deg, #45b7d1, #96c93d);
-            color: white;
-        }
-
-        .feature-card:nth-child(4) .feature-icon {
-            background: linear-gradient(135deg, #f093fb, #f5576c);
-            color: white;
-        }
-
-        .feature-card:nth-child(5) .feature-icon {
-            background: linear-gradient(135deg, #4facfe, #00f2fe);
-            color: white;
-        }
-
-        .feature-card:nth-child(6) .feature-icon {
-            background: linear-gradient(135deg, #43e97b, #38f9d7);
-            color: white;
-        }
-
-        .feature-card h3 {
-            font-size: 1.5rem;
-            font-weight: 600;
-            margin-bottom: 15px;
-            color: #1a1a1a;
-        }
-
-        .feature-card p {
-            color: #666;
-            line-height: 1.6;
+        .mid-cta .sub {
+            font-family: var(--font-sans);
             font-size: 1rem;
+            font-weight: 400;
+            color: var(--text-muted);
+            margin-bottom: 1.5rem;
         }
 
-        /* Privacy Section */
+        /* Feature bands */
+        .feature-band {
+            margin-bottom: var(--space-section);
+        }
+
+        .feature-band-title {
+            font-size: 0.75rem;
+            font-weight: 700;
+            letter-spacing: 0.14em;
+            text-transform: uppercase;
+            color: var(--text-soft);
+            margin-bottom: 1.25rem;
+            padding-bottom: 0.75rem;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .feature-grid {
+            display: grid;
+            gap: 1rem;
+            grid-template-columns: 1fr;
+        }
+
+        @media (min-width: 640px) {
+            .feature-grid--2 {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (min-width: 900px) {
+            .feature-grid--3 {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+
+        .feature-item {
+            background: var(--bg-elevated);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            padding: 1.35rem 1.35rem 1.5rem;
+            transition: border-color 0.2s ease, background 0.2s ease;
+        }
+
+        .feature-item:hover {
+            border-color: rgba(255, 255, 255, 0.14);
+            background: rgba(255, 255, 255, 0.03);
+        }
+
+        .feature-item h3 {
+            font-size: 0.95rem;
+            font-weight: 700;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+            color: var(--text);
+            margin-bottom: 0.65rem;
+            line-height: 1.35;
+        }
+
+        .feature-item p {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            line-height: 1.6;
+        }
+
+        /* Privacy */
         .privacy-section {
-            background: rgba(255, 255, 255, 0.95);
-            border-radius: 24px;
-            padding: 50px 40px;
-            margin-bottom: 60px;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: clamp(2rem, 4vw, 3rem);
+            margin-bottom: 3rem;
             text-align: center;
         }
 
         .privacy-section h2 {
-            font-size: 2.2rem;
-            font-weight: 600;
-            margin-bottom: 20px;
-            color: #1a1a1a;
+            font-family: var(--font-display);
+            font-size: clamp(1.5rem, 3vw, 2rem);
+            margin-bottom: 1rem;
         }
 
-        .privacy-section p {
-            font-size: 1.1rem;
-            color: #666;
-            max-width: 600px;
-            margin: 0 auto 30px;
+        .privacy-section > p {
+            color: var(--text-muted);
+            max-width: 52ch;
+            margin: 0 auto 1.5rem;
+            font-size: 1.05rem;
         }
 
         .privacy-badge {
             display: inline-flex;
             align-items: center;
-            background: linear-gradient(135deg, #667eea, #764ba2);
-            color: white;
-            padding: 12px 24px;
-            border-radius: 50px;
-            font-weight: 500;
-            font-size: 0.9rem;
-        }
-
-        .privacy-badge::before {
-            content: '🔒';
-            margin-right: 8px;
+            gap: 0.5rem;
+            padding: 0.5rem 1.1rem;
+            border-radius: 999px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            background: var(--accent-dim);
+            color: var(--accent);
+            border: 1px solid rgba(62, 207, 142, 0.35);
         }
 
         /* Disclaimer */
         .disclaimer {
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(10px);
-            border-radius: 16px;
-            padding: 30px;
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            padding: 1.25rem 1.5rem;
+            margin-bottom: 3rem;
             text-align: center;
-            color: white;
-            margin-bottom: 60px;
         }
 
         .disclaimer p {
-            font-size: 0.9rem;
-            opacity: 0.8;
+            font-size: 0.85rem;
+            color: var(--text-soft);
             font-style: italic;
+        }
+
+        .disclaimer strong {
+            font-style: normal;
+            color: var(--text-muted);
         }
 
         /* Footer */
         .footer {
             text-align: center;
-            padding: 40px 0;
-            color: white;
-            opacity: 0.8;
+            padding: 2rem 0 3rem;
+            color: var(--text-soft);
+            font-size: 0.875rem;
         }
 
-        .footer p {
-            font-size: 0.9rem;
+        .lang-switch {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.35rem;
+            font-size: 0.8rem;
+            font-weight: 500;
+            color: var(--text-soft);
         }
 
-        /* Responsive Design */
-        @media (max-width: 768px) {
-            .header h1 {
-                font-size: 2.5rem;
-            }
-
-            .header .tagline {
-                font-size: 1.2rem;
-            }
-
-            .download-content {
-                padding: 25px 20px;
-            }
-
-            .download-content h3 {
-                font-size: 1.5rem;
-            }
-
-            .app-store-button {
-                padding: 12px 20px;
-            }
-
-            .app-store-icon {
-                width: 28px;
-                height: 28px;
-                margin-right: 10px;
-            }
-
-            .store-name {
-                font-size: 1.1rem;
-            }
-
-            .screenshots-section h2 {
-                font-size: 2rem;
-            }
-
-            .screenshots-section>.container>p {
-                font-size: 1rem;
-            }
-
-            .screenshots-grid {
-                grid-template-columns: 1fr;
-                gap: 30px;
-            }
-
-            .phone-frame {
-                width: 180px;
-                height: 360px;
-            }
-
-            .hero h2 {
-                font-size: 2rem;
-            }
-
-            .features {
-                grid-template-columns: 1fr;
-                gap: 20px;
-            }
-
-            .feature-card {
-                padding: 30px 20px;
-            }
-
-            .privacy-section {
-                padding: 40px 20px;
-            }
-
-            .privacy-section h2 {
-                font-size: 1.8rem;
-            }
+        .lang-switch button {
+            font: inherit;
+            color: inherit;
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 0.2rem 0.35rem;
+            border-radius: 6px;
+            text-decoration: underline;
+            text-underline-offset: 3px;
         }
 
-        /* Animations */
-        @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(30px);
-            }
-
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+        .lang-switch button:hover {
+            color: var(--text-muted);
         }
 
-        .feature-card {
-            animation: fadeInUp 0.6s ease forwards;
+        .lang-switch button:focus-visible {
+            outline: 2px solid var(--accent);
+            outline-offset: 2px;
         }
 
-        .feature-card:nth-child(1) {
-            animation-delay: 0.1s;
+        .lang-switch button[aria-current="true"] {
+            color: var(--accent);
+            text-decoration: none;
+            font-weight: 700;
+            cursor: default;
         }
 
-        .feature-card:nth-child(2) {
-            animation-delay: 0.2s;
+        .lang-switch .sep {
+            opacity: 0.45;
+            user-select: none;
         }
 
-        .feature-card:nth-child(3) {
-            animation-delay: 0.3s;
-        }
-
-        .feature-card:nth-child(4) {
-            animation-delay: 0.4s;
-        }
-
-        .feature-card:nth-child(5) {
-            animation-delay: 0.5s;
-        }
-
-        .feature-card:nth-child(6) {
-            animation-delay: 0.6s;
+        .nav-right {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            flex-wrap: wrap;
+            justify-content: flex-end;
         }
     </style>
 </head>
 
 <body>
-    <div class="container">
-        <!-- Header -->
-        <header class="header">
-            <h1>Velora</h1>
-            <p class="tagline">Your Fitness Buddy</p>
-            <p class="description">
-                The indie-built fitness companion that turns your sweat into progress you can actually see.
-                Friendly vibe, zero fluff.
-            </p>
-        </header>
-
-        <!-- App Store Download Section -->
-        <section class="download-section">
-            <div class="download-content">
-                <h3>Download Velora</h3>
-                <p>Get your fitness companion on the App Store</p>
-                <a href="https://apps.apple.com/tr/app/velora-health-companion/id6748447208" class="app-store-button"
-                    target="_blank" rel="noopener">
-                    <svg class="app-store-icon" viewBox="0 0 24 24" fill="currentColor">
-                        <path
-                            d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.81-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z" />
-                    </svg>
-                    <div class="button-text">
-                        <span class="download-text">Download on the</span>
-                        <span class="store-name">App Store</span>
-                    </div>
-                </a>
+    <nav class="site-nav" data-i18n-aria-label="nav.ariaLabel" aria-label="Primary">
+        <div class="container">
+            <a class="brand" href="#">Velora</a>
+            <div class="nav-right">
+                <div class="lang-switch" role="group" data-i18n-aria-label="lang.groupAria" aria-label="Language">
+                    <button type="button" data-locale="en" aria-current="true">English</button>
+                    <span class="sep" aria-hidden="true">·</span>
+                    <button type="button" data-locale="tr">Türkçe</button>
+                </div>
+                <a class="nav-cta" href="https://apps.apple.com/tr/app/velora-health-companion/id6748447208"
+                    target="_blank" rel="noopener">App Store</a>
             </div>
+        </div>
+    </nav>
+
+    <header class="hero">
+        <div class="container hero-grid">
+            <div>
+                <span class="eyebrow" data-i18n="hero.eyebrow">Health companion · iPhone</span>
+                <h1>Velora</h1>
+                <p class="tagline" data-i18n="hero.tagline">Your indie-built fitness buddy</p>
+                <p class="lead" data-i18n="hero.lead">
+                    Turn your sweat into progress you can actually see. Friendly vibe, zero fluff — built for people who
+                    want clarity, not noise.
+                </p>
+                <div class="hero-cta-row">
+                    <a href="https://apps.apple.com/tr/app/velora-health-companion/id6748447208" class="app-store-button"
+                        target="_blank" rel="noopener">
+                        <svg class="app-store-icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                            <path
+                                d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.81-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z" />
+                        </svg>
+                        <div class="button-text">
+                            <span class="download-text" data-i18n="appStore.line1">Download on the</span>
+                            <span class="store-name" data-i18n="appStore.line2">App Store</span>
+                        </div>
+                    </a>
+                </div>
+                <p class="hero-trust">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+                    </svg>
+                    <span data-i18n="hero.trust">Private by design — data stays on your device via Apple HealthKit.</span>
+                </p>
+            </div>
+            <div class="hero-visual" aria-hidden="true">
+                <div class="hero-orb"></div>
+                <div class="hero-phone-stack">
+                    <div class="hero-phone hero-phone--back">
+                        <img src="images/workout-analytics.PNG" alt="" decoding="async">
+                    </div>
+                    <div class="hero-phone hero-phone--front">
+                        <img src="images/progress-dashboard.PNG" data-i18n-alt="img.heroAlt"
+                            alt="Velora app showing weekly progress overview" decoding="async">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <section class="screenshots-section" aria-labelledby="shots-heading">
+        <div class="container">
+            <div class="section-head">
+                <h2 id="shots-heading" data-i18n="shots.title">See it in action</h2>
+                <p data-i18n="shots.sub">A calm interface so you can focus on training — not hunting through menus.</p>
+            </div>
+            <div class="screenshots-grid">
+                <article class="screenshot-card">
+                    <div class="phone-frame">
+                        <img src="images/progress-dashboard.PNG" data-i18n-alt="img.shot1Alt"
+                            alt="Velora weekly progress dashboard" class="screenshot" width="400" height="800"
+                            loading="lazy">
+                    </div>
+                    <h3 data-i18n="shot1.title">Weekly progress</h3>
+                    <p data-i18n="shot1.desc">Your last seven days at a glance. Spot trends, catch plateaus early, and plan your next push.</p>
+                </article>
+                <article class="screenshot-card">
+                    <div class="phone-frame">
+                        <img src="images/workout-analytics.PNG" data-i18n-alt="img.shot2Alt"
+                            alt="Velora workout analytics and maps" class="screenshot" width="400" height="800"
+                            loading="lazy">
+                    </div>
+                    <h3 data-i18n="shot2.title">Workout details &amp; analytics</h3>
+                    <p data-i18n="shot2.desc">Sets, reps, routes, and metrics in one place — with maps and effort breakdowns.</p>
+                </article>
+                <article class="screenshot-card">
+                    <div class="phone-frame">
+                        <img src="images/heart-rate-zones.PNG" data-i18n-alt="img.shot3Alt"
+                            alt="Velora heart rate zones" class="screenshot" width="400" height="800" loading="lazy">
+                    </div>
+                    <h3 data-i18n="shot3.title">Heart-rate zones</h3>
+                    <p data-i18n="shot3.desc">Color-coded zones in real time so you can balance intensity and recovery.</p>
+                </article>
+            </div>
+        </div>
+    </section>
+
+    <div class="container">
+        <section class="mid-cta" data-i18n-aria-label="mid.aria" aria-label="Download prompt">
+            <p data-i18n="mid.title">Progress you can see — not another cluttered dashboard.</p>
+            <p class="sub" data-i18n="mid.sub">Pull to refresh on Home for instant sync. Filter history by month for the bigger picture.</p>
+            <a href="https://apps.apple.com/tr/app/velora-health-companion/id6748447208" class="app-store-button"
+                target="_blank" rel="noopener">
+                <svg class="app-store-icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                    <path
+                        d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.81-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z" />
+                </svg>
+                <div class="button-text">
+                    <span class="download-text" data-i18n="appStore.midLine1">Get Velora on the</span>
+                    <span class="store-name" data-i18n="appStore.line2">App Store</span>
+                </div>
+            </a>
         </section>
 
-        <!-- App Screenshots Section -->
-        <section class="screenshots-section">
-            <div class="container">
-                <h2>See Velora in Action</h2>
-                <p>Discover the beautiful, intuitive interface that makes fitness tracking effortless</p>
-
-                <div class="screenshots-grid">
-                    <!-- Screenshot 1: Progress Dashboard -->
-                    <div class="screenshot-card">
-                        <div class="phone-frame">
-                            <img src="images/progress-dashboard.PNG" alt="Velora Progress Dashboard" class="screenshot">
-                        </div>
-                        <h3>Weekly Progress</h3>
-                        <p>Clear, at-a-glance charts of your last seven days</p>
-                    </div>
-
-                    <!-- Screenshot 3: Workout Analytics -->
-                    <div class="screenshot-card">
-                        <div class="phone-frame">
-                            <img src="images/workout-analytics.PNG" alt="Velora Workout Analytics" class="screenshot">
-                        </div>
-                        <h3>Workout Analytics</h3>
-                        <p>Every set, rep, and metric captured in one place</p>
-                    </div>
-
-                    <!-- Screenshot 4: Heart Rate Zones -->
-                    <div class="screenshot-card">
-                        <div class="phone-frame">
-                            <img src="images/heart-rate-zones.PNG" alt="Velora Heart Rate Zones" class="screenshot">
-                        </div>
-                        <h3>Heart Rate Zones</h3>
-                        <p>Color-coded zones show exactly how hard you're working</p>
-                    </div>
+        <section class="feature-band" aria-labelledby="band-progress">
+            <h2 id="band-progress" class="feature-band-title" data-i18n="band.progress">Your timeline</h2>
+            <div class="feature-grid feature-grid--3">
+                <div class="feature-item">
+                    <h3 data-i18n="feat.p1.title">Weekly progress</h3>
+                    <p data-i18n="feat.p1.desc">A clear chart of your last seven days. See trends early and adjust with confidence.</p>
+                </div>
+                <div class="feature-item">
+                    <h3 data-i18n="feat.p2.title">Monthly workout filters</h3>
+                    <p data-i18n="feat.p2.desc">Zoom out on your history by month — total volume and how much you crushed over the last 30 days.</p>
+                </div>
+                <div class="feature-item">
+                    <h3 data-i18n="feat.p3.title">Instant data refresh</h3>
+                    <p data-i18n="feat.p3.desc">Swipe down on Home to refresh all workout data in a moment. Stay synced and keep momentum.</p>
                 </div>
             </div>
         </section>
 
-        <!-- Hero Section -->
-        <section class="hero">
-            <h2>Progress? We made it visual.</h2>
-            <p>Track every step, every rep, every calorie. Even snack runs!</p>
-        </section>
-
-        <!-- Features Grid -->
-        <section class="features">
-            <div class="feature-card">
-                <div class="feature-icon">📊</div>
-                <h3>Weekly Progress</h3>
-                <p>A clear, at-a-glance chart of your last seven days. Spot trends, catch plateaus early, and plan your
-                    next push with confidence.</p>
-            </div>
-
-            <div class="feature-card">
-                <div class="feature-icon">👣</div>
-                <h3>Step Insights</h3>
-                <p>Daily step count, distance, walking time, flights climbed, and 14-day trends. Understand how you
-                    really move instead of chasing an arbitrary number.</p>
-            </div>
-
-            <div class="feature-card">
-                <div class="feature-icon">💪</div>
-                <h3>Workout Details & Analytics</h3>
-                <p>Every set, rep, route, and metric captured in one place. Dive into precise stats, interactive maps,
-                    and effort breakdowns to fine-tune training.</p>
-            </div>
-
-            <div class="feature-card">
-                <div class="feature-icon">❤️</div>
-                <h3>Heart-Rate Zones</h3>
-                <p>Color-coded zones show exactly how hard you're working in real time, helping you balance intensity,
-                    recover properly, and avoid overtraining.</p>
-            </div>
-
-            <div class="feature-card">
-                <div class="feature-icon">🔥</div>
-                <h3>Calorie Burn & Efficiency</h3>
-                <p>Beyond totals: see when and how efficiently you burned calories, so every minute of effort counts
-                    toward your goals.</p>
-            </div>
-
-            <div class="feature-card">
-                <div class="feature-icon">🎯</div>
-                <h3>Smart Stats</h3>
-                <p>Your heart knows. Now you do too! Personalized training zones based on your age and fitness level for
-                    stronger workouts.</p>
+        <section class="feature-band" aria-labelledby="band-train">
+            <h2 id="band-train" class="feature-band-title" data-i18n="band.train">Train &amp; body</h2>
+            <div class="feature-grid feature-grid--3">
+                <div class="feature-item">
+                    <h3 data-i18n="feat.t1.title">Workout details &amp; analytics</h3>
+                    <p data-i18n="feat.t1.desc">Every set, rep, route, and metric in one place — stats, interactive maps, and effort breakdowns.</p>
+                </div>
+                <div class="feature-item">
+                    <h3 data-i18n="feat.t2.title">Heart-rate zones</h3>
+                    <p data-i18n="feat.t2.desc">Color-coded zones in real time. Balance intensity, recover properly, and avoid overtraining.</p>
+                </div>
+                <div class="feature-item">
+                    <h3 data-i18n="feat.t3.title">Calorie burn &amp; efficiency</h3>
+                    <p data-i18n="feat.t3.desc">Beyond totals: when and how efficiently you burned calories — every minute counts.</p>
+                </div>
+                <div class="feature-item">
+                    <h3 data-i18n="feat.t4.title">Weight logging &amp; graphs</h3>
+                    <p data-i18n="feat.t4.desc">Log weight manually and follow the new graph in your personal details for long-term trends.</p>
+                </div>
             </div>
         </section>
 
-        <!-- Privacy Section -->
-        <section class="privacy-section">
-            <h2>Your Data Stays Private</h2>
-            <p>Your health data stays on-device via Apple HealthKit; nothing leaves your phone. We believe in
-                transparency and your right to privacy.</p>
-            <div class="privacy-badge">On-Device Processing</div>
+        <section class="feature-band" aria-labelledby="band-daily">
+            <h2 id="band-daily" class="feature-band-title" data-i18n="band.daily">Daily rhythm</h2>
+            <div class="feature-grid feature-grid--2">
+                <div class="feature-item">
+                    <h3 data-i18n="feat.d1.title">Step insights &amp; widgets</h3>
+                    <p data-i18n="feat.d1.desc">Daily steps, distance, and walking time — how you really move. Add the step widget to your Home
+                        Screen.</p>
+                </div>
+                <div class="feature-item">
+                    <h3 data-i18n="feat.d2.title">Alcohol widget &amp; details</h3>
+                    <p data-i18n="feat.d2.desc">Track drinks via Apple Health with a dashboard counter and Home Screen widget. Dig into details to
+                        see how downtime affects your next training block.</p>
+                </div>
+            </div>
         </section>
 
-        <!-- Disclaimer -->
+        <section class="feature-band" aria-labelledby="band-smart">
+            <h2 id="band-smart" class="feature-band-title" data-i18n="band.smart">Insight &amp; polish</h2>
+            <div class="feature-grid feature-grid--3">
+                <div class="feature-item">
+                    <h3 data-i18n="feat.s1.title">Smarter AI insights</h3>
+                    <p data-i18n="feat.s1.desc">Faster, sharper reads on workouts and alcohol data — with fixes so insights don’t repeat when you
+                        open the app.</p>
+                </div>
+                <div class="feature-item">
+                    <h3 data-i18n="feat.s2.title">Sleek navigation</h3>
+                    <p data-i18n="feat.s2.desc">An upgraded tab bar so moving through your stats feels as smooth as a clean rep.</p>
+                </div>
+                <div class="feature-item">
+                    <h3 data-i18n="feat.s3.title">Under the hood</h3>
+                    <p data-i18n="feat.s3.desc">Faster internal loading. Open privacy policy and terms of service right inside the app.</p>
+                </div>
+                <div class="feature-item">
+                    <h3 data-i18n="feat.s4.title">Custom profile</h3>
+                    <p data-i18n="feat.s4.desc">Upload your own profile photo in settings and make Velora feel like yours.</p>
+                </div>
+                <div class="feature-item">
+                    <h3 data-i18n="feat.s5.title">Language selection</h3>
+                    <p data-i18n="feat.s5.desc">Turkish or English at onboarding — or switch any time in settings.</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="privacy-section" aria-labelledby="privacy-heading">
+            <h2 id="privacy-heading" data-i18n="privacy.title">Private data stays private</h2>
+            <p data-i18n="privacy.body">Your health data stays on-device through Apple HealthKit. Nothing leaves your phone — transparency and
+                control by default.</p>
+            <div class="privacy-badge" role="status">
+                <span aria-hidden="true">🔒</span>
+                <span data-i18n="privacy.badge">On-device · HealthKit</span>
+            </div>
+        </section>
+
         <section class="disclaimer">
-            <p><strong>Disclaimer:</strong> Velora is not a medical device and should not replace professional medical
-                advice.</p>
+            <p><strong data-i18n="disclaimer.label">Disclaimer:</strong> <span data-i18n="disclaimer.body">Velora is not a medical device and should not replace professional medical
+                advice.</span></p>
         </section>
 
-        <!-- Footer -->
         <footer class="footer">
-            <p>&copy; 2024 Velora. Built with ❤️ for fitness enthusiasts.</p>
+            <p data-i18n="footer.copy">&copy; 2026 Velora. Built with care for people who train.</p>
         </footer>
     </div>
+    <script>
+        (function () {
+            var STORAGE_KEY = 'velora-lang';
+
+            var STRINGS = {
+                en: {
+                    meta: {
+                        title: 'Velora — Health companion on the App Store',
+                        description: 'Velora — the indie-built health companion for iPhone. Weekly progress, workouts, steps, heart-rate zones, and private HealthKit sync.'
+                    },
+                    nav: { ariaLabel: 'Primary' },
+                    lang: { groupAria: 'Language' },
+                    hero: {
+                        eyebrow: 'Health companion · iPhone',
+                        tagline: 'Your indie-built fitness buddy',
+                        lead: 'Turn your sweat into progress you can actually see. Friendly vibe, zero fluff — built for people who want clarity, not noise.',
+                        trust: 'Private by design — data stays on your device via Apple HealthKit.'
+                    },
+                    appStore: {
+                        line1: 'Download on the',
+                        line2: 'App Store',
+                        midLine1: 'Get Velora on the'
+                    },
+                    img: {
+                        heroAlt: 'Velora app showing weekly progress overview',
+                        shot1Alt: 'Velora weekly progress dashboard',
+                        shot2Alt: 'Velora workout analytics and maps',
+                        shot3Alt: 'Velora heart rate zones'
+                    },
+                    shots: {
+                        title: 'See it in action',
+                        sub: 'A calm interface so you can focus on training — not hunting through menus.'
+                    },
+                    shot1: {
+                        title: 'Weekly progress',
+                        desc: 'Your last seven days at a glance. Spot trends, catch plateaus early, and plan your next push.'
+                    },
+                    shot2: {
+                        title: 'Workout details & analytics',
+                        desc: 'Sets, reps, routes, and metrics in one place — with maps and effort breakdowns.'
+                    },
+                    shot3: {
+                        title: 'Heart-rate zones',
+                        desc: 'Color-coded zones in real time so you can balance intensity and recovery.'
+                    },
+                    mid: {
+                        aria: 'Download Velora',
+                        title: 'Progress you can see — not another cluttered dashboard.',
+                        sub: 'Pull to refresh on Home for instant sync. Filter history by month for the bigger picture.'
+                    },
+                    band: {
+                        progress: 'Your timeline',
+                        train: 'Train & body',
+                        daily: 'Daily rhythm',
+                        smart: 'Insight & polish'
+                    },
+                    feat: {
+                        p1: { title: 'Weekly progress', desc: 'A clear chart of your last seven days. See trends early and adjust with confidence.' },
+                        p2: { title: 'Monthly workout filters', desc: 'Zoom out on your history by month — total volume and how much you crushed over the last 30 days.' },
+                        p3: { title: 'Instant data refresh', desc: 'Swipe down on Home to refresh all workout data in a moment. Stay synced and keep momentum.' },
+                        t1: { title: 'Workout details & analytics', desc: 'Every set, rep, route, and metric in one place — stats, interactive maps, and effort breakdowns.' },
+                        t2: { title: 'Heart-rate zones', desc: 'Color-coded zones in real time. Balance intensity, recover properly, and avoid overtraining.' },
+                        t3: { title: 'Calorie burn & efficiency', desc: 'Beyond totals: when and how efficiently you burned calories — every minute counts.' },
+                        t4: { title: 'Weight logging & graphs', desc: 'Log weight manually and follow the new graph in your personal details for long-term trends.' },
+                        d1: { title: 'Step insights & widgets', desc: 'Daily steps, distance, and walking time — how you really move. Add the step widget to your Home Screen.' },
+                        d2: { title: 'Alcohol widget & details', desc: 'Track drinks via Apple Health with a dashboard counter and Home Screen widget. Dig into details to see how downtime affects your next training block.' },
+                        s1: { title: 'Smarter AI insights', desc: 'Faster, sharper reads on workouts and alcohol data — with fixes so insights don’t repeat when you open the app.' },
+                        s2: { title: 'Sleek navigation', desc: 'An upgraded tab bar so moving through your stats feels as smooth as a clean rep.' },
+                        s3: { title: 'Under the hood', desc: 'Faster internal loading. Open privacy policy and terms of service right inside the app.' },
+                        s4: { title: 'Custom profile', desc: 'Upload your own profile photo in settings and make Velora feel like yours.' },
+                        s5: { title: 'Language selection', desc: 'Turkish or English at onboarding — or switch any time in settings.' }
+                    },
+                    privacy: {
+                        title: 'Private data stays private',
+                        body: 'Your health data stays on-device through Apple HealthKit. Nothing leaves your phone — transparency and control by default.',
+                        badge: 'On-device · HealthKit'
+                    },
+                    disclaimer: {
+                        label: 'Disclaimer:',
+                        body: 'Velora is not a medical device and should not replace professional medical advice.'
+                    },
+                    footer: { copy: '© 2026 Velora. Built with care for people who train.' }
+                },
+                tr: {
+                    meta: {
+                        title: 'Velora — App Store’daki sağlık arkadaşın',
+                        description: 'Velora — iPhone için bağımsız geliştirilen sağlık arkadaşı. Haftalık ilerleme, antrenmanlar, adımlar, nabız bölgeleri ve gizli HealthKit senkronu.'
+                    },
+                    nav: { ariaLabel: 'Ana gezinme' },
+                    lang: { groupAria: 'Dil' },
+                    hero: {
+                        eyebrow: 'Sağlık arkadaşı · iPhone',
+                        tagline: 'Bağımsız geliştiriciden fitness arkadaşın',
+                        lead: 'Terini, gerçekten görebileceğin ilerlemeye dönüştür. Samimi ton, gereksiz süs yok — netlik isteyenler için.',
+                        trust: 'Gizlilik öncelikli — verileriniz Apple HealthKit ile cihazınızda kalır.'
+                    },
+                    appStore: {
+                        line1: 'App Store’dan',
+                        line2: 'İndirin',
+                        midLine1: 'Velora App Store’da'
+                    },
+                    img: {
+                        heroAlt: 'Velora uygulamasında haftalık ilerleme özeti',
+                        shot1Alt: 'Velora haftalık ilerleme ekranı',
+                        shot2Alt: 'Velora antrenman analitiği ve haritalar',
+                        shot3Alt: 'Velora nabız bölgeleri'
+                    },
+                    shots: {
+                        title: 'Uygulamada görün',
+                        sub: 'Antrenmana odaklanman için sade bir arayüz — menülerde kaybolmadan.'
+                    },
+                    shot1: {
+                        title: 'Haftalık ilerleme',
+                        desc: 'Son yedi günün net bir özeti. Trendleri yakala, durgunlukları erken gör, bir sonraki hamleni planla.'
+                    },
+                    shot2: {
+                        title: 'Antrenman detayı ve analitik',
+                        desc: 'Set, tekrar, rota ve metrikler tek yerde — haritalar ve efor dağılımıyla.'
+                    },
+                    shot3: {
+                        title: 'Nabız bölgeleri',
+                        desc: 'Gerçek zamanlı renkli bölgelerle yoğunluk ve toparlanmayı dengele.'
+                    },
+                    mid: {
+                        aria: 'Velora’yı indir',
+                        title: 'Görebileceğin ilerleme — kalabalık paneller değil.',
+                        sub: 'Ana sayfada aşağı çek: veriler anında yenilensin. Geçmişi aya göre filtrele, büyük resmi gör.'
+                    },
+                    band: {
+                        progress: 'İlerleme akışı',
+                        train: 'Antrenman ve vücut',
+                        daily: 'Günlük ritim',
+                        smart: 'Öngörü ve ince ayar'
+                    },
+                    feat: {
+                        p1: { title: 'Haftalık ilerleme', desc: 'Son yedi günün net grafiği. Trendleri erken gör, güvenle ayarla.' },
+                        p2: { title: 'Aylık antrenman filtreleri', desc: 'Geçmişe aydan bak — toplam hacim ve son 30 günde ne kadar ilerlediğini gör.' },
+                        p3: { title: 'Anında veri yenileme', desc: 'Ana sayfada aşağı kaydır; tüm antrenman verileri bir anda güncellensin. Senkron kalsın, momentum kaybolmasın.' },
+                        t1: { title: 'Antrenman detayı ve analitik', desc: 'Her set, tekrar, rota ve metrik tek yerde — istatistikler, etkileşimli haritalar ve efor dökümü.' },
+                        t2: { title: 'Nabız bölgeleri', desc: 'Gerçek zamanlı renkli bölgeler. Yoğunluğu dengele, düzgün toparlan, aşırı yüklenmeyi azalt.' },
+                        t3: { title: 'Kalori ve verimlilik', desc: 'Sadece toplam değil: kalorileri ne zaman ve ne kadar verimli yaktığını gör — her dakika sayılır.' },
+                        t4: { title: 'Kilo kaydı ve grafikler', desc: 'Kiloyu elle gir; kişisel detaylardaki yeni grafikle uzun vadeli trendini izle.' },
+                        d1: { title: 'Adım öngörüleri ve widget’lar', desc: 'Günlük adım, mesafe ve yürüme süresi — gerçekten nasıl hareket ettiğini gör. Ana Ekran’a adım widget’ını ekle.' },
+                        d2: { title: 'Alkol widget’ı ve detaylar', desc: 'İçkileri Apple Health üzerinden takip et; sayaç ve Ana Ekran widget’ı panelde. Detaylara in, molanın bir sonraki bloğu nasıl etkilediğini gör.' },
+                        s1: { title: 'Daha akıllı yapay zekâ öngörüleri', desc: 'Antrenman ve alkol verilerinde daha hızlı, daha net özetler — uygulamayı açınca tekrarlayan içgörü hatası giderildi.' },
+                        s2: { title: 'Sade gezinme', desc: 'Yenilenen sekme çubuğu; istatistikler arasında gezmek temiz bir tekrar kadar akıcı.' },
+                        s3: { title: 'Perde arkası', desc: 'Daha hızlı iç yükleme. Gizlilik politikası ve kullanım şartlarına doğrudan uygulamadan eriş.' },
+                        s4: { title: 'Özel profil', desc: 'Ayardan kendi profil fotoğrafını yükle; Velora senin gibi hissetsin.' },
+                        s5: { title: 'Dil seçimi', desc: 'Türkçe veya İngilizce — tanıtımda seç veya ayarlardan istediğin zaman değiştir.' }
+                    },
+                    privacy: {
+                        title: 'Özel verin özel kalır',
+                        body: 'Sağlık verilerin Apple HealthKit ile cihazında kalır; telefonundan çıkmaz. Şeffaflık ve kontrol varsayılanındır.',
+                        badge: 'Cihazda · HealthKit'
+                    },
+                    disclaimer: {
+                        label: 'Uyarı:',
+                        body: 'Velora tıbbi bir cihaz değildir ve profesyonel tıbbi tavsiyenin yerini tutmamalıdır.'
+                    },
+                    footer: { copy: '© 2026 Velora. Antrenman edenler için özenle.' }
+                }
+            };
+
+            function get(obj, path) {
+                var parts = path.split('.');
+                var cur = obj;
+                for (var i = 0; i < parts.length; i++) {
+                    if (cur == null) return null;
+                    cur = cur[parts[i]];
+                }
+                return typeof cur === 'string' ? cur : null;
+            }
+
+            function t(locale, path) {
+                return get(STRINGS[locale], path);
+            }
+
+            function detectBrowserLocale() {
+                var list = typeof navigator.languages !== 'undefined' && navigator.languages.length
+                    ? navigator.languages
+                    : [navigator.language || 'en'];
+                for (var i = 0; i < list.length; i++) {
+                    var tag = (list[i] || '').toLowerCase();
+                    if (tag.indexOf('tr') === 0) return 'tr';
+                }
+                return 'en';
+            }
+
+            function resolveLocale() {
+                try {
+                    var saved = localStorage.getItem(STORAGE_KEY);
+                    if (saved === 'en' || saved === 'tr') return saved;
+                } catch (e) { /* private mode */ }
+                return detectBrowserLocale();
+            }
+
+            function applyLocale(locale) {
+                var root = document.documentElement;
+                root.lang = locale === 'tr' ? 'tr' : 'en';
+
+                var meta = STRINGS[locale].meta;
+                document.title = meta.title;
+                var descEl = document.getElementById('meta-description');
+                if (descEl) descEl.setAttribute('content', meta.description);
+
+                document.querySelectorAll('[data-i18n]').forEach(function (el) {
+                    var path = el.getAttribute('data-i18n');
+                    var val = t(locale, path);
+                    if (val) el.textContent = val;
+                });
+
+                document.querySelectorAll('[data-i18n-alt]').forEach(function (el) {
+                    var path = el.getAttribute('data-i18n-alt');
+                    var val = t(locale, path);
+                    if (val) el.setAttribute('alt', val);
+                });
+
+                document.querySelectorAll('[data-i18n-aria-label]').forEach(function (el) {
+                    var path = el.getAttribute('data-i18n-aria-label');
+                    var val = t(locale, path);
+                    if (val) el.setAttribute('aria-label', val);
+                });
+
+                document.querySelectorAll('.lang-switch button[data-locale]').forEach(function (btn) {
+                    var isActive = btn.getAttribute('data-locale') === locale;
+                    btn.setAttribute('aria-current', isActive ? 'true' : 'false');
+                });
+            }
+
+            var current = resolveLocale();
+            applyLocale(current);
+
+            document.querySelectorAll('.lang-switch button[data-locale]').forEach(function (btn) {
+                btn.addEventListener('click', function () {
+                    var next = btn.getAttribute('data-locale');
+                    if (next !== 'en' && next !== 'tr') return;
+                    try {
+                        localStorage.setItem(STORAGE_KEY, next);
+                    } catch (e) { /* ignore */ }
+                    applyLocale(next);
+                });
+            });
+        })();
+    </script>
 </body>
 
 </html>
