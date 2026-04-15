@@ -25,10 +25,10 @@
             --text: #f4f6f8;
             --text-muted: rgba(244, 246, 248, 0.65);
             --text-soft: rgba(244, 246, 248, 0.45);
-            --accent: #3ecf8e;
-            --accent-dim: rgba(62, 207, 142, 0.15);
+            --accent: #2ED1EA;
+            --accent-dim: rgba(46, 209, 234, 0.15);
             --accent-warm: #f0b429;
-            --glow: rgba(62, 207, 142, 0.35);
+            --glow: rgba(46, 209, 234, 0.35);
             --radius-lg: 24px;
             --radius-md: 16px;
             --radius-sm: 10px;
@@ -79,9 +79,9 @@
             inset: 0;
             z-index: -1;
             background:
-                radial-gradient(ellipse 80% 50% at 50% -20%, rgba(62, 207, 142, 0.18), transparent 55%),
+                radial-gradient(ellipse 80% 50% at 50% -20%, rgba(46, 209, 234, 0.18), transparent 55%),
                 radial-gradient(ellipse 60% 40% at 100% 50%, rgba(240, 180, 41, 0.06), transparent 50%),
-                radial-gradient(ellipse 50% 30% at 0% 80%, rgba(62, 207, 142, 0.08), transparent 45%),
+                radial-gradient(ellipse 50% 30% at 0% 80%, rgba(46, 209, 234, 0.08), transparent 45%),
                 var(--bg-deep);
             pointer-events: none;
         }
@@ -384,7 +384,7 @@
         }
 
         .screenshot-card:hover {
-            border-color: rgba(62, 207, 142, 0.35);
+            border-color: rgba(46, 209, 234, 0.35);
             transform: translateY(-4px);
         }
 
@@ -544,7 +544,7 @@
             font-weight: 600;
             background: var(--accent-dim);
             color: var(--accent);
-            border: 1px solid rgba(62, 207, 142, 0.35);
+            border: 1px solid rgba(46, 209, 234, 0.35);
         }
 
         /* Disclaimer */
@@ -964,19 +964,19 @@
                 tr: {
                     meta: {
                         title: 'Velora: App Store’daki sağlık arkadaşın',
-                        description: 'Velora: iPhone için bağımsız geliştirilen sağlık arkadaşı. Haftalık ilerleme, antrenmanlar, adımlar, nabız bölgeleri ve gizli HealthKit senkronu.'
+                        description: 'Velora: iPhone için bağımsız geliştirilen sağlık arkadaşı. Haftalık ilerleme, antrenmanlar, adımlar, nabız bölgeleri ve gizliliği koruyan HealthKit senkronu.'
                     },
                     nav: { ariaLabel: 'Ana gezinme' },
                     lang: { groupAria: 'Dil' },
                     hero: {
                         eyebrow: 'Sağlık arkadaşı · iPhone',
-                        tagline: 'Bağımsız geliştiriciden fitness arkadaşın',
-                        lead: 'Terini, gerçekten görebileceğin ilerlemeye dönüştür. Samimi ton, gereksiz süs yok. Netlik isteyenler için.',
-                        trust: 'Gizlilik öncelikli: verileriniz Apple HealthKit ile cihazınızda kalır.'
+                        tagline: 'Bağımsız bir geliştiriciden fitness arkadaşın',
+                        lead: 'Terini, gerçekten görebileceğin ilerlemeye dönüştür. Sıcak bir ton, gereksiz süs yok. Gürültü değil, netlik isteyenler için.',
+                        trust: 'Gizlilik öncelikli: verilerin Apple HealthKit ile cihazında kalır.'
                     },
                     appStore: {
                         line1: 'App Store’dan',
-                        line2: 'İndirin',
+                        line2: 'İndir',
                         midLine1: 'Velora App Store’da'
                     },
                     img: {
@@ -987,8 +987,8 @@
                         shot4Alt: 'Velora temel istatistikler ekranı'
                     },
                     shots: {
-                        title: 'Uygulamada görün',
-                        sub: 'Antrenmana odaklanman için sade bir arayüz, menülerde kaybolmadan.'
+                        title: 'İş başında gör',
+                        sub: 'Menülerde kaybolmadan antrenmana odaklanman için sade bir arayüz.'
                     },
                     shot1: {
                         title: 'Haftalık ilerleme',
@@ -1004,12 +1004,12 @@
                     },
                     shot4: {
                         title: 'Temel istatistikler',
-                        desc: 'Her antrenman türü için toplam egzersiz, süre, kalori ve ortalama seans. Büyük resmi bir bakışta gör.'
+                        desc: 'Her antrenman türü için toplam antrenman, süre, kalori ve ortalama seans. Büyük resmi tek bakışta gör.'
                     },
                     mid: {
                         aria: 'Velora’yı indir',
                         title: 'Görebileceğin ilerleme, kalabalık paneller değil.',
-                        sub: 'Ana sayfada aşağı çek: veriler anında yenilensin. Geçmişi aya göre filtrele, büyük resmi gör.'
+                        sub: 'Ana sayfada aşağı çek; veriler anında yenilensin. Geçmişi aya göre filtrele, büyük resmi yakala.'
                     },
                     band: {
                         progress: 'İlerleme akışı',
@@ -1018,20 +1018,20 @@
                         smart: 'Öngörü ve ince ayar'
                     },
                     feat: {
-                        p1: { title: 'Haftalık ilerleme', desc: 'Son yedi günün net grafiği. Trendleri erken gör, güvenle ayarla.' },
-                        p2: { title: 'Aylık antrenman filtreleri', desc: 'Geçmişe aydan bak: toplam hacim ve son 30 günde ne kadar ilerlediğini gör.' },
-                        p3: { title: 'Anında veri yenileme', desc: 'Ana sayfada aşağı kaydır; tüm antrenman verileri bir anda güncellensin. Senkron kalsın, momentum kaybolmasın.' },
-                        t1: { title: 'Antrenman detayı ve analitik', desc: 'Her set, tekrar, rota ve metrik tek yerde, istatistikler, etkileşimli haritalar ve efor dökümü.' },
-                        t2: { title: 'Nabız bölgeleri', desc: 'Gerçek zamanlı renkli bölgeler. Yoğunluğu dengele, düzgün toparlan, aşırı yüklenmeyi azalt.' },
-                        t3: { title: 'Kalori ve verimlilik', desc: 'Sadece toplam değil: kalorileri ne zaman ve ne kadar verimli yaktığını gör. Her dakika sayılır.' },
-                        t4: { title: 'Kilo kaydı ve grafikler', desc: 'Kiloyu elle gir; kişisel detaylardaki yeni grafikle uzun vadeli trendini izle.' },
-                        d1: { title: 'Adım öngörüleri ve widget’lar', desc: 'Günlük adım, mesafe ve yürüme süresi: gerçekten nasıl hareket ettiğini gör. Ana Ekran’a adım widget’ını ekle.' },
-                        d2: { title: 'Alkol widget’ı ve detaylar', desc: 'İçkileri Apple Health üzerinden takip et; sayaç ve Ana Ekran widget’ı panelde. Detaylara in, molanın bir sonraki bloğu nasıl etkilediğini gör.' },
-                        s1: { title: 'Daha akıllı yapay zekâ öngörüleri', desc: 'Antrenman ve alkol verilerinde daha hızlı, daha net özetler. Uygulamayı açınca tekrarlayan içgörü hatası giderildi.' },
-                        s2: { title: 'Sade gezinme', desc: 'Yenilenen sekme çubuğu; istatistikler arasında gezmek temiz bir tekrar kadar akıcı.' },
-                        s3: { title: 'Perde arkası', desc: 'Daha hızlı iç yükleme. Gizlilik politikası ve kullanım şartlarına doğrudan uygulamadan eriş.' },
-                        s4: { title: 'Özel profil', desc: 'Ayardan kendi profil fotoğrafını yükle; Velora senin gibi hissetsin.' },
-                        s5: { title: 'Dil seçimi', desc: 'Türkçe veya İngilizce. Tanıtımda seç veya ayarlardan istediğin zaman değiştir.' }
+                        p1: { title: 'Haftalık ilerleme', desc: 'Son yedi günün net bir grafiği. Trendleri erken gör, rotanı güvenle ayarla.' },
+                        p2: { title: 'Aylık antrenman filtreleri', desc: 'Geçmişine aylık bak: toplam hacmi ve son 30 günde kat ettiğin yolu gör.' },
+                        p3: { title: 'Anında veri yenileme', desc: 'Ana sayfada aşağı kaydır; tüm antrenman verilerin bir anda yenilensin. Senkronda kal, momentumu kaybetme.' },
+                        t1: { title: 'Antrenman detayı ve analitik', desc: 'Her set, tekrar, rota ve metrik tek yerde; istatistikler, etkileşimli haritalar ve efor dağılımıyla.' },
+                        t2: { title: 'Nabız bölgeleri', desc: 'Gerçek zamanlı renkli bölgeler. Yoğunluğu dengele, düzgün toparlan, aşırı yüklenmeden uzak dur.' },
+                        t3: { title: 'Kalori yakımı ve verimlilik', desc: 'Yalnızca toplam değil: kalorileri ne zaman ve ne kadar verimli yaktığını gör. Her dakika sayılır.' },
+                        t4: { title: 'Kilo kaydı ve grafikler', desc: 'Kiloyu elle gir; profil bilgilerindeki yeni grafikte uzun vadeli trendini izle.' },
+                        d1: { title: 'Adım öngörüleri ve widget’lar', desc: 'Günlük adım, mesafe ve yürüme süresi: gerçekten nasıl hareket ettiğini gör. Adım widget’ını Ana Ekran’a ekle.' },
+                        d2: { title: 'Alkol widget’ı ve detaylar', desc: 'İçkilerini Apple Health üzerinden takip et; panelde sayaç, Ana Ekran’da widget. Detaylara in, molaların bir sonraki antrenman bloğunu nasıl etkilediğini gör.' },
+                        s1: { title: 'Daha akıllı yapay zekâ öngörüleri', desc: 'Antrenman ve alkol verilerinde daha hızlı, daha net özetler. Uygulamayı her açışında içgörüler artık tekrar etmiyor.' },
+                        s2: { title: 'Sade gezinme', desc: 'Yenilenen sekme çubuğuyla istatistikler arasında gezmek temiz bir tekrar kadar akıcı.' },
+                        s3: { title: 'Perde arkası', desc: 'Uygulama içi yüklemeler daha hızlı. Gizlilik politikası ve kullanım şartlarına doğrudan uygulamadan ulaş.' },
+                        s4: { title: 'Özel profil', desc: 'Kendi profil fotoğrafını ayarlardan yükle; Velora sana ait olsun.' },
+                        s5: { title: 'Dil seçimi', desc: 'Türkçe ya da İngilizce. Tanıtımda seç ya da ayarlardan istediğin zaman değiştir.' }
                     },
                     privacy: {
                         title: 'Özel verin özel kalır',
@@ -1042,7 +1042,7 @@
                         label: 'Uyarı:',
                         body: 'Velora tıbbi bir cihaz değildir ve profesyonel tıbbi tavsiyenin yerini tutmamalıdır.'
                     },
-                    footer: { copy: '© 2025 Velora. Antrenman edenler için özenle.' }
+                    footer: { copy: '© 2025 Velora. Antrenman yapanlar için özenle hazırlandı.' }
                 }
             };
 
