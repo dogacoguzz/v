@@ -7,6 +7,10 @@
     <meta name="description" id="meta-description"
         content="Velora: the health companion for iPhone, independently built. Weekly progress, workouts, steps, heart rate zones, and private HealthKit sync.">
     <title>Velora: Health companion on the App Store</title>
+    <link rel="icon" type="image/png" href="images/velora.png">
+    <link rel="apple-touch-icon" href="images/velora.png">
+    <meta property="og:image" content="images/velora.png">
+    <meta name="twitter:image" content="images/velora.png">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link
@@ -106,12 +110,22 @@
         }
 
         .brand {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.6rem;
             font-family: var(--font-display);
             font-weight: 600;
             font-size: 1.35rem;
             letter-spacing: -0.02em;
             color: var(--text);
             text-decoration: none;
+        }
+
+        .brand-logo {
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            display: block;
         }
 
         .brand:hover {
@@ -616,7 +630,7 @@
 <body>
     <nav class="site-nav" data-i18n-aria-label="nav.ariaLabel" aria-label="Primary">
         <div class="container">
-            <a class="brand" href="#">Velora</a>
+            <a class="brand" href="#"><img class="brand-logo" src="images/velora.png" alt="Velora logo" width="32" height="32">Velora</a>
             <div class="nav-right">
                 <div class="lang-switch" role="group" data-i18n-aria-label="lang.groupAria" aria-label="Language">
                     <button type="button" data-locale="en" aria-current="true">English</button>
@@ -664,10 +678,10 @@
                 <div class="hero-orb"></div>
                 <div class="hero-phone-stack">
                     <div class="hero-phone hero-phone--back">
-                        <img src="images/workout-analytics.PNG" alt="" decoding="async">
+                        <img src="images/en2.png" data-src-en="images/en2.png" data-src-tr="images/tr2.png" alt="" decoding="async">
                     </div>
                     <div class="hero-phone hero-phone--front">
-                        <img src="images/progress-dashboard.PNG" data-i18n-alt="img.heroAlt"
+                        <img src="images/en1.png" data-src-en="images/en1.png" data-src-tr="images/tr1.png" data-i18n-alt="img.heroAlt"
                             alt="Velora app showing weekly progress overview" decoding="async">
                     </div>
                 </div>
@@ -684,7 +698,7 @@
             <div class="screenshots-grid">
                 <article class="screenshot-card">
                     <div class="phone-frame">
-                        <img src="images/progress-dashboard.PNG" data-i18n-alt="img.shot1Alt"
+                        <img src="images/en3.png" data-src-en="images/en3.png" data-src-tr="images/tr3.png" data-i18n-alt="img.shot1Alt"
                             alt="Velora weekly progress dashboard" class="screenshot" width="400" height="800"
                             loading="lazy">
                     </div>
@@ -694,7 +708,7 @@
                 </article>
                 <article class="screenshot-card">
                     <div class="phone-frame">
-                        <img src="images/workout-analytics.PNG" data-i18n-alt="img.shot2Alt"
+                        <img src="images/en6.png" data-src-en="images/en6.png" data-src-tr="images/tr6.png" data-i18n-alt="img.shot2Alt"
                             alt="Velora workout analytics and maps" class="screenshot" width="400" height="800"
                             loading="lazy">
                     </div>
@@ -704,11 +718,20 @@
                 </article>
                 <article class="screenshot-card">
                     <div class="phone-frame">
-                        <img src="images/heart-rate-zones.PNG" data-i18n-alt="img.shot3Alt"
+                        <img src="images/en4.png" data-src-en="images/en4.png" data-src-tr="images/tr4.png" data-i18n-alt="img.shot3Alt"
                             alt="Velora heart rate zones" class="screenshot" width="400" height="800" loading="lazy">
                     </div>
                     <h3 data-i18n="shot3.title">Heart rate zones</h3>
                     <p data-i18n="shot3.desc">Color coded zones in real time so you can balance intensity and recovery.
+                    </p>
+                </article>
+                <article class="screenshot-card">
+                    <div class="phone-frame">
+                        <img src="images/en5.png" data-src-en="images/en5.png" data-src-tr="images/tr5.png" data-i18n-alt="img.shot4Alt"
+                            alt="Velora key statistics overlay" class="screenshot" width="400" height="800" loading="lazy">
+                    </div>
+                    <h3 data-i18n="shot4.title">Key statistics</h3>
+                    <p data-i18n="shot4.desc">Total workouts, duration, calories, and average session per workout type. The bigger picture at a glance.
                     </p>
                 </article>
             </div>
@@ -877,7 +900,8 @@
                         heroAlt: 'Velora app showing weekly progress overview',
                         shot1Alt: 'Velora weekly progress dashboard',
                         shot2Alt: 'Velora workout analytics and maps',
-                        shot3Alt: 'Velora heart rate zones'
+                        shot3Alt: 'Velora heart rate zones',
+                        shot4Alt: 'Velora key statistics overlay'
                     },
                     shots: {
                         title: 'See it in action',
@@ -894,6 +918,10 @@
                     shot3: {
                         title: 'Heart rate zones',
                         desc: 'Color coded zones in real time so you can balance intensity and recovery.'
+                    },
+                    shot4: {
+                        title: 'Key statistics',
+                        desc: 'Total workouts, duration, calories, and average session per workout type. The bigger picture at a glance.'
                     },
                     mid: {
                         aria: 'Download Velora',
@@ -955,7 +983,8 @@
                         heroAlt: 'Velora uygulamasında haftalık ilerleme özeti',
                         shot1Alt: 'Velora haftalık ilerleme ekranı',
                         shot2Alt: 'Velora antrenman analitiği ve haritalar',
-                        shot3Alt: 'Velora nabız bölgeleri'
+                        shot3Alt: 'Velora nabız bölgeleri',
+                        shot4Alt: 'Velora temel istatistikler ekranı'
                     },
                     shots: {
                         title: 'Uygulamada görün',
@@ -972,6 +1001,10 @@
                     shot3: {
                         title: 'Nabız bölgeleri',
                         desc: 'Gerçek zamanlı renkli bölgelerle yoğunluk ve toparlanmayı dengele.'
+                    },
+                    shot4: {
+                        title: 'Temel istatistikler',
+                        desc: 'Her antrenman türü için toplam egzersiz, süre, kalori ve ortalama seans. Büyük resmi bir bakışta gör.'
                     },
                     mid: {
                         aria: 'Velora’yı indir',
@@ -1065,6 +1098,11 @@
                     var path = el.getAttribute('data-i18n-alt');
                     var val = t(locale, path);
                     if (val) el.setAttribute('alt', val);
+                });
+
+                document.querySelectorAll('[data-src-en][data-src-tr]').forEach(function (el) {
+                    var src = el.getAttribute('data-src-' + locale);
+                    if (src) el.setAttribute('src', src);
                 });
 
                 document.querySelectorAll('[data-i18n-aria-label]').forEach(function (el) {
