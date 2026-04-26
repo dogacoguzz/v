@@ -1,0 +1,63 @@
+{
+  "meta": {
+    "title": "Velora — Antrenman, metrik ve trendler tek yerde",
+    "description": "Gizliliği önemseyen iOS sağlık uygulaması. Antrenmanlarını kaydet, haftalık trendlerini izle, her metriği bir bakışta gör."
+  },
+  "nav": {
+    "langGroupAria": "Dil",
+    "langEn": "EN",
+    "langTr": "TR"
+  },
+  "hero": {
+    "eyebrow": "iOS · iPhone ve Apple Watch",
+    "h1": "Haftan, sade bir akışta.",
+    "sub": "Antrenman, kalori ve trendler — tek bir sakin ekranda.",
+    "ctaPrimary": "App Store'dan İndir",
+    "ctaSecondary": "Nasıl çalışıyor?",
+    "chip1": "Gizlilik öncelikli",
+    "chip2": "EN · TR",
+    "chip3": "Yerel iOS"
+  },
+  "showcase": {
+    "metrics": {
+      "eyebrow": "Anasayfa",
+      "h1": "Bütün metrikler aynı yerde.",
+      "sub": "Kalori, adım, su ve antrenman — açıp hazır.",
+      "imgAlt": "Velora ana ekranı: haftalık kalori, dakika, adım ve su tüketimi"
+    },
+    "trends": {
+      "eyebrow": "Trendler",
+      "h1": "Trendlerinizi takip edin.",
+      "sub": "İlerlemenizi görün, limitlerinizi zorlayın.",
+      "imgAlt": "Velora trendler ekranı: haftalık kalori grafiği, aktif günler ve mesafe grafiği"
+    },
+    "activities": {
+      "eyebrow": "Aktiviteler",
+      "h1": "Aktiviteleri kolayca kaydedin.",
+      "sub": "Tüm aktiviteler tek ekranda.",
+      "imgAlt": "Velora aktivite listesi: günlere göre gruplanmış antrenmanlar"
+    }
+  },
+  "pillars": {
+    "track": {
+      "h": "Takip",
+      "p": "Kalori, adım ve dakika — bir bakışta."
+    },
+    "trend": {
+      "h": "Trend",
+      "p": "Veriyi yöne çeviren haftalık örüntüler."
+    },
+    "train": {
+      "h": "Antrenman",
+      "p": "Her yürüyüş, koşu ya da çalışma tek dokunuşla."
+    }
+  },
+  "privacy": {
+    "h": "Sadece size ait.",
+    "p": "Velora verilerinizi cihazda tutar. Hesap yok, satış yok."
+  },
+  "footer": {
+    "copy": "© 2026 Velora",
+    "disclaimer": "Velora bir sağlık eşlikçisidir, tıbbi cihaz değildir. Tıbbi tavsiye için bir hekime danışın."
+  }
+}

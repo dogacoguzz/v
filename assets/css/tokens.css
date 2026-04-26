@@ -1,0 +1,92 @@
+/* tokens.css — design system primitives for Velora landing
+   Loaded first; all other stylesheets read from these vars. */
+
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&display=swap');
+
+:root {
+  /* Surfaces */
+  --bg-deep:     #0c0f12;
+  --bg-elevated: #141a1f;
+  --bg-card:     rgba(255, 255, 255, 0.04);
+  --bg-card-hover: rgba(255, 255, 255, 0.06);
+  --border:      rgba(255, 255, 255, 0.08);
+  --border-strong: rgba(255, 255, 255, 0.14);
+
+  /* Text */
+  --text:       #f4f6f8;
+  --text-muted: rgba(244, 246, 248, 0.65);
+  --text-soft:  rgba(244, 246, 248, 0.45);
+
+  /* Multi-accent palette (mirrored from app screens) */
+  --accent-metrics:    #A78BFA;  /* purple — Home / Metrics */
+  --accent-trends:     #F5A23B;  /* orange — Trends */
+  --accent-activities: #2ED1EA;  /* cyan   — Activities (current brand) */
+
+  /* Active accent — driven by [data-accent] on body or section */
+  --accent: var(--accent-activities);
+  --accent-dim:  color-mix(in oklab, var(--accent) 18%, transparent);
+  --accent-soft: color-mix(in oklab, var(--accent) 28%, transparent);
+  --accent-glow: color-mix(in oklab, var(--accent) 38%, transparent);
+  --accent-ink:  color-mix(in oklab, var(--accent) 92%, white 8%);
+
+  /* Brand-locked accent (CTA, focus, logo halo never change) */
+  --brand:       var(--accent-activities);
+  --brand-dim:   color-mix(in oklab, var(--brand) 22%, transparent);
+
+  /* Radii */
+  --radius-xl: 32px;
+  --radius-lg: 24px;
+  --radius-md: 16px;
+  --radius-sm: 10px;
+  --radius-pill: 999px;
+
+  /* Type */
+  --font-sans:    'Plus Jakarta Sans', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-display: 'Fraunces', 'Plus Jakarta Sans', Georgia, serif;
+
+  --fs-1:   clamp(2.6rem, 6vw + 1rem, 5rem);     /* hero h1 */
+  --fs-2:   clamp(2rem, 3.5vw + 0.8rem, 3.4rem); /* showcase h2 */
+  --fs-3:   clamp(1.4rem, 1vw + 1rem, 1.75rem);  /* pillar h3 */
+  --fs-lead: clamp(1.05rem, 0.4vw + 0.95rem, 1.2rem);
+  --fs-body: 1rem;
+  --fs-small: 0.875rem;
+  --fs-eyebrow: 0.75rem;
+
+  --lh-tight: 1.05;
+  --lh-snug:  1.2;
+  --lh-body:  1.55;
+
+  /* Spacing scale (8pt rhythm) */
+  --space-section: clamp(4rem, 9vw, 7rem);
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.5rem;
+  --space-6: 2rem;
+  --space-7: 3rem;
+  --space-8: 4rem;
+
+  /* Layout */
+  --container-max: 1200px;
+  --container-pad: clamp(1.25rem, 4vw, 2.5rem);
+
+  /* Transitions */
+  --t-fast: 160ms cubic-bezier(.2, .7, .3, 1);
+  --t-med:  280ms cubic-bezier(.2, .7, .3, 1);
+  --t-accent: 520ms cubic-bezier(.2, .7, .3, 1);
+
+  /* Elevation (subtle on dark) */
+  --shadow-1: 0 1px 0 rgba(255,255,255,0.04) inset, 0 8px 24px rgba(0,0,0,0.35);
+  --shadow-2: 0 1px 0 rgba(255,255,255,0.05) inset, 0 24px 60px rgba(0,0,0,0.55);
+}
+
+/* Accent activation by section / body */
+[data-accent="metrics"]    { --accent: var(--accent-metrics); }
+[data-accent="trends"]     { --accent: var(--accent-trends); }
+[data-accent="activities"] { --accent: var(--accent-activities); }
+
+/* Smooth accent-driven transitions */
+:root {
+  transition: --accent var(--t-accent);
+}

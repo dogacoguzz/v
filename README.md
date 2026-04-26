@@ -1,96 +1,109 @@
-# Velora - Fitness App Website
+# Velora — Marketing Site
 
-A beautiful, modern website for Velora, the indie-built fitness buddy that turns your sweat into progress you can actually see.
+The static landing page for **Velora**, a privacy-first wellness app for iOS.
+Built as a multi-file static bundle (no build tooling) and deployed to Cloudflare Pages.
 
-## Features
+## Highlights
 
-- **Modern Design**: Clean, card-based layout with gradient backgrounds
-- **Responsive**: Optimized for all devices (mobile, tablet, desktop)
-- **Fast Loading**: Minimal dependencies, optimized for performance
-- **Serverless**: Ready for deployment on Cloudflare Pages
-- **App Ads Support**: Includes `/app-ads.txt` route for mobile app advertising
-
-## Design Inspiration
-
-The website design is inspired by the Velora mobile app's clean, modern interface featuring:
-- Gradient backgrounds (blue to purple)
-- Card-based layouts with subtle shadows
-- Clean typography using Inter font
-- Colorful feature icons with gradients
-- Smooth animations and hover effects
+- **Multi-accent design system** — purple (Metrics), orange (Trends), cyan (Activities), mirroring the app's three core surfaces. The active accent is driven by scroll position via `IntersectionObserver` and exposed through CSS custom properties.
+- **Sticky-scroll showcase** — one phone is pinned while three text stages scroll past; image and accent swap as each stage activates.
+- **Bilingual (EN / TR)** — all copy is locale-aware via `data-i18n` attributes; per-locale screenshot variants swap automatically.
+- **Brand-locked CTAs** — primary App Store CTA and focus rings stay cyan even as the section accent changes.
+- **No build step** — pure HTML / CSS / ES modules. CSS is split into 5 stylesheets that HTTP/2 multiplexes; locale strings are fetched on demand.
 
 ## File Structure
 
 ```
-├── index.html          # Main website page
-├── app-ads.txt         # App advertising configuration
-├── _redirects          # Cloudflare Pages routing
-└── README.md          # This file
+.
+├── index.html                    # ~267 lines — DOM skeleton + <link>/<script> tags
+├── assets/
+│   ├── css/
+│   │   ├── tokens.css            # CSS variables, font import, multi-accent system
+│   │   ├── base.css              # Reset, body, ambient orbs, focus styles
+│   │   ├── layout.css            # Container, sticky nav, footer
+│   │   ├── components.css        # Buttons, chips, phone frame, pillar cards, lang switch
+│   │   └── sections.css          # Hero, sticky showcase, pillars, privacy
+│   ├── js/
+│   │   ├── i18n.js               # applyLocale, localStorage persistence, JSON fetch
+│   │   └── app.js                # Entry: bootstrap, lang switch, IntersectionObserver
+│   └── data/
+│       ├── strings.en.json
+│       └── strings.tr.json
+├── images/
+│   ├── velora.png                # App icon / favicon
+│   ├── en1.jpg, en2.jpg, en3.jpg # English screenshots (Home, Trends, Activities)
+│   └── tr1.jpg, tr2.jpg, tr3.jpg # Turkish screenshots
+├── app-ads.txt                   # App advertising config
+├── CNAME                         # Custom domain
+├── _redirects                    # Cloudflare Pages routing
+└── robots.txt
 ```
 
-## Deployment to Cloudflare Pages
+## Local Development
 
-### Option 1: Deploy via Cloudflare Dashboard
+The site has no build step. Serve the directory with any static server:
 
-1. Go to [Cloudflare Dashboard](https://dash.cloudflare.com)
-2. Navigate to **Pages** → **Create a project**
-3. Choose **Connect to Git**
-4. Select your GitHub repository
-5. Configure build settings:
-   - **Build command**: Leave empty (static site)
-   - **Build output directory**: Leave empty (root directory)
-   - **Root directory**: Leave empty
-6. Click **Save and Deploy**
+```bash
+python3 -m http.server 8080
+# then open http://localhost:8080
+```
 
-### Option 2: Deploy via Wrangler CLI
+ES modules require an actual HTTP server — `file://` will not work for `import`.
 
-1. Install Wrangler CLI:
-   ```bash
-   npm install -g wrangler
-   ```
+## Deployment (Cloudflare Pages)
 
-2. Login to Cloudflare:
-   ```bash
-   wrangler login
-   ```
+### Option 1: Connect via Dashboard
 
-3. Deploy the site:
-   ```bash
-   wrangler pages deploy . --project-name velora-website
-   ```
+1. [Cloudflare Dashboard](https://dash.cloudflare.com) → **Pages** → **Create a project** → **Connect to Git**
+2. Build settings: leave **Build command** and **Output directory** empty (it's already static)
+3. Save & deploy
 
-## Routes
+### Option 2: Wrangler CLI
 
-- `/` - Main website homepage
-- `/app-ads.txt` - App advertising configuration file
+```bash
+npm install -g wrangler
+wrangler login
+wrangler pages deploy . --project-name velora-website
+```
 
-## Customization
+## Internationalization
 
-### Colors
-The website uses a blue-to-purple gradient theme. You can customize colors by modifying the CSS variables in the `<style>` section of `index.html`.
+All user-facing strings live in `assets/data/strings.{en,tr}.json`. To add or update copy:
 
-### Content
-Update the content in `index.html` to match your specific messaging and features.
+1. Edit the JSON files — keep keys parallel between locales.
+2. In HTML, reference keys via attributes:
+   - `data-i18n="hero.h1"` — replaces `textContent`
+   - `data-i18n-alt="showcase.metrics.imgAlt"` — replaces `alt`
+   - `data-i18n-aria-label="nav.langGroupAria"` — replaces `aria-label`
+3. For per-locale image swaps, add `data-src-en` and `data-src-tr` attributes to `<img>`.
 
-### App Ads
-Update `app-ads.txt` with your actual ad network information when implementing advertising in your mobile app.
+The selected locale is persisted in `localStorage['velora-lang']`. The first visit detects from `navigator.languages` (Turkish-prefer logic).
 
-## Performance
+## Adding a New Showcase Stage
 
-The website is optimized for performance with:
-- Minimal external dependencies (only Google Fonts)
-- Optimized CSS with no unused styles
-- Fast loading times
-- Mobile-first responsive design
+Each stage is a `<article data-showcase-section>` block in `index.html`:
+
+```html
+<article class="showcase__section"
+         data-showcase-section
+         data-accent="metrics|trends|activities"
+         data-src-en="images/enN.jpg"
+         data-src-tr="images/trN.jpg"
+         data-alt-en="..."
+         data-alt-tr="...">
+  <span class="eyebrow" data-i18n="showcase.X.eyebrow"></span>
+  <h2 data-i18n="showcase.X.h1"></h2>
+  <p class="showcase__sub" data-i18n="showcase.X.sub"></p>
+  <!-- mobile-only inline phone copy here -->
+</article>
+```
+
+The `IntersectionObserver` in `app.js` will pick up the new section automatically. Add a matching `--accent-X` token in `tokens.css` if introducing a new accent role.
 
 ## Browser Support
 
-- Chrome (latest)
-- Firefox (latest)
-- Safari (latest)
-- Edge (latest)
-- Mobile browsers (iOS Safari, Chrome Mobile)
+`color-mix()`, `:has()`, `@layer`-free CSS, and ES modules. All evergreen browsers (Chrome, Firefox, Safari 16.2+, Edge). iOS Safari 16.4+ for `color-mix`. Reduced-motion is respected.
 
 ## License
 
-This project is created for Velora. All rights reserved. 
+All rights reserved. © 2026 Velora.

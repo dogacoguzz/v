@@ -1,0 +1,280 @@
+/* components.css — buttons, cards, phone-frame, chips, lang-switch */
+
+/* Lang switch */
+.lang-switch {
+  display: inline-flex;
+  align-items: center;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-pill);
+  padding: 4px;
+  gap: 2px;
+}
+
+.lang-switch button {
+  padding: 6px 12px;
+  border-radius: var(--radius-pill);
+  font-size: var(--fs-small);
+  font-weight: 600;
+  color: var(--text-muted);
+  letter-spacing: 0.02em;
+  transition: color var(--t-fast), background var(--t-fast);
+  min-height: 32px;
+}
+
+.lang-switch button:hover { color: var(--text); }
+
+.lang-switch button[aria-current="true"] {
+  background: var(--brand);
+  color: #08151a;
+}
+
+/* App Store CTA (brand-locked) */
+.app-store-button {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: 14px 22px;
+  border-radius: var(--radius-pill);
+  background: var(--text);
+  color: #08151a;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  font-size: 1rem;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.35), 0 0 0 1px rgba(255,255,255,0.06) inset;
+  transition: transform var(--t-fast), box-shadow var(--t-fast);
+  min-height: 48px;
+}
+
+.app-store-button:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 14px 38px rgba(0,0,0,0.45), 0 0 0 1px rgba(255,255,255,0.08) inset, 0 0 28px var(--brand-dim);
+}
+
+.app-store-button:active { transform: translateY(0); }
+
+.app-store-button__icon {
+  width: 22px; height: 22px;
+  display: grid; place-items: center;
+  flex-shrink: 0;
+}
+
+.app-store-button__lines {
+  display: flex; flex-direction: column;
+  line-height: 1.05;
+  text-align: left;
+}
+
+.app-store-button__l1 {
+  font-size: 0.7rem;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  opacity: 0.75;
+}
+
+.app-store-button__l2 {
+  font-size: 1.05rem;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+
+/* Ghost CTA */
+.ghost-button {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: 14px 20px;
+  border-radius: var(--radius-pill);
+  background: var(--bg-card);
+  color: var(--text);
+  font-weight: 600;
+  font-size: 1rem;
+  border: 1px solid var(--border);
+  transition: background var(--t-fast), border-color var(--t-fast);
+  min-height: 48px;
+}
+
+.ghost-button:hover {
+  background: var(--bg-card-hover);
+  border-color: var(--border-strong);
+}
+
+.ghost-button__arrow {
+  transition: transform var(--t-fast);
+}
+
+.ghost-button:hover .ghost-button__arrow {
+  transform: translateX(3px);
+}
+
+/* Chips */
+.chip-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+  margin-top: var(--space-5);
+}
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: 6px 12px;
+  border-radius: var(--radius-pill);
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  font-size: var(--fs-small);
+  font-weight: 500;
+  color: var(--text-muted);
+}
+
+.chip__dot {
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: var(--accent);
+  box-shadow: 0 0 8px var(--accent-glow);
+  transition: background var(--t-accent), box-shadow var(--t-accent);
+}
+
+/* Phone frame */
+.phone-frame {
+  position: relative;
+  width: 100%;
+  max-width: 340px;
+  aspect-ratio: 1 / 2.05;
+  border-radius: 38px;
+  padding: 7px;
+  background:
+    linear-gradient(180deg, rgba(255,255,255,0.08), rgba(255,255,255,0.02));
+  border: 1px solid var(--border-strong);
+  box-shadow: var(--shadow-2);
+  margin-inline: auto;
+}
+
+.phone-frame::before {
+  /* subtle accent ring/glow */
+  content: '';
+  position: absolute;
+  inset: -8px;
+  border-radius: 46px;
+  background: radial-gradient(50% 50% at 50% 50%, var(--accent-soft), transparent 70%);
+  filter: blur(28px);
+  z-index: -1;
+  opacity: 0.85;
+  transition: background var(--t-accent), opacity var(--t-accent);
+}
+
+.phone-frame__screen {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  border-radius: 32px;
+  overflow: hidden;
+  background: #000;
+}
+
+.phone-frame__img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: opacity var(--t-med);
+}
+
+.phone-frame--swap .phone-frame__img {
+  /* placeholder for crossfade animations */
+}
+
+/* Pillar card */
+.pillar-card {
+  position: relative;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: var(--space-6);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  overflow: hidden;
+  transition: background var(--t-fast), border-color var(--t-fast), transform var(--t-fast);
+}
+
+.pillar-card:hover {
+  background: var(--bg-card-hover);
+  border-color: var(--accent-soft);
+  transform: translateY(-2px);
+}
+
+.pillar-card[data-accent] .pillar-card__icon {
+  color: var(--accent);
+}
+
+.pillar-card__icon {
+  width: 44px;
+  height: 44px;
+  border-radius: 14px;
+  display: grid;
+  place-items: center;
+  background: var(--accent-dim);
+  color: var(--accent);
+  transition: background var(--t-accent), color var(--t-accent);
+}
+
+.pillar-card__icon svg { width: 22px; height: 22px; }
+
+.pillar-card__title {
+  font-family: var(--font-display);
+  font-size: var(--fs-3);
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+
+.pillar-card__body {
+  color: var(--text-muted);
+  font-size: var(--fs-body);
+  line-height: 1.5;
+  max-width: 30ch;
+}
+
+/* Privacy badge / strip */
+.privacy-strip {
+  display: flex;
+  align-items: center;
+  gap: var(--space-5);
+  padding: var(--space-5) var(--space-6);
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+}
+
+.privacy-strip__icon {
+  width: 48px; height: 48px;
+  border-radius: 14px;
+  background: var(--brand-dim);
+  color: var(--brand);
+  display: grid; place-items: center;
+  flex-shrink: 0;
+}
+
+.privacy-strip__icon svg { width: 24px; height: 24px; }
+
+.privacy-strip__text {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.privacy-strip__title {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 1.2rem;
+  letter-spacing: -0.01em;
+}
+
+.privacy-strip__body {
+  color: var(--text-muted);
+  font-size: var(--fs-small);
+}
+
+@media (max-width: 640px) {
+  .privacy-strip { flex-direction: column; align-items: flex-start; gap: var(--space-3); padding: var(--space-5); }
+}

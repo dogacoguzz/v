@@ -1,0 +1,196 @@
+/* sections.css — hero, showcase, pillars */
+
+/* ---------- HERO ---------- */
+.hero {
+  padding-block: clamp(3rem, 8vw, 6rem) clamp(3rem, 7vw, 5rem);
+  position: relative;
+}
+
+.hero__grid {
+  display: grid;
+  grid-template-columns: 1.05fr 0.95fr;
+  gap: clamp(2rem, 5vw, 5rem);
+  align-items: center;
+}
+
+.hero__copy {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+  max-width: 28ch;
+}
+
+.hero__h1 {
+  font-size: var(--fs-1);
+  line-height: 1.02;
+  letter-spacing: -0.03em;
+  font-weight: 600;
+}
+
+.hero__h1 em {
+  font-style: italic;
+  color: var(--accent);
+  transition: color var(--t-accent);
+}
+
+.hero__sub {
+  font-size: var(--fs-lead);
+  line-height: 1.45;
+  color: var(--text-muted);
+  max-width: 38ch;
+}
+
+.hero__cta-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+  margin-top: var(--space-3);
+}
+
+.hero__visual {
+  position: relative;
+  display: grid;
+  place-items: center;
+}
+
+.hero__visual .phone-frame {
+  max-width: 320px;
+  transform: rotate(-2deg);
+}
+
+@media (max-width: 880px) {
+  .hero__grid {
+    grid-template-columns: 1fr;
+    gap: var(--space-7);
+    text-align: left;
+  }
+  .hero__copy { max-width: none; }
+  .hero__visual .phone-frame { transform: none; max-width: 280px; }
+}
+
+/* ---------- SHOWCASE (sticky-scroll) ---------- */
+.showcase {
+  position: relative;
+  padding-block: var(--space-section);
+}
+
+.showcase__inner {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: clamp(2rem, 6vw, 6rem);
+  align-items: start;
+}
+
+.showcase__phone-col {
+  position: sticky;
+  top: 14vh;
+  align-self: start;
+  height: fit-content;
+  display: grid;
+  place-items: center;
+}
+
+.showcase__phone-col .phone-frame {
+  max-width: 320px;
+}
+
+.showcase__sections {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(6rem, 18vh, 14rem);
+  padding-block: 8vh;
+}
+
+.showcase__section {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  min-height: 60vh;
+  justify-content: center;
+}
+
+.showcase__section h2 {
+  font-size: var(--fs-2);
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+}
+
+.showcase__section h2 em {
+  color: var(--accent);
+  font-style: italic;
+  transition: color var(--t-accent);
+}
+
+.showcase__section .showcase__sub {
+  font-size: var(--fs-lead);
+  color: var(--text-muted);
+  max-width: 36ch;
+  line-height: 1.5;
+}
+
+/* Active state lifting */
+.showcase__section.is-active h2 em { animation: hue-pop 600ms ease-out; }
+
+@keyframes hue-pop {
+  0% { filter: brightness(0.85); }
+  100% { filter: brightness(1); }
+}
+
+/* Mobile: ditch sticky, stack as cards each with own phone */
+@media (max-width: 900px) {
+  .showcase__inner {
+    grid-template-columns: 1fr;
+    gap: 0;
+  }
+  .showcase__phone-col { display: none; }
+  .showcase__sections { gap: var(--space-section); padding-block: 0; }
+  .showcase__section {
+    min-height: auto;
+    display: grid;
+    gap: var(--space-5);
+    text-align: left;
+    place-items: start;
+  }
+  /* Inject inline phone for mobile via ::before / pseudo-clone — easier: use mobile-only img */
+  .showcase__section .showcase__mobile-phone {
+    display: block;
+    margin-block: var(--space-4) var(--space-3);
+  }
+}
+@media (min-width: 901px) {
+  .showcase__section .showcase__mobile-phone { display: none; }
+}
+
+/* ---------- PILLARS ---------- */
+.pillars {
+  padding-block: var(--space-section);
+}
+
+.pillars__head {
+  max-width: 50ch;
+  margin-bottom: var(--space-7);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.pillars__head h2 {
+  font-size: clamp(1.8rem, 3vw, 2.6rem);
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+}
+
+.pillars__grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--space-5);
+}
+
+@media (max-width: 880px) {
+  .pillars__grid { grid-template-columns: 1fr; }
+}
+
+/* ---------- PRIVACY ---------- */
+.privacy {
+  padding-block: clamp(3rem, 6vw, 5rem);
+}

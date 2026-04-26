@@ -1,0 +1,92 @@
+/* layout.css — container, nav, footer, section rhythm */
+
+.container {
+  width: 100%;
+  max-width: var(--container-max);
+  margin: 0 auto;
+  padding-inline: var(--container-pad);
+}
+
+section {
+  padding-block: var(--space-section);
+}
+
+/* Site nav */
+.site-nav {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  padding-block: var(--space-3);
+  background: color-mix(in oklab, var(--bg-deep) 78%, transparent);
+  backdrop-filter: saturate(140%) blur(14px);
+  -webkit-backdrop-filter: saturate(140%) blur(14px);
+  border-bottom: 1px solid transparent;
+  transition: border-color var(--t-fast), background var(--t-accent);
+}
+
+.site-nav__row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-4);
+}
+
+.brand-mark {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-3);
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 1.2rem;
+  letter-spacing: -0.01em;
+  color: var(--text);
+}
+
+.brand-mark__logo {
+  width: 28px;
+  height: 28px;
+  border-radius: 8px;
+  box-shadow: 0 0 0 1px var(--border-strong), 0 0 24px var(--brand-dim);
+}
+
+/* Footer */
+.site-footer {
+  padding-block: var(--space-7);
+  border-top: 1px solid var(--border);
+  color: var(--text-soft);
+  font-size: var(--fs-small);
+}
+
+.site-footer__row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-4);
+}
+
+.site-footer__disclaimer {
+  max-width: 60ch;
+}
+
+/* Generic section heading helper */
+.eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+  font-size: var(--fs-eyebrow);
+  font-weight: 600;
+  color: var(--accent);
+  transition: color var(--t-accent);
+}
+
+.eyebrow::before {
+  content: '';
+  width: 1.5rem;
+  height: 1px;
+  background: currentColor;
+  display: inline-block;
+  opacity: 0.7;
+}

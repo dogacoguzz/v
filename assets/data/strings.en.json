@@ -1,0 +1,63 @@
+{
+  "meta": {
+    "title": "Velora — Workouts, metrics, and trends in one place",
+    "description": "A privacy-first wellness app for iOS. Log workouts, watch your weekly trends, and see every metric at a glance."
+  },
+  "nav": {
+    "langGroupAria": "Language",
+    "langEn": "EN",
+    "langTr": "TR"
+  },
+  "hero": {
+    "eyebrow": "iOS · iPhone & Apple Watch",
+    "h1": "Your week, made simple.",
+    "sub": "Workouts, calories, and trends — all in one calm dashboard.",
+    "ctaPrimary": "Download on the App Store",
+    "ctaSecondary": "See how it works",
+    "chip1": "Private by design",
+    "chip2": "EN · TR",
+    "chip3": "Native iOS"
+  },
+  "showcase": {
+    "metrics": {
+      "eyebrow": "Home",
+      "h1": "Every metric. One home.",
+      "sub": "Calories, steps, water, workouts — open and ready.",
+      "imgAlt": "Velora home dashboard showing weekly calories, minutes, steps, and water intake"
+    },
+    "trends": {
+      "eyebrow": "Trends",
+      "h1": "Track your trends.",
+      "sub": "See the progress, beat the pattern.",
+      "imgAlt": "Velora trends screen with weekly calories chart, active days legend, and distance graph"
+    },
+    "activities": {
+      "eyebrow": "Activities",
+      "h1": "Log activities with ease.",
+      "sub": "All activities, one screen.",
+      "imgAlt": "Velora activities list grouped by day with workouts and details"
+    }
+  },
+  "pillars": {
+    "track": {
+      "h": "Track",
+      "p": "Calories, steps and minutes — at a glance."
+    },
+    "trend": {
+      "h": "Trend",
+      "p": "Weekly patterns that turn data into direction."
+    },
+    "train": {
+      "h": "Train",
+      "p": "Capture every walk, run, or lift in one tap."
+    }
+  },
+  "privacy": {
+    "h": "Yours, alone.",
+    "p": "Velora keeps your data on-device. No accounts. No selling. Ever."
+  },
+  "footer": {
+    "copy": "© 2026 Velora",
+    "disclaimer": "Velora is a wellness companion, not a medical device. Consult a clinician for medical advice."
+  }
+}
