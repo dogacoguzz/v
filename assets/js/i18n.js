@@ -35,7 +35,7 @@ export function persistLocale(locale) {
 
 async function loadStrings(locale) {
   if (cache.has(locale)) return cache.get(locale);
-  const res = await fetch(`/assets/data/strings.${locale}.json`, { cache: 'force-cache' });
+  const res = await fetch(new URL(`../data/strings.${locale}.json`, import.meta.url), { cache: 'force-cache' });
   if (!res.ok) throw new Error(`Failed to load ${locale} strings`);
   const data = await res.json();
   cache.set(locale, data);

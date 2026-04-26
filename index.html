@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Velora — Workouts, metrics, and trends in one place</title>
+  <title>Velora · Workouts, metrics, and trends in one place</title>
   <meta name="description" content="A privacy-first wellness app for iOS. Log workouts, watch your weekly trends, and see every metric at a glance." />
   <meta name="color-scheme" content="dark" />
   <meta name="theme-color" content="#0c0f12" />
@@ -15,13 +15,13 @@
   <!-- Open Graph -->
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://veloraapp.com/" />
-  <meta property="og:title" content="Velora — Workouts, metrics, and trends in one place" />
+  <meta property="og:title" content="Velora · Workouts, metrics, and trends in one place" />
   <meta property="og:description" content="A privacy-first wellness app for iOS. Log workouts, watch your weekly trends, and see every metric at a glance." />
   <meta property="og:image" content="images/velora.png" />
 
   <!-- Twitter -->
   <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content="Velora — Workouts, metrics, and trends in one place" />
+  <meta name="twitter:title" content="Velora · Workouts, metrics, and trends in one place" />
   <meta name="twitter:description" content="A privacy-first wellness app for iOS." />
   <meta name="twitter:image" content="images/velora.png" />
 
@@ -64,8 +64,8 @@
         <div class="hero__grid">
           <div class="hero__copy">
             <span class="eyebrow" data-i18n="hero.eyebrow">iOS · iPhone &amp; Apple Watch</span>
-            <h1 class="hero__h1" data-i18n="hero.h1">Your week, made simple.</h1>
-            <p class="hero__sub" data-i18n="hero.sub">Workouts, calories, and trends — all in one calm dashboard.</p>
+            <h1 class="hero__h1" data-i18n-html="hero.h1">Your week, <em>made simple.</em></h1>
+            <p class="hero__sub" data-i18n="hero.sub">Workouts, calories, and trends. All in one calm dashboard.</p>
             <div class="hero__cta-row">
               <a class="app-store-button" href="#" aria-label="Download Velora on the App Store">
                 <span class="app-store-button__icon" aria-hidden="true">
@@ -87,17 +87,48 @@
             </div>
           </div>
 
-          <div class="hero__visual">
-            <div class="phone-frame">
-              <div class="phone-frame__screen">
-                <img class="phone-frame__img"
-                     src="images/en1.jpg"
-                     data-src-en="images/en1.jpg"
-                     data-src-tr="images/tr1.jpg"
-                     data-i18n-alt="showcase.metrics.imgAlt"
-                     alt="Velora home dashboard"
-                     width="400" height="820" loading="eager" decoding="async" />
+          <!-- Constellation: floating metric fragments — Velora's design language without a phone -->
+          <div class="hero__constellation" aria-hidden="true">
+            <div class="metric-card metric-card--calories" style="--accent: var(--accent-trends);">
+              <div class="metric-card__row">
+                <div class="metric-card__icon">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8.5 14.5A2.5 2.5 0 0011 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 11-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 002.5 2.5z"/></svg>
+                </div>
+                <div class="metric-card__label">Calories</div>
               </div>
+              <div class="metric-card__value">179<span class="metric-card__unit"> / 450 kcal</span></div>
+              <div class="metric-card__bar"><span style="width:40%"></span></div>
+            </div>
+
+            <div class="metric-card metric-card--steps" style="--accent: var(--accent-activities);">
+              <div class="metric-card__row">
+                <div class="metric-card__icon">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 21c-1 0-1.5-1-1.5-2 0-2 1.5-3 1.5-5 0-1.5-1-2-1-4 0-2 1.5-4 3-4 1.5 0 2 1 2 3s-1 4-1 6c0 4-1 6-3 6z"/><path d="M16 21c-1.5 0-2-1.5-2-4 0-2 .5-4 2-4s2 2 2 4c0 2.5-.5 4-2 4z"/><path d="M19 11c-1 0-1.5-1-1.5-2.5 0-1.5.5-3.5 2-3.5s1.5 2 1.5 3.5c0 1.5-.5 2.5-2 2.5z"/></svg>
+                </div>
+                <div class="metric-card__label">Steps</div>
+              </div>
+              <div class="metric-card__value">3,825<span class="metric-card__unit"> / 8k</span></div>
+              <div class="metric-card__bar"><span style="width:48%"></span></div>
+            </div>
+
+            <div class="metric-card metric-card--minutes" style="--accent: var(--accent-metrics);">
+              <div class="metric-card__row">
+                <div class="metric-card__icon">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="13" r="8"/><path d="M12 9v4l2.5 2.5"/><path d="M9 2h6"/></svg>
+                </div>
+                <div class="metric-card__label">Minutes</div>
+              </div>
+              <div class="metric-card__value">25<span class="metric-card__unit"> / 30 min</span></div>
+              <div class="metric-card__bar"><span style="width:83%"></span></div>
+            </div>
+
+            <div class="hero-ring" style="--accent: var(--accent-metrics);">
+              <svg viewBox="0 0 64 64" aria-hidden="true">
+                <circle cx="32" cy="32" r="26" fill="none" stroke="currentColor" stroke-opacity="0.12" stroke-width="6"/>
+                <circle cx="32" cy="32" r="26" fill="none" stroke="currentColor" stroke-width="6" stroke-linecap="round" stroke-dasharray="163.36" stroke-dashoffset="48" transform="rotate(-90 32 32)"/>
+              </svg>
+              <div class="hero-ring__day">Thu</div>
+              <div class="hero-ring__num">25</div>
             </div>
           </div>
         </div>
@@ -135,7 +166,7 @@
                      data-alt-tr="Haftalık istatistiklerle Velora ana ekranı">
               <span class="eyebrow" data-i18n="showcase.metrics.eyebrow">Home</span>
               <h2 data-i18n="showcase.metrics.h1">Every metric. One home.</h2>
-              <p class="showcase__sub" data-i18n="showcase.metrics.sub">Calories, steps, water, workouts — open and ready.</p>
+              <p class="showcase__sub" data-i18n="showcase.metrics.sub">Calories, steps, water, workouts. Open and ready.</p>
 
               <!-- Mobile-only inline phone -->
               <div class="phone-frame showcase__mobile-phone">
@@ -217,7 +248,7 @@
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
             </div>
             <h3 class="pillar-card__title" data-i18n="pillars.track.h">Track</h3>
-            <p class="pillar-card__body" data-i18n="pillars.track.p">Calories, steps and minutes — at a glance.</p>
+            <p class="pillar-card__body" data-i18n="pillars.track.p">Calories, steps and minutes, at a glance.</p>
           </article>
 
           <article class="pillar-card" data-accent="trends">

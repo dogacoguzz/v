@@ -2,7 +2,7 @@
 
 /* ---------- HERO ---------- */
 .hero {
-  padding-block: clamp(3rem, 8vw, 6rem) clamp(3rem, 7vw, 5rem);
+  padding-block: clamp(3.5rem, 8vw, 6rem) clamp(3rem, 7vw, 5rem);
   position: relative;
 }
 
@@ -11,26 +11,38 @@
   grid-template-columns: 1.05fr 0.95fr;
   gap: clamp(2rem, 5vw, 5rem);
   align-items: center;
+  min-height: 60vh;
 }
 
 .hero__copy {
   display: flex;
   flex-direction: column;
   gap: var(--space-5);
-  max-width: 28ch;
+  max-width: 22ch;
 }
 
 .hero__h1 {
-  font-size: var(--fs-1);
-  line-height: 1.02;
-  letter-spacing: -0.03em;
+  font-size: clamp(2.6rem, 5.5vw + 1rem, 5rem);
+  line-height: 0.98;
+  letter-spacing: -0.035em;
   font-weight: 600;
+  font-family: var(--font-display);
 }
 
 .hero__h1 em {
   font-style: italic;
-  color: var(--accent);
-  transition: color var(--t-accent);
+  background: linear-gradient(135deg, var(--accent-metrics), var(--accent-trends), var(--accent-activities));
+  background-size: 200% 200%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  -webkit-text-fill-color: transparent;
+  animation: hue-shift 14s ease-in-out infinite alternate;
+}
+
+@keyframes hue-shift {
+  0%   { background-position: 0% 50%; }
+  100% { background-position: 100% 50%; }
 }
 
 .hero__sub {
@@ -47,25 +59,88 @@
   margin-top: var(--space-3);
 }
 
-.hero__visual {
+/* ---------- HERO CONSTELLATION ---------- */
+.hero__constellation {
   position: relative;
-  display: grid;
-  place-items: center;
+  height: clamp(420px, 56vh, 560px);
+  isolation: isolate;
 }
 
-.hero__visual .phone-frame {
-  max-width: 320px;
-  transform: rotate(-2deg);
+.hero__constellation::before {
+  /* soft halo behind cards */
+  content: '';
+  position: absolute;
+  inset: 8% 6%;
+  background:
+    radial-gradient(60% 60% at 60% 40%, color-mix(in oklab, var(--accent-metrics) 22%, transparent), transparent 70%),
+    radial-gradient(50% 50% at 30% 70%, color-mix(in oklab, var(--accent-trends) 22%, transparent), transparent 70%);
+  filter: blur(40px);
+  z-index: -1;
+}
+
+.hero__constellation > * {
+  position: absolute;
+  will-change: transform;
+}
+
+/* Card placement (desktop) — visually scattered, not overlapping */
+.metric-card--calories { top: 4%;  left: 4%;   animation: float-a 7s ease-in-out infinite alternate; }
+.metric-card--steps    { top: 38%; right: 6%;  animation: float-b 8.5s ease-in-out infinite alternate; }
+.metric-card--minutes  { bottom: 6%; left: 18%; animation: float-c 9s ease-in-out infinite alternate; }
+.hero-ring             { bottom: 16%; right: 12%; animation: float-b 6s ease-in-out infinite alternate; }
+
+@keyframes float-a {
+  from { transform: translateY(0)   rotate(-2deg); }
+  to   { transform: translateY(-10px) rotate(-1deg); }
+}
+@keyframes float-b {
+  from { transform: translateY(0) rotate(2deg); }
+  to   { transform: translateY(-12px) rotate(3deg); }
+}
+@keyframes float-c {
+  from { transform: translateY(0) rotate(-1deg); }
+  to   { transform: translateY(-8px) rotate(0deg); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero__h1 em,
+  .metric-card--calories,
+  .metric-card--steps,
+  .metric-card--minutes,
+  .hero-ring {
+    animation: none !important;
+  }
 }
 
 @media (max-width: 880px) {
   .hero__grid {
     grid-template-columns: 1fr;
-    gap: var(--space-7);
-    text-align: left;
+    gap: var(--space-6);
+    min-height: 0;
   }
   .hero__copy { max-width: none; }
-  .hero__visual .phone-frame { transform: none; max-width: 280px; }
+  .hero__constellation {
+    height: auto;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--space-3);
+    margin-top: var(--space-4);
+  }
+  .hero__constellation > * {
+    position: static;
+    animation: none !important;
+    transform: none !important;
+  }
+  .hero-ring {
+    grid-column: 1 / -1;
+    justify-self: start;
+  }
+}
+
+@media (max-width: 480px) {
+  .hero__constellation {
+    grid-template-columns: 1fr;
+  }
 }
 
 /* ---------- SHOWCASE (sticky-scroll) ---------- */

@@ -1,6 +1,6 @@
 {
   "meta": {
-    "title": "Velora — Workouts, metrics, and trends in one place",
+    "title": "Velora · Workouts, metrics, and trends in one place",
     "description": "A privacy-first wellness app for iOS. Log workouts, watch your weekly trends, and see every metric at a glance."
   },
   "nav": {
@@ -10,8 +10,8 @@
   },
   "hero": {
     "eyebrow": "iOS · iPhone & Apple Watch",
-    "h1": "Your week, made simple.",
-    "sub": "Workouts, calories, and trends — all in one calm dashboard.",
+    "h1": "Your week, <em>made simple.</em>",
+    "sub": "Workouts, calories, and trends. All in one calm dashboard.",
     "ctaPrimary": "Download on the App Store",
     "ctaSecondary": "See how it works",
     "chip1": "Private by design",
@@ -22,7 +22,7 @@
     "metrics": {
       "eyebrow": "Home",
       "h1": "Every metric. One home.",
-      "sub": "Calories, steps, water, workouts — open and ready.",
+      "sub": "Calories, steps, water, workouts. Open and ready.",
       "imgAlt": "Velora home dashboard showing weekly calories, minutes, steps, and water intake"
     },
     "trends": {
@@ -41,7 +41,7 @@
   "pillars": {
     "track": {
       "h": "Track",
-      "p": "Calories, steps and minutes — at a glance."
+      "p": "Calories, steps and minutes, at a glance."
     },
     "trend": {
       "h": "Trend",

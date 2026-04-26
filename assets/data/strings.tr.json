@@ -1,6 +1,6 @@
 {
   "meta": {
-    "title": "Velora — Antrenman, metrik ve trendler tek yerde",
+    "title": "Velora · Antrenman, metrik ve trendler tek yerde",
     "description": "Gizliliği önemseyen iOS sağlık uygulaması. Antrenmanlarını kaydet, haftalık trendlerini izle, her metriği bir bakışta gör."
   },
   "nav": {
@@ -10,8 +10,8 @@
   },
   "hero": {
     "eyebrow": "iOS · iPhone ve Apple Watch",
-    "h1": "Haftan, sade bir akışta.",
-    "sub": "Antrenman, kalori ve trendler — tek bir sakin ekranda.",
+    "h1": "Haftan, <em>sade bir akışta.</em>",
+    "sub": "Antrenman, kalori ve trendler. Tek bir sakin ekranda.",
     "ctaPrimary": "App Store'dan İndir",
     "ctaSecondary": "Nasıl çalışıyor?",
     "chip1": "Gizlilik öncelikli",
@@ -22,7 +22,7 @@
     "metrics": {
       "eyebrow": "Anasayfa",
       "h1": "Bütün metrikler aynı yerde.",
-      "sub": "Kalori, adım, su ve antrenman — açıp hazır.",
+      "sub": "Kalori, adım, su ve antrenman. Açıp hazır.",
       "imgAlt": "Velora ana ekranı: haftalık kalori, dakika, adım ve su tüketimi"
     },
     "trends": {
@@ -41,7 +41,7 @@
   "pillars": {
     "track": {
       "h": "Takip",
-      "p": "Kalori, adım ve dakika — bir bakışta."
+      "p": "Kalori, adım ve dakika, bir bakışta."
     },
     "trend": {
       "h": "Trend",
