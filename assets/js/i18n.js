@@ -33,9 +33,12 @@ export function persistLocale(locale) {
   try { localStorage.setItem(STORAGE_KEY, locale); } catch (_) {}
 }
 
+const STRINGS_VERSION = '2026-04-30-2';
+
 async function loadStrings(locale) {
   if (cache.has(locale)) return cache.get(locale);
-  const res = await fetch(new URL(`../data/strings.${locale}.json`, import.meta.url), { cache: 'force-cache' });
+  const url = new URL(`../data/strings.${locale}.json?v=${STRINGS_VERSION}`, import.meta.url);
+  const res = await fetch(url, { cache: 'no-cache' });
   if (!res.ok) throw new Error(`Failed to load ${locale} strings`);
   const data = await res.json();
   cache.set(locale, data);
