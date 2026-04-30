@@ -19,9 +19,19 @@
     "ctaSecondary": "Nasıl çalışıyor?",
     "chip1": "Gizlilik öncelikli",
     "chip2": "EN · TR",
-    "chip3": "Yerel iOS"
+    "chip3": "Yerel iOS",
+    "constellation": {
+      "calories": "Kalori",
+      "caloriesUnit": "/ 450 kcal",
+      "steps": "Adım",
+      "stepsUnit": "/ 8 bin",
+      "minutes": "Dakika",
+      "minutesUnit": "/ 30 dk",
+      "day": "Per"
+    }
   },
   "showcase": {
+    "title": "Velora ekranları",
     "metrics": {
       "eyebrow": "Anasayfa",
       "h1": "Bütün metrikler aynı yerde.",
@@ -42,6 +52,8 @@
     }
   },
   "pillars": {
+    "eyebrow": "Temeller",
+    "title": "Üç alışkanlık, sakin bir arkadaş.",
     "track": {
       "h": "Takip",
       "p": "Kalori, adım ve dakika, bir bakışta."

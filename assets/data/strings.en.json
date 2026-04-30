@@ -19,9 +19,19 @@
     "ctaSecondary": "See how it works",
     "chip1": "Private by design",
     "chip2": "EN · TR",
-    "chip3": "Native iOS"
+    "chip3": "Native iOS",
+    "constellation": {
+      "calories": "Calories",
+      "caloriesUnit": "/ 450 kcal",
+      "steps": "Steps",
+      "stepsUnit": "/ 8k",
+      "minutes": "Minutes",
+      "minutesUnit": "/ 30 min",
+      "day": "Thu"
+    }
   },
   "showcase": {
+    "title": "Velora screens",
     "metrics": {
       "eyebrow": "Home",
       "h1": "Every metric. One home.",
@@ -42,6 +52,8 @@
     }
   },
   "pillars": {
+    "eyebrow": "Pillars",
+    "title": "Three habits, one quiet companion.",
     "track": {
       "h": "Track",
       "p": "Calories, steps and minutes, at a glance."
