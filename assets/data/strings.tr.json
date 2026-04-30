@@ -6,7 +6,10 @@
   "nav": {
     "langGroupAria": "Dil",
     "langEn": "EN",
-    "langTr": "TR"
+    "langTr": "TR",
+    "skipLink": "İçeriğe atla",
+    "ctaLabel": "App Store",
+    "ctaAria": "Velora'yı App Store'dan indir"
   },
   "hero": {
     "eyebrow": "iOS · iPhone ve Apple Watch",

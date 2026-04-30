@@ -91,11 +91,41 @@ function attachSmoothAnchorScroll() {
   });
 }
 
+function attachNavScrollObserver() {
+  const nav = document.querySelector('.site-nav');
+  const hero = document.querySelector('.hero');
+  const cta = document.querySelector('.site-nav__cta');
+  if (!nav || !hero) return;
+
+  const setScrolled = (scrolled) => {
+    nav.dataset.scrolled = scrolled ? 'true' : 'false';
+    if (cta) {
+      cta.setAttribute('aria-hidden', scrolled ? 'false' : 'true');
+      cta.setAttribute('tabindex', scrolled ? '0' : '-1');
+    }
+  };
+
+  setScrolled(false);
+
+  const io = new IntersectionObserver((entries) => {
+    for (const e of entries) {
+      // Hero out of view (accounting for sticky nav offset) => header enters scrolled state
+      setScrolled(!e.isIntersecting);
+    }
+  }, {
+    threshold: 0,
+    rootMargin: '-72px 0px 0px 0px'
+  });
+
+  io.observe(hero);
+}
+
 async function bootstrap() {
   const initialLocale = resolveLocale();
   await applyLocale(initialLocale);
   attachLangSwitch();
   attachShowcaseObserver();
+  attachNavScrollObserver();
   attachSmoothAnchorScroll();
 }
 

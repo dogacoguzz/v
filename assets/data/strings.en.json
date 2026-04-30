@@ -6,7 +6,10 @@
   "nav": {
     "langGroupAria": "Language",
     "langEn": "EN",
-    "langTr": "TR"
+    "langTr": "TR",
+    "skipLink": "Skip to content",
+    "ctaLabel": "App Store",
+    "ctaAria": "Download Velora on the App Store"
   },
   "hero": {
     "eyebrow": "iOS · iPhone & Apple Watch",
