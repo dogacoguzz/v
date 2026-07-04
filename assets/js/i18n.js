@@ -40,7 +40,7 @@ export function persistLocale(locale) {
   try { localStorage.setItem(STORAGE_KEY, locale); } catch (_) {}
 }
 
-const STRINGS_VERSION = '2026-07-04-3';
+const STRINGS_VERSION = '2026-07-04-4';
 
 async function loadStrings(locale) {
   if (cache.has(locale)) return cache.get(locale);

@@ -63,7 +63,8 @@
       "f1": "Adım, mesafe ve yürüyüş süresi",
       "f2": "Su takibi ve hatırlatıcılar",
       "f3": "Kilo ve alkol kaydı",
-      "f4": "Takvim, adım ve su widget'ları"
+      "f4": "Takvim, adım ve su widget'ları",
+      "f5": "Metrik ve imperial birimler"
     },
     "trend": {
       "h": "Trend",
@@ -72,7 +73,8 @@
       "f2": "Aylık antrenman filtreleri",
       "f3": "Uzun vadeli kilo grafikleri",
       "f4": "Yapay zeka destekli içgörüler",
-      "f5": "Günlük ve haftalık fiziksel yük"
+      "f5": "Günlük ve haftalık fiziksel yük",
+      "f6": "Paylaşılabilir ilerleme kartları"
     },
     "train": {
       "h": "Antrenman",
@@ -80,7 +82,8 @@
       "f1": "Set, tekrar ve rota detayları",
       "f2": "Nabız bölgeleri",
       "f3": "Yükseklik profilli rota haritaları",
-      "f4": "Kalori yakımı ve verimlilik"
+      "f4": "Kalori yakımı ve verimlilik",
+      "f5": "Vücut bölgesi etiketleme"
     }
   },
   "coach": {
@@ -99,7 +102,8 @@
     "p": "Sağlık verilerin yalnızca seni ilgilendirir.",
     "p1": "Cihazında kalır",
     "p2": "Hesap yok",
-    "p3": "Asla satılmaz."
+    "p3": "Asla satılmaz.",
+    "p4": "Senkron kendi iCloud'unda"
   },
   "closing": {
     "eyebrow": "Başla",

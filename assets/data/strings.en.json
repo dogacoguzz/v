@@ -63,7 +63,8 @@
       "f1": "Steps, distance & walking time",
       "f2": "Water intake with reminders",
       "f3": "Weight & alcohol logging",
-      "f4": "Calendar, steps and water widgets"
+      "f4": "Calendar, steps and water widgets",
+      "f5": "Metric & imperial units"
     },
     "trend": {
       "h": "Trend",
@@ -72,7 +73,8 @@
       "f2": "Monthly workout filters",
       "f3": "Long-term weight graphs",
       "f4": "AI-powered insights",
-      "f5": "Daily and weekly physical load"
+      "f5": "Daily and weekly physical load",
+      "f6": "Shareable progress cards"
     },
     "train": {
       "h": "Train",
@@ -80,7 +82,8 @@
       "f1": "Every set, rep & route",
       "f2": "Heart-rate zones",
       "f3": "Route maps with elevation",
-      "f4": "Calorie burn & efficiency"
+      "f4": "Calorie burn & efficiency",
+      "f5": "Body region tagging"
     }
   },
   "coach": {
@@ -99,7 +102,8 @@
     "p": "Your health data is nobody's business but yours.",
     "p1": "Kept on-device",
     "p2": "No accounts",
-    "p3": "Never sold. Ever."
+    "p3": "Never sold. Ever.",
+    "p4": "Syncs via your own iCloud"
   },
   "closing": {
     "eyebrow": "Get started",
