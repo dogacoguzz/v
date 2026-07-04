@@ -290,6 +290,10 @@
   flex-shrink: 0;
 }
 
+.coach__cta {
+  margin-top: var(--space-5);
+}
+
 .coach__demo {
   position: relative;
   display: flex;
