@@ -11,15 +11,18 @@ Built as a multi-file static bundle (no build tooling). **Live at
 - **Sticky-scroll showcase** — one phone is pinned while three text stages scroll past; the image decode-then-fades and the accent swaps as each stage activates.
 - **Bilingual (EN / TR)** — all copy is locale-aware via `data-i18n` attributes; per-locale screenshot variants swap automatically. Locale priority: `?lang=` URL param → saved choice → browser language. `?lang=tr` is the crawlable Turkish entry point (see `hreflang` alternates in the head and `sitemap.xml`).
 - **Brand-locked accents** — nav CTA, focus rings, and the closing-CTA glow stay cyan even as section accents change.
+- **Official App Store badges** — `images/badge-appstore-{en,tr}.svg` are Apple's own artwork (downloaded from Apple's marketing toolbox; per Apple's guidelines the badge must not be restyled, and the standalone Apple logo must not be used as an icon).
 - **No build step** — pure HTML / CSS / ES modules. CSS is split into 5 stylesheets that HTTP/2 multiplexes; locale strings are fetched on demand.
 
 ## File Structure
 
 ```
 .
-├── index.html                    # DOM skeleton + meta/OG/JSON-LD + <link>/<script> tags
+├── index.html                    # EN page — DOM skeleton + meta/OG/JSON-LD + <link>/<script> tags
+├── tr/index.html                 # GENERATED Turkish page — do not edit by hand (see tools/)
+├── tools/build-tr.mjs            # Prerenders tr/index.html from index.html + strings.tr.json
 ├── 404.html                      # Self-contained not-found page (GitHub Pages picks it up)
-├── sitemap.xml                   # Single URL + hreflang alternates
+├── sitemap.xml                   # / and /tr/ with hreflang alternates
 ├── assets/
 │   ├── css/
 │   │   ├── tokens.css            # CSS variables, @property --accent, multi-accent system
@@ -98,10 +101,15 @@ All user-facing strings live in `assets/data/strings.{en,tr}.json`. To add or up
    - `data-i18n-aria-label="nav.langGroupAria"` — replaces `aria-label`
 3. For per-locale image swaps, add `data-src-en` and `data-src-tr` attributes to `<img>`.
 4. Bump `STRINGS_VERSION` in `assets/js/i18n.js` so returning visitors fetch fresh strings.
+5. **Regenerate the static Turkish page and commit it:** `node tools/build-tr.mjs`.
+   Turkish lives at the prerendered `/tr/` so crawlers that don't execute JavaScript
+   (Bing, GPTBot, ClaudeBot, …) can read it; client-side i18n alone was Google-only.
 
-The selected locale is persisted in `localStorage['velora-lang']` and mirrored to the
-`?lang=` URL param. A tiny inline script in `<head>` resolves the locale before paint and
-preloads the correct-locale showcase image — keep it in sync with `i18n.js`.
+Locale resolution order: `/tr/` path → `?lang=` param (legacy) → saved choice →
+browser language. The language switch navigates between `/` and `/tr/` (matching the
+hreflang alternates). A tiny inline script in `<head>` of the EN page resolves the
+locale before paint and preloads the correct-locale showcase image — keep it in sync
+with `i18n.js`.
 
 ## Adding a New Showcase Stage
 

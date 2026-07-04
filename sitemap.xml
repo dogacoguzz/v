@@ -4,7 +4,13 @@
   <url>
     <loc>https://velorahealthcompanion.com/</loc>
     <xhtml:link rel="alternate" hreflang="en" href="https://velorahealthcompanion.com/" />
-    <xhtml:link rel="alternate" hreflang="tr" href="https://velorahealthcompanion.com/?lang=tr" />
+    <xhtml:link rel="alternate" hreflang="tr" href="https://velorahealthcompanion.com/tr/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://velorahealthcompanion.com/" />
+  </url>
+  <url>
+    <loc>https://velorahealthcompanion.com/tr/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://velorahealthcompanion.com/" />
+    <xhtml:link rel="alternate" hreflang="tr" href="https://velorahealthcompanion.com/tr/" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://velorahealthcompanion.com/" />
   </url>
 </urlset>

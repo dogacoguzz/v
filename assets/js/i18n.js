@@ -23,16 +23,20 @@ function detectBrowserLocale() {
 }
 
 export function resolveLocale() {
-  // 1. Explicit URL choice (?lang=tr) — shareable / crawlable entry point
+  // 1. Dedicated path — /tr/ is the prerendered, crawlable Turkish page
+  try {
+    if (/^\/tr(\/|$)/.test(window.location.pathname)) return 'tr';
+  } catch (_) {}
+  // 2. Explicit URL choice (?lang=tr) — legacy shareable entry point
   try {
     const fromUrl = new URLSearchParams(window.location.search).get('lang');
     if (fromUrl && SUPPORTED.includes(fromUrl)) return fromUrl;
   } catch (_) {}
-  // 2. Saved choice
+  // 3. Saved choice
   let saved = null;
   try { saved = localStorage.getItem(STORAGE_KEY); } catch (_) {}
   if (saved && SUPPORTED.includes(saved)) return saved;
-  // 3. Browser language
+  // 4. Browser language
   return detectBrowserLocale();
 }
 
@@ -40,7 +44,7 @@ export function persistLocale(locale) {
   try { localStorage.setItem(STORAGE_KEY, locale); } catch (_) {}
 }
 
-const STRINGS_VERSION = '2026-07-04-4';
+const STRINGS_VERSION = '2026-07-04-5';
 
 async function loadStrings(locale) {
   if (cache.has(locale)) return cache.get(locale);

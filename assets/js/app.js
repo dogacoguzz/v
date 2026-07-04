@@ -9,20 +9,13 @@ function getLocale() {
 
 function attachLangSwitch() {
   document.querySelectorAll('.lang-switch button[data-locale]').forEach((btn) => {
-    btn.addEventListener('click', async () => {
+    btn.addEventListener('click', () => {
       const next = btn.dataset.locale;
       if (!next || next === getLocale()) return;
       persistLocale(next);
-      // Keep the URL shareable and consistent with hreflang alternates
-      try {
-        const url = new URL(window.location.href);
-        if (next === 'en') url.searchParams.delete('lang');
-        else url.searchParams.set('lang', next);
-        history.replaceState(null, '', url);
-      } catch (_) {}
-      await applyLocale(next);
-      // After locale switch, refresh showcase phone if any showcase is currently active
-      refreshShowcasePhone(currentAccent);
+      // Each locale has its own crawlable URL (matches hreflang alternates):
+      // Turkish lives at the prerendered /tr/, English at the root.
+      window.location.assign(next === 'tr' ? '/tr/' : '/');
     });
   });
 }

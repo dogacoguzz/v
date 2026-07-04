@@ -91,53 +91,21 @@
   color: #08151a;
 }
 
-/* App Store CTA (brand-locked) */
-.app-store-button {
+/* Official App Store badge (Apple artwork — never restyle or add effects to the
+   image itself per Apple's marketing guidelines; hover motion on the link only) */
+.store-badge {
   display: inline-flex;
   align-items: center;
-  gap: var(--space-3);
-  padding: 14px 22px;
-  border-radius: var(--radius-pill);
-  background: var(--text);
-  color: #08151a;
-  font-weight: 700;
-  letter-spacing: -0.01em;
-  font-size: 1rem;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.35), 0 0 0 1px rgba(255,255,255,0.06) inset;
-  transition: transform var(--t-fast), box-shadow var(--t-fast);
-  min-height: 48px;
+  transition: transform var(--t-fast);
 }
 
-.app-store-button:hover {
-  transform: translateY(-1px);
-  box-shadow: 0 14px 38px rgba(0,0,0,0.45), 0 0 0 1px rgba(255,255,255,0.08) inset, 0 0 28px var(--brand-dim);
-}
+.store-badge:hover { transform: translateY(-1px); }
+.store-badge:active { transform: translateY(0); }
 
-.app-store-button:active { transform: translateY(0); }
-
-.app-store-button__icon {
-  width: 22px; height: 22px;
-  display: grid; place-items: center;
-  flex-shrink: 0;
-}
-
-.app-store-button__lines {
-  display: flex; flex-direction: column;
-  line-height: 1.05;
-  text-align: left;
-}
-
-.app-store-button__l1 {
-  font-size: 0.7rem;
-  font-weight: 500;
-  letter-spacing: 0.02em;
-  opacity: 0.75;
-}
-
-.app-store-button__l2 {
-  font-size: 1.05rem;
-  font-weight: 700;
-  letter-spacing: -0.01em;
+.store-badge img {
+  display: block;
+  height: 52px; /* ≥40px minimum required by Apple */
+  width: auto;
 }
 
 /* Ghost CTA */

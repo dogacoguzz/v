@@ -14,8 +14,6 @@
     "eyebrow": "iOS · iPhone ve Apple Watch",
     "h1": "Haftan,<br /><em>sade bir akışta.</em>",
     "sub": "Antrenman, kalori ve trendler. Tek bir sakin ekranda.",
-    "ctaPrimaryL1": "App Store'dan",
-    "ctaPrimaryL2": "İndir",
     "ctaSecondary": "Nasıl çalışıyor?",
     "chip1": "Gizlilik öncelikli",
     "chip2": "English · Türkçe",
@@ -95,7 +93,8 @@
     "p3": "Bot gibi değil, koç gibi konuşur",
     "q": "Bu hafta nasıldı?",
     "label": "Velora Koç",
-    "a": "Ortalamanın 213 kcal altındasın. Toparlanmak için iyi bir pencere!"
+    "a": "Ortalamanın 213 kcal altındasın. Toparlanmak için iyi bir pencere!",
+    "cta": "Velora'yı indir"
   },
   "privacy": {
     "h": "Sadece sana ait.",

@@ -14,8 +14,6 @@
     "eyebrow": "iOS · iPhone & Apple Watch",
     "h1": "Your week,<br /><em>made simple.</em>",
     "sub": "Workouts, calories, and trends. All in one calm dashboard.",
-    "ctaPrimaryL1": "Download on the",
-    "ctaPrimaryL2": "App Store",
     "ctaSecondary": "See how it works",
     "chip1": "Private by design",
     "chip2": "English · Türkçe",
@@ -95,7 +93,8 @@
     "p3": "Speaks like a coach, not a bot",
     "q": "How was this week?",
     "label": "Velora Coach",
-    "a": "213 kcal below your average. A good window to recover!"
+    "a": "213 kcal below your average. A good window to recover!",
+    "cta": "Get Velora"
   },
   "privacy": {
     "h": "Yours, alone.",
