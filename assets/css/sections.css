@@ -119,28 +119,11 @@
     min-height: 0;
   }
   .hero__copy { max-width: none; }
-  .hero__constellation {
-    height: auto;
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: var(--space-3);
-    margin-top: var(--space-4);
-  }
-  .hero__constellation > * {
-    position: static;
-    animation: none !important;
-    transform: none !important;
-  }
-  .hero-ring {
-    grid-column: 1 / -1;
-    justify-self: start;
-  }
-}
-
-@media (max-width: 480px) {
-  .hero__constellation {
-    grid-template-columns: 1fr;
-  }
+  /* The floating metric cards are decorative filler on small screens: stacked
+     vertically they delay the real app screenshots by a full viewport, and the
+     first showcase stage already shows these metrics for real. Desktop keeps
+     the scattered constellation in the right-hand column. */
+  .hero__constellation { display: none; }
 }
 
 /* ---------- SHOWCASE (sticky-scroll) ---------- */
