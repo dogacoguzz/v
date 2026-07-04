@@ -5,7 +5,7 @@
   display: inline-grid;
   place-items: center;
   width: 0;
-  height: 36px;
+  height: 44px; /* Apple HIG minimum touch target */
   border-radius: var(--radius-pill);
   background: var(--brand);
   color: #08151a;
@@ -26,7 +26,7 @@
 }
 
 .site-nav[data-scrolled="true"] .site-nav__cta {
-  width: 36px;
+  width: 44px;
   opacity: 1;
   transform: translateX(0);
   visibility: visible;
@@ -64,17 +64,17 @@
 .lang-switch {
   display: inline-flex;
   align-items: center;
-  height: 36px;
+  height: 44px; /* touch-target friendly */
   background: var(--bg-card);
   border: 1px solid var(--border);
   border-radius: var(--radius-pill);
-  padding: 3px;
+  padding: 4px;
   gap: 2px;
 }
 
 .lang-switch button {
-  height: 28px;
-  padding: 0 12px;
+  height: 36px;
+  padding: 0 14px;
   border-radius: var(--radius-pill);
   font-size: var(--fs-small);
   font-weight: 600;
@@ -239,11 +239,8 @@
   width: 100%;
   height: 100%;
   object-fit: cover;
+  /* opacity is driven by app.js decode-then-fade swap */
   transition: opacity var(--t-med);
-}
-
-.phone-frame--swap .phone-frame__img {
-  /* placeholder for crossfade animations */
 }
 
 /* Pillar card */
@@ -523,6 +520,31 @@
 .privacy-strip__body {
   color: var(--text-muted);
   font-size: var(--fs-small);
+}
+
+.privacy-strip__points {
+  list-style: none;
+  margin: var(--space-3) 0 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2) var(--space-5);
+}
+
+.privacy-strip__points li {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-size: var(--fs-small);
+  font-weight: 500;
+  color: var(--text-muted);
+}
+
+.privacy-strip__points svg {
+  width: 14px;
+  height: 14px;
+  color: var(--brand);
+  flex-shrink: 0;
 }
 
 @media (max-width: 640px) {

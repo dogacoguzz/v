@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>404 · Velora</title>
+  <meta name="robots" content="noindex" />
+  <meta name="color-scheme" content="dark" />
+  <meta name="theme-color" content="#0c0f12" />
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32.png" />
+  <style>
+    * { margin: 0; box-sizing: border-box; }
+    body {
+      min-height: 100dvh;
+      display: grid;
+      place-items: center;
+      background: #0c0f12;
+      color: #f4f6f8;
+      font-family: 'Plus Jakarta Sans', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+      text-align: center;
+      padding: 2rem;
+      position: relative;
+      overflow: hidden;
+    }
+    body::before {
+      content: '';
+      position: fixed;
+      inset: -10vh -20vw auto auto;
+      width: 75vw; height: 75vh;
+      background: radial-gradient(50% 50% at 70% 30%, rgba(46, 209, 234, 0.28), transparent 70%);
+      filter: blur(60px);
+      pointer-events: none;
+    }
+    main { position: relative; display: grid; gap: 1.25rem; justify-items: center; }
+    img { width: 64px; height: 64px; border-radius: 16px; box-shadow: 0 0 0 1px rgba(255,255,255,0.14), 0 0 32px rgba(46, 209, 234, 0.3); }
+    h1 { font-size: clamp(2rem, 6vw, 3rem); letter-spacing: -0.02em; font-weight: 700; }
+    p { color: rgba(244, 246, 248, 0.65); max-width: 40ch; line-height: 1.55; }
+    a {
+      display: inline-flex;
+      align-items: center;
+      min-height: 48px;
+      padding: 12px 24px;
+      border-radius: 999px;
+      background: #2ED1EA;
+      color: #08151a;
+      font-weight: 700;
+      text-decoration: none;
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <img src="/images/logo-56.png" alt="" width="64" height="64" />
+    <h1>Page not found</h1>
+    <p>This page doesn't exist — but your week is still waiting. · Aradığın sayfa yok — ama haftan seni bekliyor.</p>
+    <a href="/">Velora home · Anasayfa</a>
+  </main>
+</body>
+</html>

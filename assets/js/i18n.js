@@ -23,9 +23,16 @@ function detectBrowserLocale() {
 }
 
 export function resolveLocale() {
+  // 1. Explicit URL choice (?lang=tr) — shareable / crawlable entry point
+  try {
+    const fromUrl = new URLSearchParams(window.location.search).get('lang');
+    if (fromUrl && SUPPORTED.includes(fromUrl)) return fromUrl;
+  } catch (_) {}
+  // 2. Saved choice
   let saved = null;
   try { saved = localStorage.getItem(STORAGE_KEY); } catch (_) {}
   if (saved && SUPPORTED.includes(saved)) return saved;
+  // 3. Browser language
   return detectBrowserLocale();
 }
 
@@ -33,12 +40,14 @@ export function persistLocale(locale) {
   try { localStorage.setItem(STORAGE_KEY, locale); } catch (_) {}
 }
 
-const STRINGS_VERSION = '2026-04-30-2';
+const STRINGS_VERSION = '2026-07-04-1';
 
 async function loadStrings(locale) {
   if (cache.has(locale)) return cache.get(locale);
+  // The ?v= version param already busts stale caches; no-cache would force
+  // a revalidation round-trip on every load.
   const url = new URL(`../data/strings.${locale}.json?v=${STRINGS_VERSION}`, import.meta.url);
-  const res = await fetch(url, { cache: 'no-cache' });
+  const res = await fetch(url);
   if (!res.ok) throw new Error(`Failed to load ${locale} strings`);
   const data = await res.json();
   cache.set(locale, data);

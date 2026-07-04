@@ -8,25 +8,28 @@
     "langEn": "EN",
     "langTr": "TR",
     "skipLink": "Skip to content",
-    "ctaLabel": "App Store",
     "ctaAria": "Download Velora on the App Store"
   },
   "hero": {
     "eyebrow": "iOS · iPhone & Apple Watch",
-    "h1": "Your week, <em>made simple.</em>",
+    "h1": "Your week,<br /><em>made simple.</em>",
     "sub": "Workouts, calories, and trends. All in one calm dashboard.",
-    "ctaPrimary": "Download on the App Store",
+    "ctaPrimaryL1": "Download on the",
+    "ctaPrimaryL2": "App Store",
     "ctaSecondary": "See how it works",
     "chip1": "Private by design",
-    "chip2": "EN · TR",
+    "chip2": "English · Türkçe",
     "chip3": "Native iOS",
     "constellation": {
       "calories": "Calories",
-      "caloriesUnit": "/ 450 kcal",
+      "caloriesValue": "179",
+      "caloriesUnit": " / 450 kcal",
       "steps": "Steps",
-      "stepsUnit": "/ 8k",
+      "stepsValue": "3,825",
+      "stepsUnit": " / 8k",
       "minutes": "Minutes",
-      "minutesUnit": "/ 30 min",
+      "minutesValue": "25",
+      "minutesUnit": " / 30 min",
       "day": "Thu"
     }
   },
@@ -69,7 +72,15 @@
   },
   "privacy": {
     "h": "Yours, alone.",
-    "p": "Velora keeps your data on-device. No accounts. No selling. Ever."
+    "p": "Your health data is nobody's business but yours.",
+    "p1": "Kept on-device",
+    "p2": "No accounts",
+    "p3": "Never sold. Ever."
+  },
+  "closing": {
+    "eyebrow": "Get started",
+    "h": "Make this week simpler.",
+    "sub": "Free on the App Store. Your data stays yours."
   },
   "footer": {
     "copy": "© 2026 Velora",

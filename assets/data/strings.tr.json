@@ -8,25 +8,28 @@
     "langEn": "EN",
     "langTr": "TR",
     "skipLink": "İçeriğe atla",
-    "ctaLabel": "App Store",
     "ctaAria": "Velora'yı App Store'dan indir"
   },
   "hero": {
     "eyebrow": "iOS · iPhone ve Apple Watch",
-    "h1": "Haftan, <em>sade bir akışta.</em>",
+    "h1": "Haftan,<br /><em>sade bir akışta.</em>",
     "sub": "Antrenman, kalori ve trendler. Tek bir sakin ekranda.",
-    "ctaPrimary": "App Store'dan İndir",
+    "ctaPrimaryL1": "App Store'dan",
+    "ctaPrimaryL2": "İndir",
     "ctaSecondary": "Nasıl çalışıyor?",
     "chip1": "Gizlilik öncelikli",
-    "chip2": "EN · TR",
+    "chip2": "English · Türkçe",
     "chip3": "Yerel iOS",
     "constellation": {
       "calories": "Kalori",
-      "caloriesUnit": "/ 450 kcal",
+      "caloriesValue": "179",
+      "caloriesUnit": " / 450 kcal",
       "steps": "Adım",
-      "stepsUnit": "/ 8 bin",
+      "stepsValue": "3.825",
+      "stepsUnit": " / 8 bin",
       "minutes": "Dakika",
-      "minutesUnit": "/ 30 dk",
+      "minutesValue": "25",
+      "minutesUnit": " / 30 dk",
       "day": "Per"
     }
   },
@@ -35,28 +38,28 @@
     "metrics": {
       "eyebrow": "Anasayfa",
       "h1": "Bütün metrikler aynı yerde.",
-      "sub": "Kalori, adım, su ve antrenman. Açıp hazır.",
+      "sub": "Kalori, adım, su ve antrenman. Açar açmaz hazır.",
       "imgAlt": "Velora ana ekranı: haftalık kalori, dakika, adım ve su tüketimi"
     },
     "trends": {
       "eyebrow": "Trendler",
-      "h1": "Trendlerinizi takip edin.",
-      "sub": "İlerlemenizi görün, limitlerinizi zorlayın.",
+      "h1": "Trendlerini izle.",
+      "sub": "İlerlemeni gör, limitlerini zorla.",
       "imgAlt": "Velora trendler ekranı: haftalık kalori grafiği, aktif günler ve mesafe grafiği"
     },
     "activities": {
       "eyebrow": "Aktiviteler",
-      "h1": "Aktiviteleri kolayca kaydedin.",
+      "h1": "Aktivitelerini kolayca kaydet.",
       "sub": "Tüm aktiviteler tek ekranda.",
       "imgAlt": "Velora aktivite listesi: günlere göre gruplanmış antrenmanlar"
     }
   },
   "pillars": {
     "eyebrow": "Temeller",
-    "title": "Üç alışkanlık, sakin bir arkadaş.",
+    "title": "Üç alışkanlık, sessiz bir yol arkadaşı.",
     "track": {
       "h": "Takip",
-      "p": "Kalori, adım ve dakika, bir bakışta."
+      "p": "Kalori, adım ve dakika — bir bakışta."
     },
     "trend": {
       "h": "Trend",
@@ -64,12 +67,20 @@
     },
     "train": {
       "h": "Antrenman",
-      "p": "Her yürüyüş, koşu ya da çalışma tek dokunuşla."
+      "p": "Yürüyüş, koşu ya da ağırlık — hepsi tek dokunuşla."
     }
   },
   "privacy": {
-    "h": "Sadece size ait.",
-    "p": "Velora verilerinizi cihazda tutar. Hesap yok, satış yok."
+    "h": "Sadece sana ait.",
+    "p": "Sağlık verilerin yalnızca seni ilgilendirir.",
+    "p1": "Cihazında kalır",
+    "p2": "Hesap yok",
+    "p3": "Asla satılmaz."
+  },
+  "closing": {
+    "eyebrow": "Başla",
+    "h": "Bu haftayı sadeleştir.",
+    "sub": "App Store'da ücretsiz. Verilerin sende kalır."
   },
   "footer": {
     "copy": "© 2026 Velora",

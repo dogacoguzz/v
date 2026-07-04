@@ -8,36 +8,83 @@
   <meta name="color-scheme" content="dark" />
   <meta name="theme-color" content="#0c0f12" />
 
-  <link rel="canonical" href="https://veloraapp.com/" />
-  <link rel="icon" type="image/png" href="images/velora.png" />
-  <link rel="apple-touch-icon" href="images/velora.png" />
+  <link rel="canonical" href="https://velorahealthcompanion.com/" />
+  <link rel="alternate" hreflang="en" href="https://velorahealthcompanion.com/" />
+  <link rel="alternate" hreflang="tr" href="https://velorahealthcompanion.com/?lang=tr" />
+  <link rel="alternate" hreflang="x-default" href="https://velorahealthcompanion.com/" />
+
+  <link rel="icon" type="image/png" sizes="32x32" href="images/favicon-32.png" />
+  <link rel="apple-touch-icon" href="images/apple-touch-icon.png" />
+  <meta name="apple-itunes-app" content="app-id=6748447208" />
 
   <!-- Open Graph -->
   <meta property="og:type" content="website" />
-  <meta property="og:url" content="https://veloraapp.com/" />
+  <meta property="og:site_name" content="Velora" />
+  <meta property="og:url" content="https://velorahealthcompanion.com/" />
   <meta property="og:title" content="Velora · Workouts, metrics, and trends in one place" />
   <meta property="og:description" content="A privacy-first wellness app for iOS. Log workouts, watch your weekly trends, and see every metric at a glance." />
-  <meta property="og:image" content="images/velora.png" />
+  <meta property="og:image" content="https://velorahealthcompanion.com/images/og.jpg" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta property="og:image:alt" content="Velora — your week, made simple. iOS wellness app." />
+  <meta property="og:locale" content="en_US" />
+  <meta property="og:locale:alternate" content="tr_TR" />
 
   <!-- Twitter -->
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:title" content="Velora · Workouts, metrics, and trends in one place" />
-  <meta name="twitter:description" content="A privacy-first wellness app for iOS." />
-  <meta name="twitter:image" content="images/velora.png" />
+  <meta name="twitter:description" content="A privacy-first wellness app for iOS. Log workouts, watch your weekly trends, and see every metric at a glance." />
+  <meta name="twitter:image" content="https://velorahealthcompanion.com/images/og.jpg" />
 
-  <!-- Stylesheets (HTTP/2 multiplex; load order matters: tokens first) -->
+  <!-- Fonts (real Fraunces italics; Jakarta 400–700 variable range, unused 800 dropped) -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500..700;1,9..144,500..700&family=Plus+Jakarta+Sans:wght@400..700&display=swap" />
+
+  <!-- Stylesheets (HTTP/2 multiplex; load order matters: tokens first) -->
   <link rel="stylesheet" href="assets/css/tokens.css" />
   <link rel="stylesheet" href="assets/css/base.css" />
   <link rel="stylesheet" href="assets/css/layout.css" />
   <link rel="stylesheet" href="assets/css/components.css" />
   <link rel="stylesheet" href="assets/css/sections.css" />
 
-  <!-- Preload first hero image so layout doesn't pop -->
-  <link rel="preload" as="image" href="images/en1.jpg" />
+  <!-- Early locale: set <html lang> and preload the correct-locale showcase image
+       (URL ?lang= > saved choice > browser language). Keep in sync with i18n.js. -->
+  <script>
+    (function () {
+      var l = null;
+      try { l = new URLSearchParams(location.search).get('lang'); } catch (e) {}
+      if (l !== 'en' && l !== 'tr') l = null;
+      if (!l) { try { var s = localStorage.getItem('velora-lang'); if (s === 'en' || s === 'tr') l = s; } catch (e) {} }
+      if (!l) {
+        var langs = (navigator.languages && navigator.languages.length) ? navigator.languages : [navigator.language || ''];
+        for (var i = 0; i < langs.length; i++) { if (/^tr/i.test(String(langs[i]))) { l = 'tr'; break; } }
+        if (!l) l = 'en';
+      }
+      document.documentElement.lang = l;
+      var p = document.createElement('link');
+      p.rel = 'preload'; p.as = 'image'; p.href = 'images/' + l + '1.webp';
+      document.head.appendChild(p);
+    })();
+  </script>
 
   <script type="module" src="assets/js/app.js"></script>
+
+  <!-- Structured data -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "Velora: Health Companion",
+    "operatingSystem": "iOS",
+    "applicationCategory": "HealthApplication",
+    "url": "https://velorahealthcompanion.com/",
+    "downloadUrl": "https://apps.apple.com/app/id6748447208",
+    "image": "https://velorahealthcompanion.com/images/og.jpg",
+    "description": "A privacy-first wellness app for iOS. Log workouts, watch your weekly trends, and see every metric at a glance.",
+    "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" }
+  }
+  </script>
 </head>
 
 <body data-accent="activities">
@@ -49,11 +96,11 @@
   <header class="site-nav">
     <div class="container site-nav__row">
       <a href="#top" class="brand-mark" aria-label="Velora home">
-        <img class="brand-mark__logo" src="images/velora.png" alt="" width="28" height="28" />
+        <img class="brand-mark__logo" src="images/logo-56.png" alt="" width="28" height="28" />
         <span class="brand-mark__text">Velora</span>
       </a>
       <div class="site-nav__actions">
-        <a class="site-nav__cta" href="https://apps.apple.com/tr/app/velora-health-companion/id6748447208"
+        <a class="site-nav__cta" href="https://apps.apple.com/app/id6748447208"
            target="_blank" rel="noopener noreferrer"
            aria-hidden="true" tabindex="-1"
            data-i18n-aria-label="nav.ctaAria" aria-label="Download Velora on the App Store">
@@ -72,20 +119,21 @@
   <main id="top">
 
     <!-- ========== HERO ========== -->
-    <section class="hero">
+    <section class="hero" data-accent="activities">
       <div class="container">
         <div class="hero__grid">
           <div class="hero__copy">
             <span class="eyebrow" data-i18n="hero.eyebrow">iOS · iPhone &amp; Apple Watch</span>
-            <h1 class="hero__h1" data-i18n-html="hero.h1">Your week, <em>made simple.</em></h1>
+            <h1 class="hero__h1" data-i18n-html="hero.h1">Your week,<br /><em>made simple.</em></h1>
             <p class="hero__sub" data-i18n="hero.sub">Workouts, calories, and trends. All in one calm dashboard.</p>
             <div class="hero__cta-row">
-              <a class="app-store-button" href="https://apps.apple.com/tr/app/velora-health-companion/id6748447208" target="_blank" rel="noopener noreferrer" aria-label="Download Velora on the App Store">
+              <a class="app-store-button" href="https://apps.apple.com/app/id6748447208" target="_blank" rel="noopener noreferrer" aria-label="Download Velora on the App Store">
                 <span class="app-store-button__icon" aria-hidden="true">
                   <svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor" aria-hidden="true"><path d="M17.05 20.28c-.98.95-2.05.8-3.08.35-1.09-.46-2.09-.48-3.24 0-1.44.62-2.2.44-3.06-.35C2.79 15.25 3.51 7.59 9.05 7.31c1.35.07 2.29.74 3.08.8 1.18-.24 2.31-.93 3.57-.84 1.51.12 2.65.72 3.4 1.8-3.12 1.87-2.38 5.98.48 7.13-.57 1.5-1.31 2.99-2.54 4.09zM12 7.25c-.15-2.23 1.66-4.07 3.74-4.25.29 2.58-2.34 4.5-3.74 4.25z"/></svg>
                 </span>
                 <span class="app-store-button__lines">
-                  <span class="app-store-button__l1" data-i18n="hero.ctaPrimary">Download on the App Store</span>
+                  <span class="app-store-button__l1" data-i18n="hero.ctaPrimaryL1">Download on the</span>
+                  <span class="app-store-button__l2" data-i18n="hero.ctaPrimaryL2">App Store</span>
                 </span>
               </a>
               <a class="ghost-button" href="#showcase">
@@ -95,7 +143,7 @@
             </div>
             <div class="chip-row">
               <span class="chip"><span class="chip__dot"></span><span data-i18n="hero.chip1">Private by design</span></span>
-              <span class="chip"><span class="chip__dot"></span><span data-i18n="hero.chip2">EN · TR</span></span>
+              <span class="chip"><span class="chip__dot"></span><span data-i18n="hero.chip2">English · Türkçe</span></span>
               <span class="chip"><span class="chip__dot"></span><span data-i18n="hero.chip3">Native iOS</span></span>
             </div>
           </div>
@@ -109,7 +157,7 @@
                 </div>
                 <div class="metric-card__label" data-i18n="hero.constellation.calories">Calories</div>
               </div>
-              <div class="metric-card__value">179<span class="metric-card__unit" data-i18n="hero.constellation.caloriesUnit"> / 450 kcal</span></div>
+              <div class="metric-card__value"><span data-i18n="hero.constellation.caloriesValue">179</span><span class="metric-card__unit" data-i18n="hero.constellation.caloriesUnit"> / 450 kcal</span></div>
               <div class="metric-card__bar"><span style="width:40%"></span></div>
             </div>
 
@@ -120,7 +168,7 @@
                 </div>
                 <div class="metric-card__label" data-i18n="hero.constellation.steps">Steps</div>
               </div>
-              <div class="metric-card__value">3,825<span class="metric-card__unit" data-i18n="hero.constellation.stepsUnit"> / 8k</span></div>
+              <div class="metric-card__value"><span data-i18n="hero.constellation.stepsValue">3,825</span><span class="metric-card__unit" data-i18n="hero.constellation.stepsUnit"> / 8k</span></div>
               <div class="metric-card__bar"><span style="width:48%"></span></div>
             </div>
 
@@ -131,7 +179,7 @@
                 </div>
                 <div class="metric-card__label" data-i18n="hero.constellation.minutes">Minutes</div>
               </div>
-              <div class="metric-card__value">25<span class="metric-card__unit" data-i18n="hero.constellation.minutesUnit"> / 30 min</span></div>
+              <div class="metric-card__value"><span data-i18n="hero.constellation.minutesValue">25</span><span class="metric-card__unit" data-i18n="hero.constellation.minutesUnit"> / 30 min</span></div>
               <div class="metric-card__bar"><span style="width:83%"></span></div>
             </div>
 
@@ -153,7 +201,7 @@
     <!-- ========== SHOWCASE (sticky-scroll) ========== -->
     <section class="showcase" id="showcase" aria-labelledby="showcase-title">
       <div class="container">
-        <h2 id="showcase-title" class="visually-hidden" style="position:absolute;left:-9999px;" data-i18n="showcase.title">Velora screens</h2>
+        <h2 id="showcase-title" class="visually-hidden" data-i18n="showcase.title">Velora screens</h2>
         <div class="showcase__inner">
 
           <!-- Phone column (sticky on desktop) -->
@@ -162,9 +210,9 @@
               <div class="phone-frame__screen">
                 <img class="phone-frame__img"
                      data-showcase-phone
-                     src="images/en1.jpg"
+                     src="images/en1.webp"
                      alt=""
-                     width="400" height="820" loading="lazy" decoding="async" />
+                     width="680" height="1476" loading="lazy" decoding="async" />
               </div>
             </div>
           </div>
@@ -175,8 +223,8 @@
             <article class="showcase__section"
                      data-showcase-section
                      data-accent="metrics"
-                     data-src-en="images/en1.jpg"
-                     data-src-tr="images/tr1.jpg"
+                     data-src-en="images/en1.webp"
+                     data-src-tr="images/tr1.webp"
                      data-alt-en="Velora home dashboard with weekly stats"
                      data-alt-tr="Haftalık istatistiklerle Velora ana ekranı">
               <span class="eyebrow" data-i18n="showcase.metrics.eyebrow">Home</span>
@@ -187,12 +235,12 @@
               <div class="phone-frame showcase__mobile-phone">
                 <div class="phone-frame__screen">
                   <img class="phone-frame__img"
-                       src="images/en1.jpg"
-                       data-src-en="images/en1.jpg"
-                       data-src-tr="images/tr1.jpg"
+                       src="images/en1.webp"
+                       data-src-en="images/en1.webp"
+                       data-src-tr="images/tr1.webp"
                        data-i18n-alt="showcase.metrics.imgAlt"
                        alt=""
-                       width="400" height="820" loading="lazy" decoding="async" />
+                       width="680" height="1476" loading="lazy" decoding="async" />
                 </div>
               </div>
             </article>
@@ -200,8 +248,8 @@
             <article class="showcase__section"
                      data-showcase-section
                      data-accent="trends"
-                     data-src-en="images/en2.jpg"
-                     data-src-tr="images/tr2.jpg"
+                     data-src-en="images/en2.webp"
+                     data-src-tr="images/tr2.webp"
                      data-alt-en="Velora trends screen with weekly charts"
                      data-alt-tr="Haftalık grafiklerle Velora trend ekranı">
               <span class="eyebrow" data-i18n="showcase.trends.eyebrow">Trends</span>
@@ -211,12 +259,12 @@
               <div class="phone-frame showcase__mobile-phone">
                 <div class="phone-frame__screen">
                   <img class="phone-frame__img"
-                       src="images/en2.jpg"
-                       data-src-en="images/en2.jpg"
-                       data-src-tr="images/tr2.jpg"
+                       src="images/en2.webp"
+                       data-src-en="images/en2.webp"
+                       data-src-tr="images/tr2.webp"
                        data-i18n-alt="showcase.trends.imgAlt"
                        alt=""
-                       width="400" height="820" loading="lazy" decoding="async" />
+                       width="680" height="1476" loading="lazy" decoding="async" />
                 </div>
               </div>
             </article>
@@ -224,8 +272,8 @@
             <article class="showcase__section"
                      data-showcase-section
                      data-accent="activities"
-                     data-src-en="images/en3.jpg"
-                     data-src-tr="images/tr3.jpg"
+                     data-src-en="images/en3.webp"
+                     data-src-tr="images/tr3.webp"
                      data-alt-en="Velora activities list grouped by day"
                      data-alt-tr="Günlere göre gruplanmış Velora aktivite listesi">
               <span class="eyebrow" data-i18n="showcase.activities.eyebrow">Activities</span>
@@ -235,12 +283,12 @@
               <div class="phone-frame showcase__mobile-phone">
                 <div class="phone-frame__screen">
                   <img class="phone-frame__img"
-                       src="images/en3.jpg"
-                       data-src-en="images/en3.jpg"
-                       data-src-tr="images/tr3.jpg"
+                       src="images/en3.webp"
+                       data-src-en="images/en3.webp"
+                       data-src-tr="images/tr3.webp"
                        data-i18n-alt="showcase.activities.imgAlt"
                        alt=""
-                       width="400" height="820" loading="lazy" decoding="async" />
+                       width="680" height="1476" loading="lazy" decoding="async" />
                 </div>
               </div>
             </article>
@@ -260,7 +308,7 @@
         <div class="pillars__grid">
           <article class="pillar-card" data-accent="metrics">
             <div class="pillar-card__icon">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 15l3.5-3.5"/><path d="M20.5 18a9 9 0 1 0-17 0"/></svg>
             </div>
             <h3 class="pillar-card__title" data-i18n="pillars.track.h">Track</h3>
             <p class="pillar-card__body" data-i18n="pillars.track.p">Calories, steps and minutes, at a glance.</p>
@@ -294,9 +342,41 @@
           </div>
           <div class="privacy-strip__text">
             <span class="privacy-strip__title" data-i18n="privacy.h">Yours, alone.</span>
-            <span class="privacy-strip__body" data-i18n="privacy.p">Velora keeps your data on-device. No accounts. No selling. Ever.</span>
+            <span class="privacy-strip__body" data-i18n="privacy.p">Your health data is nobody's business but yours.</span>
+            <ul class="privacy-strip__points" role="list">
+              <li>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6L9 17l-5-5"/></svg>
+                <span data-i18n="privacy.p1">Kept on-device</span>
+              </li>
+              <li>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6L9 17l-5-5"/></svg>
+                <span data-i18n="privacy.p2">No accounts</span>
+              </li>
+              <li>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6L9 17l-5-5"/></svg>
+                <span data-i18n="privacy.p3">Never sold. Ever.</span>
+              </li>
+            </ul>
           </div>
         </div>
+      </div>
+    </section>
+
+    <!-- ========== CLOSING CTA ========== -->
+    <section class="closing" aria-labelledby="closing-title">
+      <div class="container closing__inner">
+        <span class="eyebrow" data-i18n="closing.eyebrow">Get started</span>
+        <h2 id="closing-title" data-i18n="closing.h">Make this week simpler.</h2>
+        <p class="closing__sub" data-i18n="closing.sub">Free on the App Store. Your data stays yours.</p>
+        <a class="app-store-button" href="https://apps.apple.com/app/id6748447208" target="_blank" rel="noopener noreferrer" data-i18n-aria-label="nav.ctaAria" aria-label="Download Velora on the App Store">
+          <span class="app-store-button__icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor" aria-hidden="true"><path d="M17.05 20.28c-.98.95-2.05.8-3.08.35-1.09-.46-2.09-.48-3.24 0-1.44.62-2.2.44-3.06-.35C2.79 15.25 3.51 7.59 9.05 7.31c1.35.07 2.29.74 3.08.8 1.18-.24 2.31-.93 3.57-.84 1.51.12 2.65.72 3.4 1.8-3.12 1.87-2.38 5.98.48 7.13-.57 1.5-1.31 2.99-2.54 4.09zM12 7.25c-.15-2.23 1.66-4.07 3.74-4.25.29 2.58-2.34 4.5-3.74 4.25z"/></svg>
+          </span>
+          <span class="app-store-button__lines">
+            <span class="app-store-button__l1" data-i18n="hero.ctaPrimaryL1">Download on the</span>
+            <span class="app-store-button__l2" data-i18n="hero.ctaPrimaryL2">App Store</span>
+          </span>
+        </a>
       </div>
     </section>
   </main>
@@ -305,7 +385,7 @@
   <footer class="site-footer">
     <div class="container site-footer__row">
       <span class="site-footer__brand">
-        <img src="images/velora.png" alt="" width="18" height="18" />
+        <img src="images/logo-56.png" alt="" width="18" height="18" />
         <span data-i18n="footer.copy">© 2026 Velora</span>
       </span>
       <span class="site-footer__disclaimer" data-i18n="footer.disclaimer">Velora is a wellness companion, not a medical device. Consult a clinician for medical advice.</span>

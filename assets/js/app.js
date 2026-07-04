@@ -13,6 +13,13 @@ function attachLangSwitch() {
       const next = btn.dataset.locale;
       if (!next || next === getLocale()) return;
       persistLocale(next);
+      // Keep the URL shareable and consistent with hreflang alternates
+      try {
+        const url = new URL(window.location.href);
+        if (next === 'en') url.searchParams.delete('lang');
+        else url.searchParams.set('lang', next);
+        history.replaceState(null, '', url);
+      } catch (_) {}
       await applyLocale(next);
       // After locale switch, refresh showcase phone if any showcase is currently active
       refreshShowcasePhone(currentAccent);
@@ -29,6 +36,22 @@ function setBodyAccent(accent) {
   refreshShowcasePhone(accent);
 }
 
+// Decode off-screen first, then fade — avoids the hard swap flash.
+async function crossfadePhone(img, src, alt) {
+  if (img.getAttribute('src') === src) {
+    if (alt) img.setAttribute('alt', alt);
+    return;
+  }
+  const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (!reduce) img.style.opacity = '0';
+  const pre = new Image();
+  pre.src = src;
+  try { if (pre.decode) await pre.decode(); } catch (_) {}
+  img.setAttribute('src', src);
+  if (alt) img.setAttribute('alt', alt);
+  if (!reduce) requestAnimationFrame(() => { img.style.opacity = '1'; });
+}
+
 function refreshShowcasePhone(accent) {
   const phone = document.querySelector('[data-showcase-phone]');
   if (!phone) return;
@@ -39,23 +62,34 @@ function refreshShowcasePhone(accent) {
   const altAttr = locale === 'tr' ? 'data-alt-tr' : 'data-alt-en';
   const src = section.getAttribute(srcAttr);
   const alt = section.getAttribute(altAttr);
-  if (src && phone.getAttribute('src') !== src) phone.setAttribute('src', src);
-  if (alt) phone.setAttribute('alt', alt);
+  if (src) crossfadePhone(phone, src, alt);
 }
 
 function attachShowcaseObserver() {
   const sections = document.querySelectorAll('[data-showcase-section]');
   if (!sections.length) return;
 
-  // Initialize phone with the first section's image so users see something at load
+  // Initialize the sticky phone with the first section's image (locale-aware)
+  // WITHOUT forcing the body accent — the hero keeps its own accent until
+  // the user actually reaches the showcase.
   const first = sections[0];
   if (first) {
-    document.body.dataset.accent = first.dataset.accent || 'activities';
-    currentAccent = first.dataset.accent || 'activities';
-    refreshShowcasePhone(currentAccent);
+    const phone = document.querySelector('[data-showcase-phone]');
+    if (phone) {
+      const locale = getLocale();
+      const src = first.getAttribute(locale === 'tr' ? 'data-src-tr' : 'data-src-en');
+      const alt = first.getAttribute(locale === 'tr' ? 'data-alt-tr' : 'data-alt-en');
+      if (src && phone.getAttribute('src') !== src) phone.setAttribute('src', src);
+      if (alt) phone.setAttribute('alt', alt);
+    }
   }
 
   const isMobile = window.matchMedia('(max-width: 900px)');
+
+  // The hero participates too, so scrolling back up restores the brand accent.
+  const hero = document.querySelector('.hero[data-accent]');
+  const showcaseSet = new Set(sections);
+  const watched = hero ? [hero, ...sections] : [...sections];
 
   const io = new IntersectionObserver((entries) => {
     // pick the entry with highest intersectionRatio that is intersecting
@@ -66,16 +100,24 @@ function attachShowcaseObserver() {
     }
     if (best) {
       const accent = best.target.dataset.accent;
-      // Toggle active class for typography pop
+      // Toggle active class for typography pop (showcase stages only)
       sections.forEach((s) => s.classList.toggle('is-active', s === best.target));
-      setBodyAccent(accent);
+      if (showcaseSet.has(best.target)) {
+        setBodyAccent(accent);
+      } else if (accent && document.body.dataset.accent !== accent) {
+        // Hero: restore brand accent but leave the showcase phone as-is
+        currentAccent = accent;
+        document.body.dataset.accent = accent;
+      }
     }
   }, {
-    threshold: [0.3, 0.5, 0.75],
+    // 0.15 included so the tall hero can still cross a threshold inside the
+    // shrunken root band (its max possible ratio is well under 0.3).
+    threshold: [0.15, 0.3, 0.5, 0.75],
     rootMargin: isMobile.matches ? '-30% 0px -30% 0px' : '-40% 0px -40% 0px'
   });
 
-  sections.forEach((s) => io.observe(s));
+  watched.forEach((s) => io.observe(s));
 }
 
 function attachSmoothAnchorScroll() {
@@ -86,7 +128,8 @@ function attachSmoothAnchorScroll() {
       const target = document.getElementById(id);
       if (!target) return;
       ev.preventDefault();
-      target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      target.scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', block: 'start' });
     });
   });
 }

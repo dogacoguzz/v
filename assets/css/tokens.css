@@ -1,7 +1,15 @@
 /* tokens.css — design system primitives for Velora landing
-   Loaded first; all other stylesheets read from these vars. */
+   Loaded first; all other stylesheets read from these vars.
+   (Fonts are loaded from index.html <head> so the browser discovers them
+   without waiting for this stylesheet — do not re-add @import here.) */
 
-@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&display=swap');
+/* Registered so `transition: --accent` genuinely interpolates and the
+   color-mix() derived tokens below follow it frame-by-frame. */
+@property --accent {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: #2ED1EA;
+}
 
 :root {
   /* Surfaces */
@@ -15,7 +23,7 @@
   /* Text */
   --text:       #f4f6f8;
   --text-muted: rgba(244, 246, 248, 0.65);
-  --text-soft:  rgba(244, 246, 248, 0.45);
+  --text-soft:  rgba(244, 246, 248, 0.55); /* ≥4.5:1 on --bg-deep for small labels */
 
   /* Multi-accent palette (mirrored from app screens) */
   --accent-metrics:    #A78BFA;  /* purple — Home / Metrics */
@@ -24,10 +32,6 @@
 
   /* Active accent — driven by [data-accent] on body or section */
   --accent: var(--accent-activities);
-  --accent-dim:  color-mix(in oklab, var(--accent) 18%, transparent);
-  --accent-soft: color-mix(in oklab, var(--accent) 28%, transparent);
-  --accent-glow: color-mix(in oklab, var(--accent) 38%, transparent);
-  --accent-ink:  color-mix(in oklab, var(--accent) 92%, white 8%);
 
   /* Brand-locked accent (CTA, focus, logo halo never change) */
   --brand:       var(--accent-activities);
@@ -86,7 +90,20 @@
 [data-accent="trends"]     { --accent: var(--accent-trends); }
 [data-accent="activities"] { --accent: var(--accent-activities); }
 
-/* Smooth accent-driven transitions */
-:root {
+/* Derived accent tokens.
+   Custom properties resolve var() at the element that DECLARES them, then
+   descendants inherit the already-substituted value — declaring these only
+   on :root froze them to cyan everywhere. Re-declaring inside every
+   [data-accent] scope makes each scope re-derive from its own --accent. */
+:root,
+[data-accent] {
+  --accent-dim:  color-mix(in oklab, var(--accent) 18%, transparent);
+  --accent-soft: color-mix(in oklab, var(--accent) 28%, transparent);
+  --accent-glow: color-mix(in oklab, var(--accent) 38%, transparent);
+  --accent-ink:  color-mix(in oklab, var(--accent) 92%, white 8%);
+}
+
+/* Smooth accent interpolation on the elements whose accent changes */
+[data-accent] {
   transition: --accent var(--t-accent);
 }
