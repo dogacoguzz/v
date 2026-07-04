@@ -68,24 +68,22 @@ ES modules require an actual HTTP server — `file://` will not work for `import
 
 ## Deployment
 
-**Target: Cloudflare Pages (Git integration).** The project must be configured as:
+**Host: GitHub Pages.** Push to `main` and the automatic "pages build and deployment"
+workflow publishes the repo root. The custom domain comes from `CNAME`; HTTPS is
+enforced in repo Settings → Pages.
 
-- Framework preset: **None**
-- Build command: **empty** (do NOT run `wrangler pages deploy` inside the CI —
-  Git-connected Pages projects upload the repo themselves; a wrangler deploy command
-  both requires a `CLOUDFLARE_API_TOKEN` with Pages:Edit permission and fights the
-  Git integration)
-- Build output directory: `/`
+DNS layout (zone lives on Cloudflare nameservers):
+- apex `velorahealthcompanion.com` → A records to GitHub Pages IPs (DNS only)
+- `www` → Cloudflare-proxied 301 redirect to the apex
 
-`_headers` (caching + security) and `_redirects` take effect on Cloudflare only.
-
-**Domain cutover checklist** (zone already uses Cloudflare nameservers):
-1. Pages project → Custom domains → add `velorahealthcompanion.com` and `www.…` —
-   Cloudflare creates the DNS records automatically.
-2. Once the apex serves from Cloudflare, unpublish GitHub Pages
-   (repo Settings → Pages → Source: None) so pushes stop triggering the legacy build.
-   The `CNAME` file only matters to GitHub Pages; it is served as a harmless static
-   file on Cloudflare.
+Notes:
+- There must be **no Cloudflare Pages project connected to this repo** — a leftover
+  Git-connected project re-runs its own (failing) build on every push. If one exists,
+  delete it in Cloudflare → Workers & Pages. No `wrangler` anywhere in this setup.
+- GitHub Pages cannot set custom response headers; `_headers` and `_redirects` are
+  **dormant** files kept only for a potential future Cloudflare Pages migration.
+- Two pushes within ~2 minutes can collide in the Pages queue ("Deployment failed,
+  try again later"). Batch changes into one push, or just re-run the failed workflow.
 
 ## Internationalization
 
