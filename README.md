@@ -68,13 +68,24 @@ ES modules require an actual HTTP server — `file://` will not work for `import
 
 ## Deployment
 
-**Current:** GitHub Pages — push to `main`, done. The custom domain is set by `CNAME`.
-Note that GitHub Pages serves everything in the repo and does not support custom response
-headers; long-lived caching is approximated with `?v=` params on locale strings.
+**Target: Cloudflare Pages (Git integration).** The project must be configured as:
 
-**Optional (Cloudflare Pages):** connect the repo in the dashboard with empty build
-command/output dir, or `wrangler pages deploy .`. This would enable `_headers`
-(immutable caching, security headers) and `_redirects`.
+- Framework preset: **None**
+- Build command: **empty** (do NOT run `wrangler pages deploy` inside the CI —
+  Git-connected Pages projects upload the repo themselves; a wrangler deploy command
+  both requires a `CLOUDFLARE_API_TOKEN` with Pages:Edit permission and fights the
+  Git integration)
+- Build output directory: `/`
+
+`_headers` (caching + security) and `_redirects` take effect on Cloudflare only.
+
+**Domain cutover checklist** (zone already uses Cloudflare nameservers):
+1. Pages project → Custom domains → add `velorahealthcompanion.com` and `www.…` —
+   Cloudflare creates the DNS records automatically.
+2. Once the apex serves from Cloudflare, unpublish GitHub Pages
+   (repo Settings → Pages → Source: None) so pushes stop triggering the legacy build.
+   The `CNAME` file only matters to GitHub Pages; it is served as a harmless static
+   file on Cloudflare.
 
 ## Internationalization
 

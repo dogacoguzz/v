@@ -1,0 +1,15 @@
+# Cloudflare Pages response headers (ignored by GitHub Pages)
+
+/*
+  X-Content-Type-Options: nosniff
+  X-Frame-Options: DENY
+  Referrer-Policy: strict-origin-when-cross-origin
+  Permissions-Policy: camera=(), microphone=(), geolocation=()
+
+# Static assets: filenames are stable but not hashed, so cache moderately
+# and let stale-while-revalidate hide the refresh cost.
+/assets/*
+  Cache-Control: public, max-age=3600, stale-while-revalidate=86400
+
+/images/*
+  Cache-Control: public, max-age=86400, stale-while-revalidate=604800
