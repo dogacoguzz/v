@@ -198,23 +198,18 @@
   transition: background var(--t-accent), box-shadow var(--t-accent);
 }
 
-/* Phone frame */
+/* Phone frame — no device bezel; the screenshot itself supplies the phone
+   chrome, so this is just a rounded, glowing mount for it. */
 .phone-frame {
   position: relative;
   width: 100%;
   max-width: 340px;
   aspect-ratio: 1 / 2.05;
-  border-radius: 38px;
-  padding: 7px;
-  background:
-    linear-gradient(180deg, rgba(255,255,255,0.08), rgba(255,255,255,0.02));
-  border: 1px solid var(--border-strong);
-  box-shadow: var(--shadow-2);
   margin-inline: auto;
 }
 
 .phone-frame::before {
-  /* subtle accent ring/glow */
+  /* soft accent glow behind the screenshot */
   content: '';
   position: absolute;
   inset: -8px;
@@ -233,6 +228,7 @@
   border-radius: 32px;
   overflow: hidden;
   background: #000;
+  box-shadow: var(--shadow-2);
 }
 
 .phone-frame__img {
