@@ -59,16 +59,40 @@
     "title": "Three habits, one quiet companion.",
     "track": {
       "h": "Track",
-      "p": "Calories, steps and minutes, at a glance."
+      "p": "Calories, steps and minutes, at a glance.",
+      "f1": "Steps, distance & walking time",
+      "f2": "Water intake with reminders",
+      "f3": "Weight & alcohol logging",
+      "f4": "Calendar, steps and water widgets"
     },
     "trend": {
       "h": "Trend",
-      "p": "Weekly patterns that turn data into direction."
+      "p": "Weekly patterns that turn data into direction.",
+      "f1": "Weekly progress charts",
+      "f2": "Monthly workout filters",
+      "f3": "Long-term weight graphs",
+      "f4": "AI-powered insights",
+      "f5": "Daily and weekly physical load"
     },
     "train": {
       "h": "Train",
-      "p": "Capture every walk, run, or lift in one tap."
+      "p": "Capture every walk, run, or lift in one tap.",
+      "f1": "Every set, rep & route",
+      "f2": "Heart-rate zones",
+      "f3": "Route maps with elevation",
+      "f4": "Calorie burn & efficiency"
     }
+  },
+  "coach": {
+    "eyebrow": "AI Coach",
+    "h": "A coach that knows your week.",
+    "sub": "Velora's AI coach reads your workouts, remembers your progress, and turns your data into clear next steps.",
+    "p1": "Remembers your training history",
+    "p2": "Analyzes effort, recovery and habits",
+    "p3": "Speaks like a coach, not a bot",
+    "q": "How was this week?",
+    "label": "Velora Coach",
+    "a": "213 kcal below your average. A good window to recover!"
   },
   "privacy": {
     "h": "Yours, alone.",

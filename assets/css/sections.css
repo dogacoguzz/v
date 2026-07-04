@@ -236,6 +236,133 @@
   .showcase__section .showcase__mobile-phone { display: none; }
 }
 
+/* ---------- AI COACH ---------- */
+.coach {
+  padding-block: var(--space-section);
+}
+
+.coach__inner {
+  display: grid;
+  grid-template-columns: 1.05fr 0.95fr;
+  gap: clamp(2rem, 6vw, 6rem);
+  align-items: center;
+}
+
+.coach__copy {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.coach__copy h2 {
+  font-size: var(--fs-2);
+  max-width: 16ch;
+}
+
+.coach__sub {
+  font-size: var(--fs-lead);
+  color: var(--text-muted);
+  max-width: 42ch;
+  line-height: 1.5;
+}
+
+.coach__points {
+  list-style: none;
+  margin: var(--space-2) 0 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.coach__points li {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  color: var(--text-muted);
+  font-weight: 500;
+}
+
+.coach__points svg {
+  width: 18px;
+  height: 18px;
+  color: var(--accent);
+  flex-shrink: 0;
+}
+
+.coach__demo {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  padding: var(--space-5);
+}
+
+.coach__demo::before {
+  /* soft accent glow behind the conversation */
+  content: '';
+  position: absolute;
+  inset: 6%;
+  border-radius: var(--radius-xl);
+  background: radial-gradient(60% 60% at 50% 50%, var(--accent-dim), transparent 70%);
+  filter: blur(36px);
+  z-index: -1;
+}
+
+.coach-bubble {
+  padding: var(--space-4) var(--space-5);
+  border-radius: var(--radius-lg);
+  font-size: var(--fs-body);
+  line-height: 1.5;
+  max-width: 36ch;
+}
+
+.coach-bubble--user {
+  align-self: flex-end;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  color: var(--text-muted);
+  border-bottom-right-radius: var(--radius-sm);
+}
+
+.coach-bubble--ai {
+  align-self: flex-start;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  background: var(--accent-dim);
+  border: 1px solid var(--accent-soft);
+  color: var(--text);
+  border-bottom-left-radius: var(--radius-sm);
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.3);
+}
+
+.coach-bubble__label {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-size: var(--fs-eyebrow);
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--accent-ink);
+}
+
+.coach-bubble__label svg {
+  width: 14px;
+  height: 14px;
+}
+
+@media (max-width: 880px) {
+  .coach__inner {
+    grid-template-columns: 1fr;
+    gap: var(--space-6);
+  }
+  .coach__demo {
+    padding: var(--space-3) 0;
+  }
+}
+
 /* ---------- PILLARS ---------- */
 .pillars {
   padding-block: var(--space-section);

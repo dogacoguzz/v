@@ -26,7 +26,7 @@ Built as a multi-file static bundle (no build tooling). **Live at
 │   │   ├── base.css              # Reset, body, ambient orbs, focus styles, .visually-hidden
 │   │   ├── layout.css            # Container, sticky nav, footer
 │   │   ├── components.css        # Buttons, chips, phone frame, pillar cards, lang switch
-│   │   └── sections.css          # Hero, sticky showcase, pillars, privacy, closing CTA
+│   │   └── sections.css          # Hero, sticky showcase, AI coach, pillars, privacy, closing CTA
 │   ├── js/
 │   │   ├── i18n.js               # applyLocale, ?lang= / localStorage / navigator resolution
 │   │   └── app.js                # Entry: bootstrap, lang switch, IntersectionObserver, crossfade

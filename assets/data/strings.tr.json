@@ -59,16 +59,40 @@
     "title": "Üç alışkanlık, sessiz bir yol arkadaşı.",
     "track": {
       "h": "Takip",
-      "p": "Kalori, adım ve dakika — bir bakışta."
+      "p": "Kalori, adım ve dakika, bir bakışta.",
+      "f1": "Adım, mesafe ve yürüyüş süresi",
+      "f2": "Su takibi ve hatırlatıcılar",
+      "f3": "Kilo ve alkol kaydı",
+      "f4": "Takvim, adım ve su widget'ları"
     },
     "trend": {
       "h": "Trend",
-      "p": "Veriyi yöne çeviren haftalık örüntüler."
+      "p": "Veriyi yöne çeviren haftalık örüntüler.",
+      "f1": "Haftalık ilerleme grafikleri",
+      "f2": "Aylık antrenman filtreleri",
+      "f3": "Uzun vadeli kilo grafikleri",
+      "f4": "Yapay zeka destekli içgörüler",
+      "f5": "Günlük ve haftalık fiziksel yük"
     },
     "train": {
       "h": "Antrenman",
-      "p": "Yürüyüş, koşu ya da ağırlık — hepsi tek dokunuşla."
+      "p": "Yürüyüş, koşu ya da ağırlık. Hepsi tek dokunuşla.",
+      "f1": "Set, tekrar ve rota detayları",
+      "f2": "Nabız bölgeleri",
+      "f3": "Yükseklik profilli rota haritaları",
+      "f4": "Kalori yakımı ve verimlilik"
     }
+  },
+  "coach": {
+    "eyebrow": "Yapay Zeka Koçu",
+    "h": "Haftanı tanıyan bir koç.",
+    "sub": "Velora'nın yapay zeka koçu antrenmanlarını okur, ilerlemeni hatırlar ve verini net adımlara çevirir.",
+    "p1": "Antrenman geçmişini hatırlar",
+    "p2": "Eforu, toparlanmayı ve alışkanlıkları analiz eder",
+    "p3": "Bot gibi değil, koç gibi konuşur",
+    "q": "Bu hafta nasıldı?",
+    "label": "Velora Koç",
+    "a": "Ortalamanın 213 kcal altındasın. Toparlanmak için iyi bir pencere!"
   },
   "privacy": {
     "h": "Sadece sana ait.",
