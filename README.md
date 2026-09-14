@@ -26,9 +26,10 @@ Built as a multi-file static bundle (no build tooling). **Live at
 ├── tr/terms-of-service/index.html # GENERATED legal page — do not edit by hand
 ├── eula/index.html               # Self-contained redirect to Apple's standard EULA (noindex)
 ├── tools/build-tr.mjs            # Prerenders tr/index.html from index.html + strings.tr.json
-├── tools/build-legal.mjs         # Generates the four legal pages from a Firebase Remote Config export
+├── tools/build-legal.mjs         # Generates the four legal pages from content/legal/*.html
 ├── tools/build-legal.test.mjs    # node:test suite for the generator's pure functions
 ├── tools/lib/prerender.mjs       # Shared prerender helpers (i18n substitution, root-relative + locale-prefixed path rewrite)
+├── content/legal/                # Source of truth for the legal text (4 HTML body fragments)
 ├── 404.html                      # Self-contained not-found page (GitHub Pages picks it up)
 ├── sitemap.xml                   # /, /tr/ and the four legal pages with hreflang alternates
 ├── assets/
@@ -113,7 +114,7 @@ All user-facing strings live in `assets/data/strings.{en,tr}.json`. To add or up
 5. **Regenerate the static Turkish page and commit it:** `node tools/build-tr.mjs`.
    Turkish lives at the prerendered `/tr/` so crawlers that don't execute JavaScript
    (Bing, GPTBot, ClaudeBot, …) can read it; client-side i18n alone was Google-only.
-   `node tools/build-legal.mjs <export>` regenerates the Turkish legal pages' chrome
+   `node tools/build-legal.mjs` regenerates the Turkish legal pages' chrome
    the same way — see [Legal Pages](#legal-pages) below for the full workflow.
 
 Locale resolution order: `<html data-locale>` (fixed-locale generated pages) → `/tr/`
@@ -129,26 +130,30 @@ correct-locale showcase image — keep it in sync with `i18n.js`.
 
 `/privacy-policy/`, `/terms-of-service/` (English) and `/tr/privacy-policy/`,
 `/tr/terms-of-service/` (Turkish) are generated pages, not hand-written. Their text
-comes from the Firebase Remote Config template of project `velora-79f7c`
-(parameters `privacy_policy_en` / `privacy_policy_tr` / `terms_of_service_en` /
-`terms_of_service_tr`; `eula_url` is cross-checked against the constant in `eula/index.html`
-so the two never drift apart).
+lives in `content/legal/*.html` — that directory is the single source of truth for
+the legal copy; there is no external document this project syncs from.
 
-Workflow to sync a console edit:
+Each `content/legal/<slug>.<locale>.html` file is a body **fragment**: no `<html>`,
+`<head>`, or `<body>`, just the inner markup of the legal document, plus a one-line
+comment at the top naming the source. Top-level elements are restricted to an
+allowlist: `h1`, `p` (optionally `class="last-updated"`), `h2`, `ul`,
+`table.data-table`, and `div.highlight` / `div.warning-box` / `div.danger-box` /
+`div.contact-info`. Do not wrap tables in `div.legal__table-scroll` yourself — the
+generator does that.
 
-1. Edit the text in the Firebase console.
-2. Export the template: `npx firebase-tools remoteconfig:get --project velora-79f7c -o /tmp/rc.json`.
-3. Regenerate the pages: `node tools/build-legal.mjs /tmp/rc.json`.
-4. Review the diff.
-5. Commit the regenerated pages.
+Workflow to edit the legal text:
 
-The export itself is never committed — it carries unrelated feature flags alongside
-the legal parameters. The generator only touches presentation: it replaces
-`\(appName)` with `Velora`, drops the App Version paragraph, strips inline styles, and
-wraps tables for horizontal scroll on narrow screens; it fails loudly on a missing
-parameter, an unresolved placeholder, or markup outside its known allowlist. Re-syncing
-after a console edit is a manual step — nothing watches the console for changes, so
-nobody is reminded to run it.
+1. Edit the relevant fragment under `content/legal/`.
+2. Regenerate the pages: `node tools/build-legal.mjs` (it takes no arguments).
+3. Review the diff.
+4. Commit the fragment and the regenerated pages together.
+
+The generator (`tools/build-legal.mjs`) fails loudly — and writes nothing — on a
+disallowed top-level element, unbalanced markup, an embedded `<script>`/`<style>`, an
+unresolved `\(...)` placeholder, or an em dash (U+2014); user-facing legal copy must
+spell out "and"/use a comma or period instead. It also asserts the EULA URL is
+identical across all three copies in `eula/index.html` and prints it in the sanity
+table, though nothing compares it to an export anymore.
 
 `/eula` is different: it's a hand-written `eula/index.html` that forwards to Apple's standard
 EULA (`https://www.apple.com/legal/internet-services/itunes/dev/stdeula/`) via meta
@@ -160,8 +165,7 @@ the slashless request to the directory index, the same as it already does for `/
 
 Run the generator's test suite with `node --test tools/build-legal.test.mjs` (Node
 20+; the file is named explicitly because `node --test <directory>` is not accepted on
-Node 21+). The tests that exercise the real documents read the export from `/tmp/rc.json`
-(override with `RC_EXPORT=<path>`) and are skipped when it is absent.
+Node 21+). All tests run unconditionally — there is no external export to gate on.
 
 ## Adding a New Showcase Stage
 

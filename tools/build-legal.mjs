@@ -1,11 +1,9 @@
 #!/usr/bin/env node
-// build-legal.mjs — generates the four legal pages from a Firebase Remote Config export.
+// build-legal.mjs — generates the four legal pages from content/legal/*.html.
 //
-// Workflow after editing a document in the Remote Config console:
-//   npx firebase-tools remoteconfig:get --project velora-79f7c -o /tmp/rc.json
-//   node tools/build-legal.mjs /tmp/rc.json
-// then commit privacy-policy/, terms-of-service/ and their tr/ siblings.
-// The export itself is never committed; the legal text is copied verbatim (only presentation changes).
+// Workflow: edit a fragment under content/legal/, then:
+//   node tools/build-legal.mjs
+// review the diff and commit privacy-policy/, terms-of-service/ and their tr/ siblings.
 
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
@@ -14,13 +12,13 @@ import { applyI18nStrings, markLangSwitch, rewriteRootRelativePaths } from './li
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
 const SITE = 'https://velorahealthcompanion.com';
-const APP_NAME = 'Velora';
+const CONTENT_DIR = join(ROOT, 'content/legal');
 
 const DOCUMENTS = [
-  { key: 'privacy_policy_en', locale: 'en', kind: 'privacy' },
-  { key: 'privacy_policy_tr', locale: 'tr', kind: 'privacy' },
-  { key: 'terms_of_service_en', locale: 'en', kind: 'terms' },
-  { key: 'terms_of_service_tr', locale: 'tr', kind: 'terms' },
+  { locale: 'en', kind: 'privacy' },
+  { locale: 'tr', kind: 'privacy' },
+  { locale: 'en', kind: 'terms' },
+  { locale: 'tr', kind: 'terms' },
 ];
 const SLUGS = { privacy: 'privacy-policy', terms: 'terms-of-service' };
 const OG_LOCALES = { en: 'en_US', tr: 'tr_TR' };
@@ -28,6 +26,8 @@ const PREFIX = { en: '', tr: '/tr' };
 
 export const outputPath = ({ locale, kind }) => `${locale === 'tr' ? 'tr/' : ''}${SLUGS[kind]}/index.html`;
 export const OUTPUT_PATHS = DOCUMENTS.map(outputPath);
+export const sourcePath = ({ locale, kind }) => `content/legal/${SLUGS[kind]}.${locale}.html`;
+export const SOURCE_PATHS = DOCUMENTS.map(sourcePath);
 
 const VOID_TAGS = new Set(['area', 'base', 'br', 'col', 'embed', 'hr', 'img', 'input', 'link', 'meta', 'source', 'track', 'wbr']);
 const TOP_LEVEL_ALLOWLIST = {
@@ -43,38 +43,6 @@ const attrValue = (attrs, name) => {
   const m = new RegExp(`(?:^|\\s)${name}="([^"]*)"`).exec(attrs);
   return m ? m[1].trim() : '';
 };
-
-// Inner HTML of the source's <div class="container">, found by depth-counting nested divs.
-export function extractBody(html) {
-  const open = '<div class="container">';
-  const start = html.indexOf(open);
-  if (start === -1) throw new Error('extractBody: no <div class="container"> in source document');
-  const re = /<\/?div\b[^>]*>/g;
-  re.lastIndex = start + open.length;
-  let depth = 1;
-  for (let m = re.exec(html); m; m = re.exec(html)) {
-    depth += m[0].startsWith('</') ? -1 : 1;
-    if (depth === 0) return html.slice(start + open.length, m.index);
-  }
-  throw new Error('extractBody: <div class="container"> is never closed');
-}
-
-const APP_VERSION_PARAGRAPH = /[ \t]*<p\b[^>]*>((?:(?!<\/p>)[\s\S])*?\\\(appVersion\)[\s\S]*?)<\/p>[ \t]*\r?\n?/g;
-const APP_VERSION_LABEL = /<strong>\s*(?:App Version|Uygulama Sürümü):?\s*<\/strong>/g;
-
-// The appVersion paragraph is dropped only when it carries nothing but its label and the placeholder.
-export function substitutePlaceholders(html) {
-  if (html.includes('\\(sharedCSS)')) throw new Error('substitutePlaceholders: \\(sharedCSS) reached the document body');
-  return html
-    .replace(APP_VERSION_PARAGRAPH, (_, inner) => {
-      const leftover = inner.replace(APP_VERSION_LABEL, '').replace(/\\\(appVersion\)/g, '').trim();
-      if (/[^\s\p{P}]/u.test(leftover)) {
-        throw new Error(`substitutePlaceholders: appVersion paragraph carries extra wording: ${leftover}`);
-      }
-      return '';
-    })
-    .replace(/\\\(appName\)/g, APP_NAME);
-}
 
 export function stripInlineStyles(html) {
   return html.replace(/\s+style=(?:"[^"]*"|'[^']*')/g, '');
@@ -97,6 +65,9 @@ export function assertClean(html) {
   if (placeholder) throw new Error(`assertClean: unresolved placeholder ${placeholder[0]}`);
   const embedded = /<(script|style)\b/i.exec(html);
   if (embedded) throw new Error(`assertClean: embedded <${embedded[1].toLowerCase()}> element is not allowed`);
+  if (html.includes('—')) {
+    throw new Error('assertClean: em dash (U+2014) is not allowed in user-facing legal text');
+  }
 
   const stripped = html.replace(/<!--[\s\S]*?-->/g, '');
   const tagRe = /<(\/?)([a-zA-Z][a-zA-Z0-9]*)\b([^>]*)>/g;
@@ -119,8 +90,10 @@ export function assertClean(html) {
   if (depth !== 0) throw new Error(`assertClean: unbalanced markup, ${depth} element(s) never closed`);
 }
 
+// Strips the file's leading `Source of truth` comment before any check or output.
 export function normaliseDocument(source) {
-  const body = wrapTables(stripInlineStyles(substitutePlaceholders(extractBody(source))));
+  const stripped = source.replace(/^\s*<!--[\s\S]*?-->\s*\n?/, '');
+  const body = wrapTables(stripInlineStyles(stripped));
   assertClean(body);
   return body;
 }
@@ -241,7 +214,7 @@ ${reindent(body, '      ')}
   return rewriteRootRelativePaths(page, { localePrefix: prefix });
 }
 
-// eula/index.html carries the URL three times; all copies must agree before the export is compared against it.
+// eula/index.html carries the URL three times; all copies must agree with each other.
 const EULA_URL_SOURCES = [
   /<meta http-equiv="refresh" content="0; url=([^"]+)" \/>/,
   /<a href="([^"]+)"/,
@@ -263,7 +236,8 @@ export function pageChecks({ page, source, locale, kind }) {
   const prefix = PREFIX[locale];
   const article = /<article class="legal">([\s\S]*?)<\/article>/.exec(page)?.[1] ?? '';
   let allowlist = true;
-  try { assertClean(article); } catch (e) { allowlist = e.message; }
+  // Em dashes are stripped here so the dedicated `no em dash` row below is the only one reporting them.
+  try { assertClean(article.replace(/—/g, '')); } catch (e) { allowlist = e.message; }
   return {
     'exactly one h1': count(page, /<h1\b/g) === 1,
     'no unresolved placeholder': !page.includes('\\('),
@@ -271,6 +245,7 @@ export function pageChecks({ page, source, locale, kind }) {
     'no script/style in article': !/<(script|style)\b/i.test(article),
     'h2 count matches source': count(article, /<h2\b/g) === count(source, /<h2\b/g),
     'top-level allowlist': allowlist,
+    'no em dash': !article.includes('—'),
     'no bare legal href': !/href="(privacy-policy|terms-of-service)\//.test(page),
     'no bare asset path': !/(?:href|src)="(?:assets|images)\//.test(page),
     'brand href is locale home': page.includes(`<a href="${prefix}/" class="brand-mark"`),
@@ -285,23 +260,9 @@ const printChecks = (log, label, checks) => {
   }
 };
 
-// Builds all four pages and prints the sanity table before anything is written.
-export function build({ exportPath, outDir = ROOT, log = console.log }) {
-  if (!exportPath) throw new Error('usage: node tools/build-legal.mjs <path-to-rc-export.json>');
-  if (!existsSync(exportPath)) throw new Error(`export not found: ${exportPath}`);
-  const parameters = JSON.parse(readFileSync(exportPath, 'utf8')).parameters ?? {};
-  const param = (key) => {
-    const value = parameters[key]?.defaultValue?.value;
-    if (typeof value !== 'string' || !value.trim()) throw new Error(`MISSING PARAMETER ${key}`);
-    return value;
-  };
-
+// Builds all four pages from content/legal/*.html and prints the sanity table before writing.
+export function build({ outDir = ROOT, contentDir = CONTENT_DIR, log = console.log } = {}) {
   const eulaUrl = readEulaUrl();
-  const exportEula = param('eula_url');
-  if (exportEula !== eulaUrl) {
-    throw new Error(`eula_url mismatch: export has ${exportEula}, eula/index.html has ${eulaUrl}`);
-  }
-
   const chrome = loadChrome();
   const strings = {
     en: JSON.parse(readFileSync(join(ROOT, 'assets/data/strings.en.json'), 'utf8')),
@@ -309,13 +270,15 @@ export function build({ exportPath, outDir = ROOT, log = console.log }) {
   };
 
   const pages = DOCUMENTS.map((doc) => {
-    const source = param(doc.key);
+    const file = join(contentDir, `${SLUGS[doc.kind]}.${doc.locale}.html`);
+    if (!existsSync(file)) throw new Error(`source not found: ${file}`);
+    const source = readFileSync(file, 'utf8');
     const body = normaliseDocument(source);
     const page = composePage({ ...doc, body, strings: strings[doc.locale], chrome });
     return { ...doc, path: outputPath(doc), page, checks: pageChecks({ page, source, ...doc }) };
   });
 
-  log(`eula_url matches eula/index.html: ${eulaUrl}`);
+  log(`eula_url is consistent in eula/index.html: ${eulaUrl}`);
   let failed = false;
   for (const p of pages) {
     printChecks(log, p.path, p.checks);
@@ -333,8 +296,13 @@ export function build({ exportPath, outDir = ROOT, log = console.log }) {
 }
 
 export function main(argv) {
+  if (argv.length) {
+    console.error('usage: node tools/build-legal.mjs (no arguments; edit content/legal/*.html instead)');
+    process.exit(1);
+    return;
+  }
   try {
-    build({ exportPath: argv[0] });
+    build();
   } catch (e) {
     console.error(e.message);
     process.exit(1);

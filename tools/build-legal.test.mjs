@@ -1,9 +1,8 @@
 // build-legal.test.mjs — run with: node --test tools/build-legal.test.mjs
-// RC_EXPORT may point at a Remote Config export; the real-document tests skip without it.
 
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { existsSync, mkdtempSync, readdirSync, readFileSync, statSync, writeFileSync } from 'node:fs';
+import { existsSync, mkdtempSync, mkdirSync, readdirSync, readFileSync, statSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -11,144 +10,92 @@ import { fileURLToPath } from 'node:url';
 import {
   count,
   OUTPUT_PATHS,
+  SOURCE_PATHS,
   assertClean,
   build,
   composePage,
-  extractBody,
   loadChrome,
   normaliseDocument,
+  main,
   pageChecks,
   readEulaUrl,
+  sourcePath,
   stripInlineStyles,
-  substitutePlaceholders,
   wrapTables,
 } from './build-legal.mjs';
 import { applyI18nStrings, keyParity, markLangSwitch, rewriteRootRelativePaths } from './lib/prerender.mjs';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
-const RC_EXPORT = process.env.RC_EXPORT || '/tmp/rc.json';
-const LEGAL_KEYS = ['privacy_policy_en', 'privacy_policy_tr', 'terms_of_service_en', 'terms_of_service_tr'];
+const DOCS = [
+  { locale: 'en', kind: 'privacy' },
+  { locale: 'tr', kind: 'privacy' },
+  { locale: 'en', kind: 'terms' },
+  { locale: 'tr', kind: 'terms' },
+];
 
-const readExport = () => (existsSync(RC_EXPORT) ? JSON.parse(readFileSync(RC_EXPORT, 'utf8')) : null);
 const tmpDir = () => mkdtempSync(join(tmpdir(), 'build-legal-'));
-const writeExport = (dir, parameters) => {
-  const file = join(dir, 'rc-export.json');
-  writeFileSync(file, JSON.stringify({ parameters }));
-  return file;
-};
-const param = (value) => ({ defaultValue: { value } });
 const listFiles = (dir) => readdirSync(dir, { recursive: true }).filter((f) => statSync(join(dir, f)).isFile());
-
-const SAMPLE = `<!DOCTYPE html>
-<html><head><title>\\(appName) Privacy</title><style>\\(sharedCSS)</style></head>
-<body>
-  <div class="container">
-    <h1>\\(appName) Privacy Policy</h1>
-    <p class="last-updated">Effective: 1 Jan 2026</p>
-    <div class="highlight">
-      <h2>1. Summary</h2>
-      <p>\\(appName) keeps data on device.</p>
-    </div>
-    <h2>2. Data</h2>
-    <table class="data-table">
-      <tr><th>A</th><th>B</th></tr>
-      <tr><td>1</td><td>2</td></tr>
-    </table>
-    <ul><li>One</li><li>Two</li></ul>
-    <div class="contact-info">
-      <h2>3. Contact</h2>
-      <p>Email: <strong>dnf.velora@gmail.com</strong></p>
-      <p><strong>App Version:</strong> \\(appVersion)</p>
-      <p style="margin-top: 20px; font-size: 12px; color: #666;">© \\(appName) / Doğaç Oğuz. All Rights Reserved.</p>
-    </div>
-  </div>
-</body></html>`;
-
-// Minimal valid Remote Config document, so the build's failure paths run without a real export.
-const syntheticDoc = (title) => `<!DOCTYPE html><html><head><style>\\(sharedCSS)</style></head><body>
-<div class="container">
-  <h1>${title}</h1>
-  <p class="last-updated">Effective: 1 Jan 2026</p>
-  <h2>1. Scope</h2>
-  <p>\\(appName) keeps data on device.</p>
-  <div class="contact-info">
-    <h2>2. Contact</h2>
-    <p><strong>App Version:</strong> \\(appVersion)</p>
-  </div>
-</div>
-</body></html>`;
-const syntheticParameters = () => ({
-  ...Object.fromEntries(LEGAL_KEYS.map((k) => [k, param(syntheticDoc(k))])),
-  eula_url: param(readEulaUrl()),
-});
 const loadStrings = (locale) => JSON.parse(readFileSync(join(ROOT, `assets/data/strings.${locale}.json`), 'utf8'));
 
-const normalise = (html) => wrapTables(stripInlineStyles(substitutePlaceholders(extractBody(html))));
+const SAMPLE_FRAGMENT = `<!-- Source of truth for /privacy-policy/ (en). Edit here, then run: node tools/build-legal.mjs -->
+<h1>Velora Privacy Policy</h1>
+<p class="last-updated">Effective: 1 Jan 2026</p>
+<div class="highlight">
+  <h2>1. Summary</h2>
+  <p>Velora keeps data on device.</p>
+</div>
+<h2>2. Data</h2>
+<table class="data-table">
+  <tr><th>A</th><th>B</th></tr>
+  <tr><td>1</td><td>2</td></tr>
+</table>
+<ul><li>One</li><li>Two</li></ul>
+<div class="contact-info">
+  <h2>3. Contact</h2>
+  <p>Email: <strong>dnf.velora@gmail.com</strong></p>
+</div>
+`;
 
-test('extractBody unwraps the container and keeps order and h2 count', () => {
-  const body = extractBody(SAMPLE);
+const seedContentDir = (dir, { overrides = {}, skip = [] } = {}) => {
+  mkdirSync(dir, { recursive: true });
+  for (const doc of DOCS) {
+    const key = `${doc.kind}.${doc.locale}`;
+    if (skip.includes(key)) continue;
+    const body = overrides[key] ?? SAMPLE_FRAGMENT;
+    writeFileSync(join(dir, sourcePath(doc).split('/').pop()), body);
+  }
+  return dir;
+};
+
+test('normaliseDocument strips the leading source comment and yields one h1', () => {
+  const body = normaliseDocument(SAMPLE_FRAGMENT);
+  assert.ok(!body.includes('Source of truth'));
+  assert.equal(count(body, /<h1\b/g), 1);
   assert.ok(body.trim().startsWith('<h1>'));
-  assert.ok(body.trim().endsWith('</div>'));
-  assert.equal(count(body, /<h2/g), 3);
-  assert.ok(body.indexOf('1. Summary') < body.indexOf('2. Data'));
-  assert.ok(body.indexOf('2. Data') < body.indexOf('3. Contact'));
-  assert.ok(!body.includes('<div class="container">'));
-  assert.ok(!body.includes('</body>'));
 });
 
-test('extractBody throws when the container is missing', () => {
-  assert.throws(() => extractBody('<html><body><p>x</p></body></html>'), /div class="container"/);
+test('normaliseDocument runs cleanly on all four real source files', () => {
+  for (const doc of DOCS) {
+    const source = readFileSync(join(ROOT, sourcePath(doc)), 'utf8');
+    const body = normaliseDocument(source);
+    assert.equal(count(body, /<h1\b/g), 1, sourcePath(doc));
+  }
 });
 
-test('substitutePlaceholders maps appName and drops only the appVersion paragraph', () => {
-  const out = substitutePlaceholders(extractBody(SAMPLE));
-  assert.ok(!out.includes('\\(appName)'));
-  assert.ok(out.includes('<h1>Velora Privacy Policy</h1>'));
-  assert.ok(out.includes('<p>Velora keeps data on device.</p>'));
-  assert.ok(!out.includes('appVersion'));
-  assert.ok(!out.includes('App Version'));
-  assert.ok(out.includes('<p>Email: <strong>dnf.velora@gmail.com</strong></p>'));
-  assert.ok(out.includes('© Velora / Doğaç Oğuz. All Rights Reserved.'));
-  assert.equal(count(out, /<p\b/g), 4);
+test('normaliseDocument rejects an em dash', () => {
+  const withDash = SAMPLE_FRAGMENT.replace('Velora keeps data on device.', 'Velora keeps data on device — always.');
+  assert.throws(() => normaliseDocument(withDash), /em dash \(U\+2014\)/);
 });
 
-test('substitutePlaceholders removes exactly the EN and TR appVersion paragraph shapes', () => {
-  const en = '<p>a</p>\n    <p><strong>App Version:</strong> \\(appVersion)</p>\n<p>b</p>';
-  const tr = '<p>a</p>\n    <p><strong>Uygulama Sürümü:</strong> \\(appVersion)</p>\n<p>b</p>';
-  assert.equal(substitutePlaceholders(en), '<p>a</p>\n<p>b</p>');
-  assert.equal(substitutePlaceholders(tr), '<p>a</p>\n<p>b</p>');
-});
-
-test('substitutePlaceholders throws when the appVersion paragraph carries extra wording', () => {
-  const src = '<p><strong>App Version:</strong> \\(appVersion). Data Controller: Doğaç Oğuz, Istanbul.</p>';
-  assert.throws(() => substitutePlaceholders(src), /extra wording: \. Data Controller: Doğaç Oğuz, Istanbul\./);
-});
-
-test('substitutePlaceholders leaves appVersion outside a <p> for assertClean to reject', () => {
-  const src = '<p>Intro</p>\n<ul><li>Build \\(appVersion)</li></ul>';
-  const out = substitutePlaceholders(src);
-  assert.equal(out, src);
-  assert.throws(() => assertClean(out), /unresolved placeholder \\\(appVersion\)/);
-});
-
-test('substitutePlaceholders throws when sharedCSS reaches the body', () => {
-  assert.throws(() => substitutePlaceholders('<p>\\(sharedCSS)</p>'), /sharedCSS/);
-});
-
-test('sharedCSS in the source head never reaches the normalised body', () => {
-  const out = normalise(SAMPLE);
-  assert.ok(!out.includes('\\('));
-  assert.doesNotThrow(() => assertClean(out));
-});
-
-test('stripInlineStyles removes the copyright style attribute and keeps its text', () => {
-  const out = stripInlineStyles(extractBody(SAMPLE));
+test('stripInlineStyles removes a style attribute and keeps the text', () => {
+  const out = stripInlineStyles('<p style="color: red">Text</p>');
   assert.ok(!/ style=/.test(out));
-  assert.ok(out.includes('<p>© \\(appName) / Doğaç Oğuz. All Rights Reserved.</p>'));
+  assert.ok(out.includes('>Text</p>'));
 });
 
 test('wrapTables wraps each data table exactly once and is idempotent', () => {
-  const once = wrapTables(extractBody(SAMPLE));
+  const src = '<table class="data-table">\n  <tr><td>1</td></tr>\n</table>';
+  const once = wrapTables(src);
   const twice = wrapTables(once);
   assert.equal(count(once, /legal__table-scroll/g), 1);
   assert.equal(twice, once);
@@ -176,6 +123,10 @@ test('assertClean rejects markup that is never closed', () => {
   assert.throws(() => assertClean('<h1>T</h1>\n<p>open\n<blockquote>q</blockquote>'), /unbalanced markup, 1 element\(s\) never closed/);
 });
 
+test('assertClean rejects an em dash', () => {
+  assert.throws(() => assertClean('<p>a — b</p>'), /assertClean: em dash \(U\+2014\) is not allowed in user-facing legal text/);
+});
+
 test('assertClean accepts every allowlisted top-level element', () => {
   const ok = [
     '<h1>T</h1>', '<p class="last-updated">d</p>', '<p>x<br />y</p>', '<h2>1.</h2>', '<ul><li>a</li></ul>',
@@ -185,18 +136,6 @@ test('assertClean accepts every allowlisted top-level element', () => {
     '<div class="danger-box"><p>p</p></div>', '<div class="contact-info"><p>p</p></div>',
   ].join('\n');
   assert.doesNotThrow(() => assertClean(ok));
-});
-
-test('the four real documents pass assertClean after normalisation', (t) => {
-  const rc = readExport();
-  if (!rc) return t.skip(`no export at ${RC_EXPORT}`);
-  for (const key of LEGAL_KEYS) {
-    const source = rc.parameters[key].defaultValue.value;
-    const out = normalise(source);
-    assert.doesNotThrow(() => assertClean(out), key);
-    assert.equal(count(out, /<h2/g), count(source, /<h2/g), key);
-    assert.equal(count(out, /<h1/g), 1, key);
-  }
 });
 
 test('rewriteRootRelativePaths maps assets, images and legal hrefs per prefix and leaves /eula', () => {
@@ -337,16 +276,14 @@ test('importing the generator module runs no CLI code and writes nothing', async
   assert.deepEqual(after, before);
 });
 
-test('pageChecks passes every check for a well-formed synthetic page', () => {
-  const source = syntheticDoc('Privacy Policy');
-  const page = composePage({ locale: 'en', kind: 'privacy', body: normaliseDocument(source), strings: loadStrings('en'), chrome: loadChrome() });
-  const checks = pageChecks({ page, source, locale: 'en', kind: 'privacy' });
+test('pageChecks passes every check for a well-formed page built from a clean fragment', () => {
+  const page = composePage({ locale: 'en', kind: 'privacy', body: normaliseDocument(SAMPLE_FRAGMENT), strings: loadStrings('en'), chrome: loadChrome() });
+  const checks = pageChecks({ page, source: SAMPLE_FRAGMENT, locale: 'en', kind: 'privacy' });
   assert.deepEqual(Object.values(checks), Object.keys(checks).map(() => true));
 });
 
 test('pageChecks flags each defect it guards against', () => {
-  const source = syntheticDoc('Privacy Policy');
-  const page = composePage({ locale: 'en', kind: 'privacy', body: normaliseDocument(source), strings: loadStrings('en'), chrome: loadChrome() });
+  const page = composePage({ locale: 'en', kind: 'privacy', body: normaliseDocument(SAMPLE_FRAGMENT), strings: loadStrings('en'), chrome: loadChrome() });
   const swap = (from, to) => {
     assert.ok(page.includes(from), `fixture lacks ${from}`);
     return page.replace(from, to);
@@ -354,9 +291,10 @@ test('pageChecks flags each defect it guards against', () => {
   const defects = {
     'exactly one h1': swap('<h1>', '<h1>Extra</h1><h1>'),
     'no unresolved placeholder': swap('</article>', '\\(foo)</article>'),
-    'no inline style': swap('<p>Velora', '<p style="color: red">Velora'),
+    'no inline style': swap('<p>Email', '<p style="color: red">Email'),
     'no script/style in article': swap('</article>', '<script>1</script></article>'),
     'top-level allowlist': swap('<article class="legal">', '<article class="legal"><blockquote>q</blockquote>'),
+    'no em dash': swap('<p>Email: <strong>dnf.velora@gmail.com</strong></p>', '<p>Email — <strong>dnf.velora@gmail.com</strong></p>'),
     'no bare legal href': swap('href="/privacy-policy/"', 'href="privacy-policy/"'),
     'no bare asset path': swap('href="/assets/css/legal.css"', 'href="assets/css/legal.css"'),
     'brand href is locale home': swap('<a href="/" class="brand-mark"', '<a href="/tr/" class="brand-mark"'),
@@ -364,58 +302,82 @@ test('pageChecks flags each defect it guards against', () => {
     'canonical ends with slug': swap('href="https://velorahealthcompanion.com/privacy-policy/" />', 'href="https://velorahealthcompanion.com/privacy-policy" />'),
   };
   for (const [check, broken] of Object.entries(defects)) {
-    const checks = pageChecks({ page: broken, source, locale: 'en', kind: 'privacy' });
+    const checks = pageChecks({ page: broken, source: SAMPLE_FRAGMENT, locale: 'en', kind: 'privacy' });
     assert.notEqual(checks[check], true, check);
   }
-  const extraH2 = pageChecks({ page, source: `${source}<h2>ghost</h2>`, locale: 'en', kind: 'privacy' });
+  const extraH2 = pageChecks({ page, source: `${SAMPLE_FRAGMENT}<h2>ghost</h2>`, locale: 'en', kind: 'privacy' });
   assert.equal(extraH2['h2 count matches source'], false);
 });
 
-test('build writes the four pages from a synthetic export', () => {
+test('build writes the four pages from a synthetic content dir', () => {
   const dir = tmpDir();
   const outDir = join(dir, 'out');
+  const contentDir = seedContentDir(join(dir, 'content'));
   const lines = [];
-  build({ exportPath: writeExport(dir, syntheticParameters()), outDir, log: (l) => lines.push(l) });
+  build({ outDir, contentDir, log: (l) => lines.push(l) });
   assert.deepEqual(listFiles(outDir).sort(), [...OUTPUT_PATHS].sort());
   assert.ok(lines.every((l) => !l.startsWith('FAIL')));
-  assert.ok(readFileSync(join(outDir, 'tr/terms-of-service/index.html'), 'utf8').includes('<h1>terms_of_service_tr</h1>'));
 });
 
-test('build fails on a missing parameter and writes nothing', () => {
-  const parameters = syntheticParameters();
-  delete parameters.terms_of_service_tr;
+test('build fails and writes nothing when a source file is missing', () => {
   const dir = tmpDir();
   const outDir = join(dir, 'out');
-  assert.throws(() => build({ exportPath: writeExport(dir, parameters), outDir, log: () => {} }), /MISSING PARAMETER terms_of_service_tr/);
+  const contentDir = seedContentDir(join(dir, 'content'), { skip: ['terms.tr'] });
+  assert.throws(() => build({ outDir, contentDir, log: () => {} }), /source not found/);
   assert.ok(!existsSync(outDir) || listFiles(outDir).length === 0);
 });
 
-test('build fails when eula_url differs from eula/index.html and writes nothing', () => {
-  const parameters = syntheticParameters();
-  parameters.eula_url = param('https://example.com/eula');
+test('build fails and writes nothing when a source file carries a disallowed element', () => {
   const dir = tmpDir();
   const outDir = join(dir, 'out');
-  assert.throws(() => build({ exportPath: writeExport(dir, parameters), outDir, log: () => {} }), /eula_url/);
+  const contentDir = seedContentDir(join(dir, 'content'), {
+    overrides: { 'privacy.en': SAMPLE_FRAGMENT.replace('<h1>', '<blockquote>x</blockquote><h1>') },
+  });
+  assert.throws(() => build({ outDir, contentDir, log: () => {} }), /<blockquote>/);
   assert.ok(!existsSync(outDir) || listFiles(outDir).length === 0);
 });
 
-test('build fails when a document carries a disallowed element and writes nothing', () => {
-  const parameters = syntheticParameters();
-  parameters.privacy_policy_en = param(syntheticDoc('Privacy Policy').replace('<h1>', '<blockquote>x</blockquote><h1>'));
+test('build fails and writes nothing when a source file carries an em dash', () => {
   const dir = tmpDir();
   const outDir = join(dir, 'out');
-  assert.throws(() => build({ exportPath: writeExport(dir, parameters), outDir, log: () => {} }), /<blockquote>/);
+  const contentDir = seedContentDir(join(dir, 'content'), {
+    overrides: { 'terms.tr': SAMPLE_FRAGMENT.replace('Velora keeps data on device.', 'Velora keeps data on device — always.') },
+  });
+  assert.throws(() => build({ outDir, contentDir, log: () => {} }), /em dash \(U\+2014\)/);
   assert.ok(!existsSync(outDir) || listFiles(outDir).length === 0);
 });
 
-test('build writes the four pages and matches the committed output', (t) => {
-  const rc = readExport();
-  if (!rc) return t.skip(`no export at ${RC_EXPORT}`);
+test('build writes the four pages matching the committed output from the real sources', () => {
   const outDir = join(tmpDir(), 'out');
-  build({ exportPath: RC_EXPORT, outDir, log: () => {} });
+  build({ outDir, log: () => {} });
   assert.deepEqual(listFiles(outDir).sort(), [...OUTPUT_PATHS].sort());
   for (const p of OUTPUT_PATHS) {
-    if (!existsSync(join(ROOT, p))) continue;
     assert.equal(readFileSync(join(outDir, p), 'utf8'), readFileSync(join(ROOT, p), 'utf8'), p);
   }
+});
+
+test('main exits non-zero on an unexpected argument', () => {
+  const originalExit = process.exit;
+  const originalError = console.error;
+  let code;
+  const errors = [];
+  process.exit = (c) => { code = c; throw new Error('__exit__'); };
+  console.error = (m) => errors.push(m);
+  try {
+    assert.throws(() => main(['x']), /__exit__/);
+  } finally {
+    process.exit = originalExit;
+    console.error = originalError;
+  }
+  assert.equal(code, 1);
+  assert.ok(errors.some((m) => m.includes('usage:')));
+});
+
+test('SOURCE_PATHS names the four content fragments', () => {
+  assert.deepEqual(SOURCE_PATHS.sort(), [
+    'content/legal/privacy-policy.en.html',
+    'content/legal/privacy-policy.tr.html',
+    'content/legal/terms-of-service.en.html',
+    'content/legal/terms-of-service.tr.html',
+  ].sort());
 });
