@@ -23,20 +23,25 @@ function detectBrowserLocale() {
 }
 
 export function resolveLocale() {
-  // 1. Dedicated path — /tr/ is the prerendered, crawlable Turkish page
+  // 1. Fixed-locale page (generated legal pages) — always wins
+  try {
+    const fixed = document.documentElement.dataset.locale;
+    if (fixed && SUPPORTED.includes(fixed)) return fixed;
+  } catch (_) {}
+  // 2. Dedicated path — /tr/ is the prerendered, crawlable Turkish page
   try {
     if (/^\/tr(\/|$)/.test(window.location.pathname)) return 'tr';
   } catch (_) {}
-  // 2. Explicit URL choice (?lang=tr) — legacy shareable entry point
+  // 3. Explicit URL choice (?lang=tr) — legacy shareable entry point
   try {
     const fromUrl = new URLSearchParams(window.location.search).get('lang');
     if (fromUrl && SUPPORTED.includes(fromUrl)) return fromUrl;
   } catch (_) {}
-  // 3. Saved choice
+  // 4. Saved choice
   let saved = null;
   try { saved = localStorage.getItem(STORAGE_KEY); } catch (_) {}
   if (saved && SUPPORTED.includes(saved)) return saved;
-  // 4. Browser language
+  // 5. Browser language
   return detectBrowserLocale();
 }
 
@@ -44,7 +49,7 @@ export function persistLocale(locale) {
   try { localStorage.setItem(STORAGE_KEY, locale); } catch (_) {}
 }
 
-const STRINGS_VERSION = '2026-07-04-5';
+const STRINGS_VERSION = '2026-09-14-1';
 
 async function loadStrings(locale) {
   if (cache.has(locale)) return cache.get(locale);
@@ -65,23 +70,30 @@ export async function applyLocale(locale) {
   // <html lang>
   document.documentElement.lang = locale;
 
-  // <title> + meta description
-  const title = get(strings, 'meta.title');
-  if (title) document.title = title;
-  const desc = get(strings, 'meta.description');
-  if (desc) {
-    const meta = document.querySelector('meta[name="description"]');
-    if (meta) meta.setAttribute('content', desc);
-    const ogDesc = document.querySelector('meta[property="og:description"]');
-    if (ogDesc) ogDesc.setAttribute('content', desc);
-    const twDesc = document.querySelector('meta[name="twitter:description"]');
-    if (twDesc) twDesc.setAttribute('content', desc);
-  }
-  if (title) {
-    const ogTitle = document.querySelector('meta[property="og:title"]');
-    if (ogTitle) ogTitle.setAttribute('content', title);
-    const twTitle = document.querySelector('meta[name="twitter:title"]');
-    if (twTitle) twTitle.setAttribute('content', title);
+  // Fixed-locale pages (generated legal pages) already have the right
+  // title/meta baked in server-side; only home pages swap them client-side.
+  let isFixedLocale = false;
+  try { isFixedLocale = Boolean(document.documentElement.dataset.locale); } catch (_) {}
+
+  if (!isFixedLocale) {
+    // <title> + meta description
+    const title = get(strings, 'meta.title');
+    if (title) document.title = title;
+    const desc = get(strings, 'meta.description');
+    if (desc) {
+      const meta = document.querySelector('meta[name="description"]');
+      if (meta) meta.setAttribute('content', desc);
+      const ogDesc = document.querySelector('meta[property="og:description"]');
+      if (ogDesc) ogDesc.setAttribute('content', desc);
+      const twDesc = document.querySelector('meta[name="twitter:description"]');
+      if (twDesc) twDesc.setAttribute('content', desc);
+    }
+    if (title) {
+      const ogTitle = document.querySelector('meta[property="og:title"]');
+      if (ogTitle) ogTitle.setAttribute('content', title);
+      const twTitle = document.querySelector('meta[name="twitter:title"]');
+      if (twTitle) twTitle.setAttribute('content', title);
+    }
   }
 
   // Text nodes

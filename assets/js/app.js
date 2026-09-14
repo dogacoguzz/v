@@ -13,9 +13,14 @@ function attachLangSwitch() {
       const next = btn.dataset.locale;
       if (!next || next === getLocale()) return;
       persistLocale(next);
-      // Each locale has its own crawlable URL (matches hreflang alternates):
-      // Turkish lives at the prerendered /tr/, English at the root.
-      window.location.assign(next === 'tr' ? '/tr/' : '/');
+      // The page's own hreflang alternates name its sibling (legal pages);
+      // fall back to the home-page ternary when no alternate is declared.
+      let target = next === 'tr' ? '/tr/' : '/';
+      try {
+        const link = document.querySelector(`link[rel="alternate"][hreflang="${next}"]`);
+        if (link) target = new URL(link.href, window.location.href).pathname;
+      } catch (_) {}
+      window.location.assign(target);
     });
   });
 }
@@ -131,7 +136,7 @@ function attachNavScrollObserver() {
   const nav = document.querySelector('.site-nav');
   const hero = document.querySelector('.hero');
   const cta = document.querySelector('.site-nav__cta');
-  if (!nav || !hero) return;
+  if (!nav) return;
 
   const setScrolled = (scrolled) => {
     nav.dataset.scrolled = scrolled ? 'true' : 'false';
@@ -140,6 +145,12 @@ function attachNavScrollObserver() {
       cta.setAttribute('tabindex', scrolled ? '0' : '-1');
     }
   };
+
+  // No hero (legal pages) — treat the nav as permanently scrolled so the CTA stays reachable.
+  if (!hero) {
+    setScrolled(true);
+    return;
+  }
 
   setScrolled(false);
 
