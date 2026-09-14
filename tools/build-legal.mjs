@@ -59,10 +59,20 @@ export function extractBody(html) {
   throw new Error('extractBody: <div class="container"> is never closed');
 }
 
+const APP_VERSION_PARAGRAPH = /[ \t]*<p\b[^>]*>((?:(?!<\/p>)[\s\S])*?\\\(appVersion\)[\s\S]*?)<\/p>[ \t]*\r?\n?/g;
+const APP_VERSION_LABEL = /<strong>\s*(?:App Version|Uygulama Sürümü):?\s*<\/strong>/g;
+
+// The appVersion paragraph is dropped only when it carries nothing but its label and the placeholder.
 export function substitutePlaceholders(html) {
   if (html.includes('\\(sharedCSS)')) throw new Error('substitutePlaceholders: \\(sharedCSS) reached the document body');
   return html
-    .replace(/[ \t]*<p\b[^>]*>(?:(?!<\/p>)[\s\S])*?\\\(appVersion\)[\s\S]*?<\/p>[ \t]*\r?\n?/g, '')
+    .replace(APP_VERSION_PARAGRAPH, (_, inner) => {
+      const leftover = inner.replace(APP_VERSION_LABEL, '').replace(/\\\(appVersion\)/g, '').trim();
+      if (/[^\s\p{P}]/u.test(leftover)) {
+        throw new Error(`substitutePlaceholders: appVersion paragraph carries extra wording: ${leftover}`);
+      }
+      return '';
+    })
     .replace(/\\\(appName\)/g, APP_NAME);
 }
 
@@ -106,6 +116,7 @@ export function assertClean(html) {
     }
     if (!selfClosing) depth += 1;
   }
+  if (depth !== 0) throw new Error(`assertClean: unbalanced markup, ${depth} element(s) never closed`);
 }
 
 export function normaliseDocument(source) {
@@ -230,12 +241,19 @@ ${reindent(body, '      ')}
   return rewriteRootRelativePaths(page, { localePrefix: prefix });
 }
 
-const EULA_REFRESH = /<meta http-equiv="refresh" content="0; url=([^"]+)" \/>/;
+// eula.html carries the URL three times; all copies must agree before the export is compared against it.
+const EULA_URL_SOURCES = [
+  /<meta http-equiv="refresh" content="0; url=([^"]+)" \/>/,
+  /<a href="([^"]+)"/,
+  /location\.replace\('([^']+)'\)/,
+];
 
 export function readEulaUrl(eulaHtml = readFileSync(join(ROOT, 'eula.html'), 'utf8')) {
-  const m = EULA_REFRESH.exec(eulaHtml);
-  if (!m) throw new Error('eula.html has no meta refresh URL');
-  return m[1];
+  const urls = EULA_URL_SOURCES.map((re) => re.exec(eulaHtml)?.[1]);
+  if (urls.some((url) => !url) || new Set(urls).size !== 1) {
+    throw new Error('eula.html: meta refresh, link and location.replace URLs differ');
+  }
+  return urls[0];
 }
 
 export const count = (html, re) => (html.match(re) || []).length;

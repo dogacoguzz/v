@@ -127,6 +127,12 @@ export async function applyLocale(locale) {
     if (src && el.getAttribute('src') !== src) el.setAttribute('src', src);
   });
 
+  // Link href swap (per-locale document targets, e.g. footer legal links)
+  document.querySelectorAll('[data-href-en][data-href-tr]').forEach((el) => {
+    const href = el.getAttribute(locale === 'tr' ? 'data-href-tr' : 'data-href-en');
+    if (href && el.getAttribute('href') !== href) el.setAttribute('href', href);
+  });
+
   // Lang switch button state
   document.querySelectorAll('.lang-switch button[data-locale]').forEach((btn) => {
     const isCurrent = btn.dataset.locale === locale;

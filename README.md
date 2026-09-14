@@ -12,7 +12,7 @@ Built as a multi-file static bundle (no build tooling). **Live at
 - **Bilingual (EN / TR)** — all copy is locale-aware via `data-i18n` attributes; per-locale screenshot variants swap automatically. Locale priority: `?lang=` URL param → saved choice → browser language. `?lang=tr` is the crawlable Turkish entry point (see `hreflang` alternates in the head and `sitemap.xml`).
 - **Brand-locked accents** — nav CTA, focus rings, and the closing-CTA glow stay cyan even as section accents change.
 - **Official App Store badges** — `images/badge-appstore-{en,tr}.svg` are Apple's own artwork (downloaded from Apple's marketing toolbox; per Apple's guidelines the badge must not be restyled, and the standalone Apple logo must not be used as an icon).
-- **No build step** — pure HTML / CSS / ES modules. CSS is split into 5 stylesheets that HTTP/2 multiplexes; locale strings are fetched on demand.
+- **No build step** — pure HTML / CSS / ES modules. CSS is split into 6 stylesheets that HTTP/2 multiplexes; locale strings are fetched on demand.
 
 ## File Structure
 
@@ -108,7 +108,7 @@ All user-facing strings live in `assets/data/strings.{en,tr}.json`. To add or up
    - `data-i18n-html="hero.h1"` — replaces `innerHTML` (used for `<br>`/`<em>` lockups)
    - `data-i18n-alt="showcase.metrics.imgAlt"` — replaces `alt`
    - `data-i18n-aria-label="nav.langGroupAria"` — replaces `aria-label`
-3. For per-locale image swaps, add `data-src-en` and `data-src-tr` attributes to `<img>`.
+3. For per-locale image swaps, add `data-src-en` and `data-src-tr` attributes to `<img>`; for per-locale link targets (e.g. footer legal links), add `data-href-en` and `data-href-tr` instead.
 4. Bump `STRINGS_VERSION` in `assets/js/i18n.js` so returning visitors fetch fresh strings.
 5. **Regenerate the static Turkish page and commit it:** `node tools/build-tr.mjs`.
    Turkish lives at the prerendered `/tr/` so crawlers that don't execute JavaScript

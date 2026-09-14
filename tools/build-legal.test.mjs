@@ -16,6 +16,9 @@ import {
   composePage,
   extractBody,
   loadChrome,
+  normaliseDocument,
+  pageChecks,
+  readEulaUrl,
   stripInlineStyles,
   substitutePlaceholders,
   wrapTables,
@@ -61,6 +64,25 @@ const SAMPLE = `<!DOCTYPE html>
   </div>
 </body></html>`;
 
+// Minimal valid Remote Config document, so the build's failure paths run without a real export.
+const syntheticDoc = (title) => `<!DOCTYPE html><html><head><style>\\(sharedCSS)</style></head><body>
+<div class="container">
+  <h1>${title}</h1>
+  <p class="last-updated">Effective: 1 Jan 2026</p>
+  <h2>1. Scope</h2>
+  <p>\\(appName) keeps data on device.</p>
+  <div class="contact-info">
+    <h2>2. Contact</h2>
+    <p><strong>App Version:</strong> \\(appVersion)</p>
+  </div>
+</div>
+</body></html>`;
+const syntheticParameters = () => ({
+  ...Object.fromEntries(LEGAL_KEYS.map((k) => [k, param(syntheticDoc(k))])),
+  eula_url: param(readEulaUrl()),
+});
+const loadStrings = (locale) => JSON.parse(readFileSync(join(ROOT, `assets/data/strings.${locale}.json`), 'utf8'));
+
 const normalise = (html) => wrapTables(stripInlineStyles(substitutePlaceholders(extractBody(html))));
 
 test('extractBody unwraps the container and keeps order and h2 count', () => {
@@ -88,6 +110,25 @@ test('substitutePlaceholders maps appName and drops only the appVersion paragrap
   assert.ok(out.includes('<p>Email: <strong>dnf.velora@gmail.com</strong></p>'));
   assert.ok(out.includes('© Velora / Doğaç Oğuz. All Rights Reserved.'));
   assert.equal(count(out, /<p\b/g), 4);
+});
+
+test('substitutePlaceholders removes exactly the EN and TR appVersion paragraph shapes', () => {
+  const en = '<p>a</p>\n    <p><strong>App Version:</strong> \\(appVersion)</p>\n<p>b</p>';
+  const tr = '<p>a</p>\n    <p><strong>Uygulama Sürümü:</strong> \\(appVersion)</p>\n<p>b</p>';
+  assert.equal(substitutePlaceholders(en), '<p>a</p>\n<p>b</p>');
+  assert.equal(substitutePlaceholders(tr), '<p>a</p>\n<p>b</p>');
+});
+
+test('substitutePlaceholders throws when the appVersion paragraph carries extra wording', () => {
+  const src = '<p><strong>App Version:</strong> \\(appVersion). Data Controller: Doğaç Oğuz, Istanbul.</p>';
+  assert.throws(() => substitutePlaceholders(src), /extra wording: \. Data Controller: Doğaç Oğuz, Istanbul\./);
+});
+
+test('substitutePlaceholders leaves appVersion outside a <p> for assertClean to reject', () => {
+  const src = '<p>Intro</p>\n<ul><li>Build \\(appVersion)</li></ul>';
+  const out = substitutePlaceholders(src);
+  assert.equal(out, src);
+  assert.throws(() => assertClean(out), /unresolved placeholder \\\(appVersion\)/);
 });
 
 test('substitutePlaceholders throws when sharedCSS reaches the body', () => {
@@ -129,6 +170,10 @@ test('assertClean rejects an unknown div class naming tag and class', () => {
 test('assertClean rejects an embedded style or script element', () => {
   assert.throws(() => assertClean('<h1>T</h1><style>p{}</style>'), /<style>/);
   assert.throws(() => assertClean('<h1>T</h1><p>x</p><script>1</script>'), /<script>/);
+});
+
+test('assertClean rejects markup that is never closed', () => {
+  assert.throws(() => assertClean('<h1>T</h1>\n<p>open\n<blockquote>q</blockquote>'), /unbalanced markup, 1 element\(s\) never closed/);
 });
 
 test('assertClean accepts every allowlisted top-level element', () => {
@@ -193,6 +238,20 @@ test('applyI18nStrings reports missing keys and leaves those nodes untouched', (
   assert.ok(html.includes('>Keep</span>'));
 });
 
+test('applyI18nStrings leaves html, alt and aria-label nodes untouched when their key is missing', () => {
+  const cases = {
+    'hero.h1': ['<h1 data-i18n-html="hero.h1">X<br /><em>Y</em></h1>', '>X<br /><em>Y</em></h1>'],
+    'img.alt': ['<img data-i18n-alt="img.alt" alt="Picture" src="x.png" />', 'alt="Picture"'],
+    'nav.langGroupAria': ['<div data-i18n-aria-label="nav.langGroupAria" aria-label="Language"></div>', 'aria-label="Language"'],
+  };
+  for (const [key, [src, kept]] of Object.entries(cases)) {
+    const { html, missing } = applyI18nStrings(src, {});
+    assert.deepEqual(missing, [key]);
+    assert.equal(html, src);
+    assert.ok(html.includes(kept), key);
+  }
+});
+
 test('markLangSwitch flips aria-current to the given locale', () => {
   const src = '<button type="button" data-locale="en" aria-current="true">EN</button>'
     + '<button type="button" data-locale="tr" aria-current="false">TR</button>';
@@ -207,9 +266,46 @@ test('keyParity compares flattened key sets', () => {
   assert.equal(keyParity({ a: { b: 1 } }, { a: { b: 1, d: 2 } }), false);
 });
 
+test('readEulaUrl returns the URL when meta refresh, link and location.replace agree', () => {
+  const eula = readFileSync(join(ROOT, 'eula.html'), 'utf8');
+  const url = readEulaUrl(eula);
+  assert.match(url, /^https:\/\/www\.apple\.com\/legal\//);
+  assert.equal(readEulaUrl(), url);
+  assert.equal(count(eula, new RegExp(url.replace(/[.*+?^${}()|[\]\\/]/g, '\\$&'), 'g')), 3);
+});
+
+test('readEulaUrl throws when one copy of the URL drifts or the meta refresh is missing', () => {
+  const eula = readFileSync(join(ROOT, 'eula.html'), 'utf8');
+  const drifted = eula.replace(/location\.replace\('[^']+'\)/, "location.replace('https://example.com/eula')");
+  assert.notEqual(drifted, eula);
+  assert.throws(() => readEulaUrl(drifted), /meta refresh, link and location\.replace URLs differ/);
+  const noMeta = eula.replace(/<meta http-equiv="refresh"[^>]*>\n/, '');
+  assert.notEqual(noMeta, eula);
+  assert.throws(() => readEulaUrl(noMeta), /meta refresh, link and location\.replace URLs differ/);
+});
+
+test('composePage keeps English chrome, root brand href and EN canonical for locale en', () => {
+  const chrome = loadChrome();
+  const strings = loadStrings('en');
+  const page = composePage({ locale: 'en', kind: 'privacy', body: '<h1>Title</h1>\n<p>Text</p>', strings, chrome });
+  assert.ok(page.startsWith('<!DOCTYPE html>\n<html lang="en" data-locale="en">'));
+  assert.ok(page.includes(`<title>${strings.legal.privacy.title}</title>`));
+  assert.ok(page.includes('<link rel="canonical" href="https://velorahealthcompanion.com/privacy-policy/" />'));
+  assert.ok(page.includes('<meta property="og:locale" content="en_US" />'));
+  assert.ok(page.includes('<a href="/" class="brand-mark"'));
+  assert.ok(page.includes('data-i18n="nav.skipLink">Skip to content</a>'));
+  assert.ok(page.includes('data-i18n-aria-label="nav.langGroupAria" aria-label="Language"'));
+  assert.ok(page.includes('href="/privacy-policy/"'));
+  assert.ok(page.includes('href="/terms-of-service/"'));
+  assert.ok(!page.includes('href="/tr/privacy-policy/"'));
+  assert.ok(page.includes('data-locale="en" aria-current="true"'));
+  assert.ok(page.includes('data-locale="tr" aria-current="false"'));
+  assert.ok(!/(?:href|src)="(?:assets|images)\//.test(page));
+});
+
 test('composePage builds the locale-specific head and chrome around the body', () => {
   const chrome = loadChrome();
-  const strings = JSON.parse(readFileSync(join(ROOT, 'assets/data/strings.tr.json'), 'utf8'));
+  const strings = loadStrings('tr');
   const page = composePage({ locale: 'tr', kind: 'privacy', body: '<h1>Başlık</h1>\n<p>Metin</p>', strings, chrome });
   assert.ok(page.startsWith('<!DOCTYPE html>\n<html lang="tr" data-locale="tr">'));
   assert.ok(page.includes(`<title>${strings.legal.privacy.title}</title>`));
@@ -241,11 +337,52 @@ test('importing the generator module runs no CLI code and writes nothing', async
   assert.deepEqual(after, before);
 });
 
-test('build fails on a missing parameter and writes nothing', (t) => {
-  const rc = readExport();
-  if (!rc) return t.skip(`no export at ${RC_EXPORT}`);
-  const parameters = Object.fromEntries(LEGAL_KEYS.map((k) => [k, rc.parameters[k]]));
-  parameters.eula_url = rc.parameters.eula_url;
+test('pageChecks passes every check for a well-formed synthetic page', () => {
+  const source = syntheticDoc('Privacy Policy');
+  const page = composePage({ locale: 'en', kind: 'privacy', body: normaliseDocument(source), strings: loadStrings('en'), chrome: loadChrome() });
+  const checks = pageChecks({ page, source, locale: 'en', kind: 'privacy' });
+  assert.deepEqual(Object.values(checks), Object.keys(checks).map(() => true));
+});
+
+test('pageChecks flags each defect it guards against', () => {
+  const source = syntheticDoc('Privacy Policy');
+  const page = composePage({ locale: 'en', kind: 'privacy', body: normaliseDocument(source), strings: loadStrings('en'), chrome: loadChrome() });
+  const swap = (from, to) => {
+    assert.ok(page.includes(from), `fixture lacks ${from}`);
+    return page.replace(from, to);
+  };
+  const defects = {
+    'exactly one h1': swap('<h1>', '<h1>Extra</h1><h1>'),
+    'no unresolved placeholder': swap('</article>', '\\(foo)</article>'),
+    'no inline style': swap('<p>Velora', '<p style="color: red">Velora'),
+    'no script/style in article': swap('</article>', '<script>1</script></article>'),
+    'top-level allowlist': swap('<article class="legal">', '<article class="legal"><blockquote>q</blockquote>'),
+    'no bare legal href': swap('href="/privacy-policy/"', 'href="privacy-policy/"'),
+    'no bare asset path': swap('href="/assets/css/legal.css"', 'href="assets/css/legal.css"'),
+    'brand href is locale home': swap('<a href="/" class="brand-mark"', '<a href="/tr/" class="brand-mark"'),
+    'data-locale matches lang': swap('<html lang="en" data-locale="en">', '<html lang="en" data-locale="tr">'),
+    'canonical ends with slug': swap('href="https://velorahealthcompanion.com/privacy-policy/" />', 'href="https://velorahealthcompanion.com/privacy-policy" />'),
+  };
+  for (const [check, broken] of Object.entries(defects)) {
+    const checks = pageChecks({ page: broken, source, locale: 'en', kind: 'privacy' });
+    assert.notEqual(checks[check], true, check);
+  }
+  const extraH2 = pageChecks({ page, source: `${source}<h2>ghost</h2>`, locale: 'en', kind: 'privacy' });
+  assert.equal(extraH2['h2 count matches source'], false);
+});
+
+test('build writes the four pages from a synthetic export', () => {
+  const dir = tmpDir();
+  const outDir = join(dir, 'out');
+  const lines = [];
+  build({ exportPath: writeExport(dir, syntheticParameters()), outDir, log: (l) => lines.push(l) });
+  assert.deepEqual(listFiles(outDir).sort(), [...OUTPUT_PATHS].sort());
+  assert.ok(lines.every((l) => !l.startsWith('FAIL')));
+  assert.ok(readFileSync(join(outDir, 'tr/terms-of-service/index.html'), 'utf8').includes('<h1>terms_of_service_tr</h1>'));
+});
+
+test('build fails on a missing parameter and writes nothing', () => {
+  const parameters = syntheticParameters();
   delete parameters.terms_of_service_tr;
   const dir = tmpDir();
   const outDir = join(dir, 'out');
@@ -253,10 +390,8 @@ test('build fails on a missing parameter and writes nothing', (t) => {
   assert.ok(!existsSync(outDir) || listFiles(outDir).length === 0);
 });
 
-test('build fails when eula_url differs from eula.html and writes nothing', (t) => {
-  const rc = readExport();
-  if (!rc) return t.skip(`no export at ${RC_EXPORT}`);
-  const parameters = Object.fromEntries(LEGAL_KEYS.map((k) => [k, rc.parameters[k]]));
+test('build fails when eula_url differs from eula.html and writes nothing', () => {
+  const parameters = syntheticParameters();
   parameters.eula_url = param('https://example.com/eula');
   const dir = tmpDir();
   const outDir = join(dir, 'out');
@@ -264,13 +399,9 @@ test('build fails when eula_url differs from eula.html and writes nothing', (t) 
   assert.ok(!existsSync(outDir) || listFiles(outDir).length === 0);
 });
 
-test('build fails when a document carries a disallowed element and writes nothing', (t) => {
-  const rc = readExport();
-  if (!rc) return t.skip(`no export at ${RC_EXPORT}`);
-  const parameters = Object.fromEntries(LEGAL_KEYS.map((k) => [k, rc.parameters[k]]));
-  parameters.eula_url = rc.parameters.eula_url;
-  const broken = rc.parameters.privacy_policy_en.defaultValue.value.replace('<h1>', '<blockquote>x</blockquote><h1>');
-  parameters.privacy_policy_en = param(broken);
+test('build fails when a document carries a disallowed element and writes nothing', () => {
+  const parameters = syntheticParameters();
+  parameters.privacy_policy_en = param(syntheticDoc('Privacy Policy').replace('<h1>', '<blockquote>x</blockquote><h1>'));
   const dir = tmpDir();
   const outDir = join(dir, 'out');
   assert.throws(() => build({ exportPath: writeExport(dir, parameters), outDir, log: () => {} }), /<blockquote>/);
