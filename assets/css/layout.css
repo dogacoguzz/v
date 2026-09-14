@@ -137,6 +137,26 @@ section {
   max-width: 60ch;
 }
 
+/* Footer legal links */
+.site-footer__links {
+  display: inline-flex;
+  flex-wrap: wrap;
+  gap: var(--space-4);
+}
+
+.site-footer__links a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  color: var(--text-muted);
+  font-weight: 500;
+}
+
+.site-footer__links a:hover,
+.site-footer__links a:focus-visible {
+  color: var(--text);
+}
+
 @media (max-width: 640px) {
   .site-footer__row { gap: var(--space-3); }
 }
