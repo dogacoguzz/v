@@ -4,10 +4,10 @@
 const get = (strings, path) =>
   path.split('.').reduce((a, k) => (a && a[k] !== undefined ? a[k] : undefined), strings);
 
-export const esc = (s) => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+const esc = (s) => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 
 // flattens a nested strings object into dotted key paths, for key-parity checks
-export const flattenKeys = (obj, prefix = '') =>
+const flattenKeys = (obj, prefix = '') =>
   Object.entries(obj).flatMap(([k, v]) =>
     v && typeof v === 'object' ? flattenKeys(v, `${prefix}${k}.`) : [`${prefix}${k}`]
   );

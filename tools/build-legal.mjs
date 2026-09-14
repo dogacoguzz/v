@@ -156,13 +156,13 @@ export function composePage({ locale, kind, body, strings, chrome }) {
 
   let { skipLink, nav, footer } = chrome;
   if (locale === 'tr') {
-    const { html, missing } = applyI18nStrings(`${skipLink}\n${nav}\n${footer}`, strings);
-    if (missing.length) throw new Error(`MISSING TR KEYS: ${missing.join(', ')}`);
-    [skipLink, nav, footer] = [
-      /<a class="skip-link"[\s\S]*?<\/a>/.exec(html)[0],
-      sliceBetween(html, '<!-- ========== NAV ========== -->', '</header>', 'nav block'),
-      sliceBetween(html, '<!-- ========== FOOTER ========== -->', '</footer>', 'footer block'),
-    ];
+    const missing = [];
+    [skipLink, nav, footer] = [skipLink, nav, footer].map((piece) => {
+      const applied = applyI18nStrings(piece, strings);
+      missing.push(...applied.missing);
+      return applied.html;
+    });
+    if (missing.length) throw new Error(`MISSING TR KEYS: ${[...new Set(missing)].join(', ')}`);
   }
   nav = markLangSwitch(nav.replace('<a href="#top" class="brand-mark"', `<a href="${prefix}/" class="brand-mark"`), locale);
 
@@ -238,7 +238,7 @@ export function readEulaUrl(eulaHtml = readFileSync(join(ROOT, 'eula.html'), 'ut
   return m[1];
 }
 
-const count = (html, re) => (html.match(re) || []).length;
+export const count = (html, re) => (html.match(re) || []).length;
 
 export function pageChecks({ page, source, locale, kind }) {
   const slug = SLUGS[kind];

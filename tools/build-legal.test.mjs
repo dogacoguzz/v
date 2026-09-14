@@ -9,6 +9,7 @@ import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 import {
+  count,
   OUTPUT_PATHS,
   assertClean,
   build,
@@ -66,7 +67,7 @@ test('extractBody unwraps the container and keeps order and h2 count', () => {
   const body = extractBody(SAMPLE);
   assert.ok(body.trim().startsWith('<h1>'));
   assert.ok(body.trim().endsWith('</div>'));
-  assert.equal((body.match(/<h2/g) || []).length, 3);
+  assert.equal(count(body, /<h2/g), 3);
   assert.ok(body.indexOf('1. Summary') < body.indexOf('2. Data'));
   assert.ok(body.indexOf('2. Data') < body.indexOf('3. Contact'));
   assert.ok(!body.includes('<div class="container">'));
@@ -86,7 +87,7 @@ test('substitutePlaceholders maps appName and drops only the appVersion paragrap
   assert.ok(!out.includes('App Version'));
   assert.ok(out.includes('<p>Email: <strong>dnf.velora@gmail.com</strong></p>'));
   assert.ok(out.includes('© Velora / Doğaç Oğuz. All Rights Reserved.'));
-  assert.equal((out.match(/<p\b/g) || []).length, 4);
+  assert.equal(count(out, /<p\b/g), 4);
 });
 
 test('substitutePlaceholders throws when sharedCSS reaches the body', () => {
@@ -108,7 +109,7 @@ test('stripInlineStyles removes the copyright style attribute and keeps its text
 test('wrapTables wraps each data table exactly once and is idempotent', () => {
   const once = wrapTables(extractBody(SAMPLE));
   const twice = wrapTables(once);
-  assert.equal((once.match(/legal__table-scroll/g) || []).length, 1);
+  assert.equal(count(once, /legal__table-scroll/g), 1);
   assert.equal(twice, once);
   assert.match(once, /<div class="legal__table-scroll">\s*<table class="data-table">[\s\S]*<\/table>\s*<\/div>/);
 });
@@ -148,8 +149,8 @@ test('the four real documents pass assertClean after normalisation', (t) => {
     const source = rc.parameters[key].defaultValue.value;
     const out = normalise(source);
     assert.doesNotThrow(() => assertClean(out), key);
-    assert.equal((out.match(/<h2/g) || []).length, (source.match(/<h2/g) || []).length, key);
-    assert.equal((out.match(/<h1/g) || []).length, 1, key);
+    assert.equal(count(out, /<h2/g), count(source, /<h2/g), key);
+    assert.equal(count(out, /<h1/g), 1, key);
   }
 });
 

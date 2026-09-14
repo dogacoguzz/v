@@ -22,12 +22,15 @@ function detectBrowserLocale() {
   return DEFAULT_LOCALE;
 }
 
+// Generated legal pages bake their locale into <html data-locale>; home pages have none.
+function fixedLocaleAttr() {
+  try { return document.documentElement.dataset.locale; } catch (_) { return undefined; }
+}
+
 export function resolveLocale() {
-  // 1. Fixed-locale page (generated legal pages) — always wins
-  try {
-    const fixed = document.documentElement.dataset.locale;
-    if (fixed && SUPPORTED.includes(fixed)) return fixed;
-  } catch (_) {}
+  // 1. Fixed-locale page — always wins
+  const fixed = fixedLocaleAttr();
+  if (fixed && SUPPORTED.includes(fixed)) return fixed;
   // 2. Dedicated path — /tr/ is the prerendered, crawlable Turkish page
   try {
     if (/^\/tr(\/|$)/.test(window.location.pathname)) return 'tr';
@@ -70,12 +73,8 @@ export async function applyLocale(locale) {
   // <html lang>
   document.documentElement.lang = locale;
 
-  // Fixed-locale pages (generated legal pages) already have the right
-  // title/meta baked in server-side; only home pages swap them client-side.
-  let isFixedLocale = false;
-  try { isFixedLocale = Boolean(document.documentElement.dataset.locale); } catch (_) {}
-
-  if (!isFixedLocale) {
+  // Fixed-locale pages already carry their title/meta; only home pages swap them client-side.
+  if (!fixedLocaleAttr()) {
     // <title> + meta description
     const title = get(strings, 'meta.title');
     if (title) document.title = title;
