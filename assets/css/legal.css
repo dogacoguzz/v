@@ -6,6 +6,7 @@
   max-width: 72ch;
   margin-inline: auto;
   padding-block: var(--space-8) var(--space-section);
+  padding-inline: var(--container-pad);
   font-family: var(--font-sans);
   font-size: var(--fs-body);
   line-height: var(--lh-body);
@@ -15,6 +16,7 @@
 .legal h1 {
   font-family: var(--font-display);
   font-size: var(--fs-2);
+  margin-bottom: var(--space-3);
 }
 
 .legal h2 {
@@ -32,6 +34,13 @@
 .legal .last-updated {
   color: var(--text-soft);
   font-size: var(--fs-small);
+  margin-bottom: var(--space-7);
+}
+
+.legal p + p,
+.legal p + ul,
+.legal ul + p {
+  margin-top: var(--space-4);
 }
 
 .legal ul {
