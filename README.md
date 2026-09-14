@@ -20,16 +20,25 @@ Built as a multi-file static bundle (no build tooling). **Live at
 .
 ├── index.html                    # EN page — DOM skeleton + meta/OG/JSON-LD + <link>/<script> tags
 ├── tr/index.html                 # GENERATED Turkish page — do not edit by hand (see tools/)
+├── privacy-policy/index.html     # GENERATED legal page — do not edit by hand (see tools/build-legal.mjs)
+├── terms-of-service/index.html   # GENERATED legal page — do not edit by hand
+├── tr/privacy-policy/index.html  # GENERATED legal page — do not edit by hand
+├── tr/terms-of-service/index.html # GENERATED legal page — do not edit by hand
+├── eula.html                     # Self-contained redirect to Apple's standard EULA (noindex)
 ├── tools/build-tr.mjs            # Prerenders tr/index.html from index.html + strings.tr.json
+├── tools/build-legal.mjs         # Generates the four legal pages from a Firebase Remote Config export
+├── tools/build-legal.test.mjs    # node:test suite for the generator's pure functions
+├── tools/lib/prerender.mjs       # Shared prerender helpers (i18n substitution, root-relative + locale-prefixed path rewrite)
 ├── 404.html                      # Self-contained not-found page (GitHub Pages picks it up)
-├── sitemap.xml                   # / and /tr/ with hreflang alternates
+├── sitemap.xml                   # /, /tr/ and the four legal pages with hreflang alternates
 ├── assets/
 │   ├── css/
 │   │   ├── tokens.css            # CSS variables, @property --accent, multi-accent system
 │   │   ├── base.css              # Reset, body, ambient orbs, focus styles, .visually-hidden
 │   │   ├── layout.css            # Container, sticky nav, footer
 │   │   ├── components.css        # Buttons, chips, phone frame, pillar cards, lang switch
-│   │   └── sections.css          # Hero, sticky showcase, AI coach, pillars, privacy, closing CTA
+│   │   ├── sections.css          # Hero, sticky showcase, AI coach, pillars, privacy, closing CTA
+│   │   └── legal.css             # Legal document pages (.legal scope) + print styles
 │   ├── js/
 │   │   ├── i18n.js               # applyLocale, ?lang= / localStorage / navigator resolution
 │   │   └── app.js                # Entry: bootstrap, lang switch, IntersectionObserver, crossfade
@@ -104,12 +113,55 @@ All user-facing strings live in `assets/data/strings.{en,tr}.json`. To add or up
 5. **Regenerate the static Turkish page and commit it:** `node tools/build-tr.mjs`.
    Turkish lives at the prerendered `/tr/` so crawlers that don't execute JavaScript
    (Bing, GPTBot, ClaudeBot, …) can read it; client-side i18n alone was Google-only.
+   `node tools/build-legal.mjs <export>` regenerates the Turkish legal pages' chrome
+   the same way — see [Legal Pages](#legal-pages) below for the full workflow.
 
-Locale resolution order: `/tr/` path → `?lang=` param (legacy) → saved choice →
-browser language. The language switch navigates between `/` and `/tr/` (matching the
-hreflang alternates). A tiny inline script in `<head>` of the EN page resolves the
-locale before paint and preloads the correct-locale showcase image — keep it in sync
-with `i18n.js`.
+Locale resolution order: `<html data-locale>` (fixed-locale generated pages) → `/tr/`
+path → `?lang=` param (legacy) → saved choice → browser language. The language switch
+navigates to the page's own `hreflang` alternate (same-origin pathname): on a legal
+page it opens the sibling document in the other locale, and on the home pages it keeps
+navigating between `/` and `/tr/`. Fixed-locale pages keep their own `<title>` and meta
+description regardless of the visitor's saved language. A tiny inline script in
+`<head>` of the EN page resolves the locale before paint and preloads the
+correct-locale showcase image — keep it in sync with `i18n.js`.
+
+## Legal Pages
+
+`/privacy-policy/`, `/terms-of-service/` (English) and `/tr/privacy-policy/`,
+`/tr/terms-of-service/` (Turkish) are generated pages, not hand-written. Their text
+comes from the Firebase Remote Config template of project `velora-79f7c`
+(parameters `privacy_policy_en` / `privacy_policy_tr` / `terms_of_service_en` /
+`terms_of_service_tr`; `eula_url` is cross-checked against the constant in `eula.html`
+so the two never drift apart).
+
+Workflow to sync a console edit:
+
+1. Edit the text in the Firebase console.
+2. Export the template: `npx firebase-tools remoteconfig:get --project velora-79f7c -o /tmp/rc.json`.
+3. Regenerate the pages: `node tools/build-legal.mjs /tmp/rc.json`.
+4. Review the diff.
+5. Commit the regenerated pages.
+
+The export itself is never committed — it carries unrelated feature flags alongside
+the legal parameters. The generator only touches presentation: it replaces
+`\(appName)` with `Velora`, drops the App Version paragraph, strips inline styles, and
+wraps tables for horizontal scroll on narrow screens; it fails loudly on a missing
+parameter, an unresolved placeholder, or markup outside its known allowlist. Re-syncing
+after a console edit is a manual step — nothing watches the console for changes, so
+nobody is reminded to run it.
+
+`/eula` is different: it's a hand-written `eula.html` that forwards to Apple's standard
+EULA (`https://www.apple.com/legal/internet-services/itunes/dev/stdeula/`) via meta
+refresh, a `location.replace` script, and a visible fallback link, and is `noindex`.
+
+Canonical URLs use the trailing-slash form (`/privacy-policy/`); GitHub Pages redirects
+the slashless request to the directory index, the same as it already does for `/tr`.
+`/eula` has no trailing slash and is served directly from `eula.html`.
+
+Run the generator's test suite with `node --test tools/build-legal.test.mjs` (Node
+20+; the file is named explicitly because `node --test <directory>` is not accepted on
+Node 21+). The tests that exercise the real documents read the export from `/tmp/rc.json`
+(override with `RC_EXPORT=<path>`) and are skipped when it is absent.
 
 ## Adding a New Showcase Stage
 
