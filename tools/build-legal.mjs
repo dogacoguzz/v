@@ -60,13 +60,12 @@ export function wrapTables(html) {
 }
 
 // Top-level elements must match the allowlist; nested markup is the document's own business.
-export function assertClean(html, { allowEmDash = false } = {}) {
+export function assertClean(html) {
   const placeholder = /\\\([^)]*\)?/.exec(html);
   if (placeholder) throw new Error(`assertClean: unresolved placeholder ${placeholder[0]}`);
   const embedded = /<(script|style)\b/i.exec(html);
   if (embedded) throw new Error(`assertClean: embedded <${embedded[1].toLowerCase()}> element is not allowed`);
-  // TEMPORARY: allowEmDash bypasses this guard only for the byte-preserving seed round-trip.
-  if (!allowEmDash && html.includes('—')) {
+  if (html.includes('—')) {
     throw new Error('assertClean: em dash (U+2014) is not allowed in user-facing legal text');
   }
 
@@ -92,10 +91,10 @@ export function assertClean(html, { allowEmDash = false } = {}) {
 }
 
 // Strips the file's leading `Source of truth` comment before any check or output.
-export function normaliseDocument(source, { allowEmDash = false } = {}) {
+export function normaliseDocument(source) {
   const stripped = source.replace(/^\s*<!--[\s\S]*?-->\s*\n?/, '');
   const body = wrapTables(stripInlineStyles(stripped));
-  assertClean(body, { allowEmDash });
+  assertClean(body);
   return body;
 }
 
@@ -232,12 +231,13 @@ export function readEulaUrl(eulaHtml = readFileSync(join(ROOT, 'eula/index.html'
 
 export const count = (html, re) => (html.match(re) || []).length;
 
-export function pageChecks({ page, source, locale, kind, allowEmDash = false }) {
+export function pageChecks({ page, source, locale, kind }) {
   const slug = SLUGS[kind];
   const prefix = PREFIX[locale];
   const article = /<article class="legal">([\s\S]*?)<\/article>/.exec(page)?.[1] ?? '';
   let allowlist = true;
-  try { assertClean(article, { allowEmDash: true }); } catch (e) { allowlist = e.message; }
+  // Em dashes are stripped here so the dedicated `no em dash` row below is the only one reporting them.
+  try { assertClean(article.replace(/—/g, '')); } catch (e) { allowlist = e.message; }
   return {
     'exactly one h1': count(page, /<h1\b/g) === 1,
     'no unresolved placeholder': !page.includes('\\('),
@@ -245,7 +245,7 @@ export function pageChecks({ page, source, locale, kind, allowEmDash = false }) 
     'no script/style in article': !/<(script|style)\b/i.test(article),
     'h2 count matches source': count(article, /<h2\b/g) === count(source, /<h2\b/g),
     'top-level allowlist': allowlist,
-    'no em dash': allowEmDash || !article.includes('—'),
+    'no em dash': !article.includes('—'),
     'no bare legal href': !/href="(privacy-policy|terms-of-service)\//.test(page),
     'no bare asset path': !/(?:href|src)="(?:assets|images)\//.test(page),
     'brand href is locale home': page.includes(`<a href="${prefix}/" class="brand-mark"`),
@@ -261,7 +261,7 @@ const printChecks = (log, label, checks) => {
 };
 
 // Builds all four pages from content/legal/*.html and prints the sanity table before writing.
-export function build({ outDir = ROOT, contentDir = CONTENT_DIR, log = console.log, allowEmDash = false } = {}) {
+export function build({ outDir = ROOT, contentDir = CONTENT_DIR, log = console.log } = {}) {
   const eulaUrl = readEulaUrl();
   const chrome = loadChrome();
   const strings = {
@@ -273,9 +273,9 @@ export function build({ outDir = ROOT, contentDir = CONTENT_DIR, log = console.l
     const file = join(contentDir, `${SLUGS[doc.kind]}.${doc.locale}.html`);
     if (!existsSync(file)) throw new Error(`source not found: ${file}`);
     const source = readFileSync(file, 'utf8');
-    const body = normaliseDocument(source, { allowEmDash });
+    const body = normaliseDocument(source);
     const page = composePage({ ...doc, body, strings: strings[doc.locale], chrome });
-    return { ...doc, path: outputPath(doc), page, checks: pageChecks({ page, source, allowEmDash, ...doc }) };
+    return { ...doc, path: outputPath(doc), page, checks: pageChecks({ page, source, ...doc }) };
   });
 
   log(`eula_url is consistent in eula/index.html: ${eulaUrl}`);
@@ -302,7 +302,7 @@ export function main(argv) {
     return;
   }
   try {
-    build({ allowEmDash: process.env.LEGAL_ALLOW_EM_DASH === '1' });
+    build();
   } catch (e) {
     console.error(e.message);
     process.exit(1);

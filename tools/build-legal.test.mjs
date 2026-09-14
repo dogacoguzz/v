@@ -77,15 +77,14 @@ test('normaliseDocument strips the leading source comment and yields one h1', ()
 test('normaliseDocument runs cleanly on all four real source files', () => {
   for (const doc of DOCS) {
     const source = readFileSync(join(ROOT, sourcePath(doc)), 'utf8');
-    const body = normaliseDocument(source, { allowEmDash: true });
+    const body = normaliseDocument(source);
     assert.equal(count(body, /<h1\b/g), 1, sourcePath(doc));
   }
 });
 
-test('normaliseDocument rejects an em dash by default and allows it via allowEmDash', () => {
+test('normaliseDocument rejects an em dash', () => {
   const withDash = SAMPLE_FRAGMENT.replace('Velora keeps data on device.', 'Velora keeps data on device — always.');
   assert.throws(() => normaliseDocument(withDash), /em dash \(U\+2014\)/);
-  assert.doesNotThrow(() => normaliseDocument(withDash, { allowEmDash: true }));
 });
 
 test('stripInlineStyles removes a style attribute and keeps the text', () => {
@@ -124,9 +123,8 @@ test('assertClean rejects markup that is never closed', () => {
   assert.throws(() => assertClean('<h1>T</h1>\n<p>open\n<blockquote>q</blockquote>'), /unbalanced markup, 1 element\(s\) never closed/);
 });
 
-test('assertClean rejects an em dash by default and accepts it with allowEmDash', () => {
+test('assertClean rejects an em dash', () => {
   assert.throws(() => assertClean('<p>a — b</p>'), /assertClean: em dash \(U\+2014\) is not allowed in user-facing legal text/);
-  assert.doesNotThrow(() => assertClean('<p>a — b</p>', { allowEmDash: true }));
 });
 
 test('assertClean accepts every allowlisted top-level element', () => {
@@ -339,17 +337,23 @@ test('build fails and writes nothing when a source file carries a disallowed ele
   assert.ok(!existsSync(outDir) || listFiles(outDir).length === 0);
 });
 
-test('build writes the four pages matching the committed output when em dashes are allowed', () => {
+test('build fails and writes nothing when a source file carries an em dash', () => {
+  const dir = tmpDir();
+  const outDir = join(dir, 'out');
+  const contentDir = seedContentDir(join(dir, 'content'), {
+    overrides: { 'terms.tr': SAMPLE_FRAGMENT.replace('Velora keeps data on device.', 'Velora keeps data on device — always.') },
+  });
+  assert.throws(() => build({ outDir, contentDir, log: () => {} }), /em dash \(U\+2014\)/);
+  assert.ok(!existsSync(outDir) || listFiles(outDir).length === 0);
+});
+
+test('build writes the four pages matching the committed output from the real sources', () => {
   const outDir = join(tmpDir(), 'out');
-  build({ outDir, allowEmDash: true, log: () => {} });
+  build({ outDir, log: () => {} });
   assert.deepEqual(listFiles(outDir).sort(), [...OUTPUT_PATHS].sort());
   for (const p of OUTPUT_PATHS) {
     assert.equal(readFileSync(join(outDir, p), 'utf8'), readFileSync(join(ROOT, p), 'utf8'), p);
   }
-});
-
-test('build against the real committed sources fails strictly (em dashes still present) until the prose rewrite lands', () => {
-  assert.throws(() => build({ outDir: join(tmpDir(), 'out'), log: () => {} }), /em dash \(U\+2014\)/);
 });
 
 test('main exits non-zero on an unexpected argument', () => {

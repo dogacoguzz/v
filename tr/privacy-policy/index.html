@@ -76,7 +76,7 @@
   <main id="top">
     <article class="legal">
       <h1>Velora Gizlilik Politikası</h1>
-      <p class="last-updated">Yürürlük Tarihi: 1 Nisan 2026</p>
+      <p class="last-updated">Yürürlük Tarihi: 14 Eylül 2026</p>
 
       <h2>1. Giriş</h2>
       <p>Bu Gizlilik Politikası, Doğaç Oğuz ("Veri Sorumlusu", "biz") tarafından geliştirilen ve işletilen Velora ("Uygulama") uygulamasının bilgileri nasıl topladığını, kullandığını, sakladığını ve koruduğunu açıklar. Velora Freemium bir hizmet olarak sunulmakta ve "OLDUĞU GİBİ" sağlanmaktadır. Uygulamayı kullanarak burada açıklanan uygulamaları kabul etmiş olursunuz.</p>
@@ -97,19 +97,19 @@
             </tr>
             <tr>
                 <td>Sağlık Verileri (Okuma)</td>
-                <td>Adım sayısı, aktif enerji, kalp atış hızı, dinlenme kalp atış hızı, antrenman efor skoru, antrenmanlar, boy, kilo, biyolojik cinsiyet, doğum tarihi, alkol tüketimi, su tüketimi</td>
+                <td>Adım sayısı, yürüme ve koşu mesafesi, aktif enerji, kalp atış hızı, dinlenme kalp atış hızı, kalp atış hızı değişkenliği (HRV), uyku analizi, antrenman efor skoru, antrenmanlar (diğer uygulamalar veya Apple Watch tarafından kaydedilen GPS rotaları dahil), aktivite özetleri (Hareket ve Egzersiz halkaları), boy, kilo, biyolojik cinsiyet, doğum tarihi, alkol tüketimi, su tüketimi</td>
                 <td>Kişiselleştirilmiş fitness bilgileri sunma ve ilerleme takibi</td>
                 <td>Apple Sağlık aracılığıyla cihazda</td>
             </tr>
             <tr>
                 <td>Sağlık Verileri (Yazma)</td>
-                <td>Alkol tüketimi, su tüketimi</td>
+                <td>Alkol tüketimi, su tüketimi, kilo (vücut ağırlığı)</td>
                 <td>Verileri Apple Sağlık'a geri kaydetmenize olanak tanıma</td>
                 <td>Apple Sağlık aracılığıyla cihazda</td>
             </tr>
             <tr>
                 <td>Konum Verisi</td>
-                <td>Yaklaşık konum (düşük doğruluk) — gün doğumu/batımı zamanları için</td>
+                <td>Gün doğumu/batımı zamanları için yaklaşık konum (düşük doğruluk)</td>
                 <td>Otomatik açık/koyu tema geçişi</td>
                 <td>Cihazda önbelleğe alınmış koordinatlar (UserDefaults)</td>
             </tr>
@@ -117,7 +117,7 @@
                 <td>Profil Verisi</td>
                 <td>Profil fotoğrafı (isteğe bağlı)</td>
                 <td>Profilinizi kişiselleştirme</td>
-                <td>Yalnızca cihaz dosya sistemi</td>
+                <td>Cihaz dosya sistemi; iCloud yedekleme açıkken ayrıca özel iCloud alanınız</td>
             </tr>
             <tr>
                 <td>Cihaz ve Kullanım Verileri</td>
@@ -132,14 +132,20 @@
                 <td>Firebase Crashlytics</td>
             </tr>
             <tr>
-                <td>Reklam Verileri</td>
-                <td>Cihaz reklam tanımlayıcısı (IDFA)</td>
-                <td>Kişiselleştirilmemiş reklamlar gösterme; reklam performansı ölçme</td>
-                <td>Google AdMob</td>
+                <td>Abonelik Durumu</td>
+                <td>Velora Pro için Apple tarafından sağlanan satın alma ve yetki durumu ile satın almayı yalnızca bu kuruluma bağlamak için kullanılan anonim, kurulum başına bir belirteç</td>
+                <td>Velora Pro özelliklerinin kilidini açma</td>
+                <td>Apple (App Store) tarafından işlenir; cihazda önbelleğe alınır. Ödeme bilgilerinizi asla almayız</td>
+            </tr>
+            <tr>
+                <td>iCloud Yedekleme (Velora Pro, isteğe bağlı)</td>
+                <td>Kuvvet antrenmanlarına eklediğiniz vücut bölgesi etiketleri ve profil fotoğrafınız</td>
+                <td>Bunları kendi cihazlarınız arasında geri yükleme</td>
+                <td>Özel iCloud veritabanınız (CloudKit), asla sunucularımız değil; yalnızca Velora Pro etkinken ve Ayarlar'daki iCloud yedekleme anahtarı açıkken</td>
             </tr>
             <tr>
                 <td>Tercihler</td>
-                <td>Tema, dil, adım hedefi, su hedefi, bildirim ayarları</td>
+                <td>Tema, dil, adım hedefi, su hedefi, bildirim ayarları, iCloud yedekleme anahtarı</td>
                 <td>Tercihlerinizi hatırlama</td>
                 <td>Cihazda (UserDefaults)</td>
             </tr>
@@ -147,7 +153,7 @@
       </div>
 
       <h2>3. Cihaz Üzerinde Yapay Zeka İşleme</h2>
-      <p>Velora, antrenman içgörülerini gerçek zamanlı olarak oluşturmak için Apple Intelligence (cihaz üzerinde Foundation Models) kullanmaktadır. Bu işlem tamamen cihazınızda gerçekleşir — <strong>yapay zeka işleme için hiçbir sağlık verisi harici bir sunucuya iletilmez</strong>. Yapay zeka tarafından üretilen içgörüler yalnızca bilgilendirme amaçlıdır ve hatalı, eksik veya beklenmedik olabilir. Yapay zeka tarafından üretilen içeriklerin doğruluğunu garanti etmiyoruz.</p>
+      <p>Velora, antrenman içgörülerini gerçek zamanlı olarak oluşturmak için Apple Intelligence (cihaz üzerinde Foundation Models) kullanmaktadır. Bu işlem tamamen cihazınızda gerçekleşir: <strong>yapay zeka işleme için hiçbir sağlık verisi harici bir sunucuya iletilmez</strong>. Yapay zeka tarafından üretilen içgörüler yalnızca bilgilendirme amaçlıdır ve hatalı, eksik veya beklenmedik olabilir. Yapay zeka tarafından üretilen içeriklerin doğruluğunu garanti etmiyoruz.</p>
 
       <h2>4. Apple Sağlık Entegrasyonu</h2>
       <p>Velora uygulamasını Apple Sağlık ile bağladığınızda:</p>
@@ -155,75 +161,78 @@
           <li>iOS izin diyalogları aracılığıyla hangi veri türlerini paylaşacağınızı siz seçersiniz</li>
           <li>Erişimi istediğiniz zaman <strong>Ayarlar → Gizlilik ve Güvenlik → Sağlık</strong> üzerinden iptal edebilirsiniz</li>
           <li>Sağlık verileri yalnızca uygulama içinde fitness bilgileri sunmak amacıyla erişilir</li>
-          <li>Uygulama ayrıca kaydettiğiniz alkol tüketimi ve su alımı kayıtlarını Apple Sağlık'a geri yazar</li>
-          <li>Apple'ın HealthKit kullanım yönergelerine uyuyoruz — <strong>HealthKit verileri asla reklam için kullanılmaz, asla satılmaz ve uygulamanın temel işlevselliğini sağlamak dışında üçüncü taraflarla paylaşılmaz</strong></li>
+          <li>Uygulama ayrıca kaydettiğiniz alkol tüketimi, su alımı ve vücut ağırlığı kayıtlarını Apple Sağlık'a geri yazar</li>
+          <li>Velora widget'ları canlı sayıları göstermek için adım verilerini doğrudan Apple Sağlık'tan okur; bu işlem yalnızca cihazınızda gerçekleşir</li>
+          <li>Apple'ın HealthKit kullanım yönergelerine uyuyoruz: <strong>HealthKit verileri asla reklam için kullanılmaz, asla satılmaz ve uygulamanın temel işlevselliğini sağlamak dışında üçüncü taraflarla paylaşılmaz</strong></li>
       </ul>
 
       <h2>5. Üçüncü Taraf Hizmetleri</h2>
       <p>Velora, her biri kendi gizlilik politikalarına tabi olan aşağıdaki hizmetleri entegre etmektedir:</p>
       <ul>
-          <li><strong>Firebase Analytics</strong> (Google) — anonim kullanım analitikleri</li>
-          <li><strong>Firebase Crashlytics</strong> (Google) — çökme raporlama</li>
-          <li><strong>Firebase Remote Config</strong> (Google) — özellik bayrakları ve yapılandırma</li>
-          <li><strong>Google AdMob</strong> — kişiselleştirilmemiş reklamlar</li>
+          <li><strong>Firebase Analytics</strong> (Google): anonim kullanım analitikleri</li>
+          <li><strong>Firebase Crashlytics</strong> (Google): çökme raporlama</li>
+          <li><strong>Firebase Remote Config</strong> (Google): yalnızca özellik bayrakları</li>
+          <li><strong>Apple</strong>: abonelik satın alımları için App Store / StoreKit ve isteğe bağlı iCloud yedekleme için CloudKit; Apple'ın gizlilik politikasına tabidir</li>
       </ul>
-      <p>Bu hizmetler kendi politikaları uyarınca cihaz tanımlayıcıları ve toplu kullanım verileri toplayabilir. Sağlık verilerinizi, konumunuzu veya profil fotoğrafınızı hiçbir üçüncü tarafla paylaşmıyoruz.</p>
+      <p>Bu hizmetler kendi politikaları uyarınca cihaz tanımlayıcıları ve toplu kullanım verileri toplayabilir. Sağlık verilerinizi, konumunuzu veya profil fotoğrafınızı hiçbir üçüncü tarafla paylaşmıyoruz; tek istisna, yedeklemeyi etkinleştirdiğinizde kendi iCloud hesabınızdır.</p>
 
       <h2>6. Arka Plan İşleme ve Bildirimler</h2>
       <ul>
           <li>Uygulama, antrenman tamamlamalarını izlemek ve adım sayılarını widget'lara senkronize etmek için periyodik arka plan görevleri çalıştırabilir</li>
-          <li>Antrenman özetleri için yerel bildirimler (push değil) gönderilebilir — bunu bildirim ayarlarından kontrol edebilirsiniz</li>
+          <li>Antrenman özetleri, kilometre taşları, seriler ve su hatırlatıcıları için yerel bildirimler gönderilebilir. Uygulama push bildirimi göndermez; yerel bildirimleri bildirim ayarlarından kontrol edebilirsiniz</li>
           <li>Arka planda harici sunuculara veri gönderilmez</li>
       </ul>
 
       <h2>7. Widget'lar ve Uygulama Grubu Verisi</h2>
-      <p>Adım sayıları, alkol alımı verileri, günlük hedefler ve dil tercihi, cihazınızdaki güvenli bir Uygulama Grubu kapsayıcısı aracılığıyla Velora widget'ları ile paylaşılır. Bu veriler asla cihazınızdan ayrılmaz.</p>
+      <p>Adım sayıları, su ve alkol alımı, günlük hedefler ve dil tercihi, cihazınızdaki güvenli bir Uygulama Grubu kapsayıcısı aracılığıyla Velora widget'ları ile paylaşılır. Widget'lar canlı adım sayıları için ayrıca doğrudan Apple Sağlık'ı sorgular. Bu verilerin hiçbiri cihazınızdan ayrılmaz.</p>
 
       <h2>8. Veri Depolama ve Güvenlik</h2>
       <ul>
           <li><strong>Yerel-öncelikli:</strong> Sağlık verileri, profil fotoğrafı ve tercihler cihazınızda kalır</li>
           <li><strong>Şifreleme:</strong> Veriler aktarım sırasında (TLS) ve beklemedeyken (iOS Veri Koruması) şifrelenir</li>
-          <li><strong>Özel sunucu yok:</strong> Velora kendi sunucularını işletmez — tüm sunucu taraflı işlemler Google/Firebase altyapısı tarafından gerçekleştirilir</li>
+          <li><strong>iCloud yedekleme (Velora Pro, isteğe bağlı):</strong> Apple'ın şifrelemesi kullanılarak özel iCloud veritabanınızda saklanır; biz okuyamayız. Ayarlar'dan istediğiniz zaman kapatabilirsiniz</li>
+          <li><strong>Özel sunucu yok:</strong> Velora kendi sunucularını işletmez. Tüm sunucu taraflı işlemler Google/Firebase altyapısı ve, satın alımlar ile isteğe bağlı iCloud yedekleme için, Apple tarafından gerçekleştirilir</li>
           <li><strong>Satış yok:</strong> Kişisel bilgilerinizi asla satmayız</li>
       </ul>
 
       <h2>9. İşlemenin Hukuki Dayanağı (KVKK / GDPR)</h2>
       <p>Avrupa Ekonomik Alanı (AEA), Birleşik Krallık, İsviçre veya Türkiye'de bulunuyorsanız, işleme için hukuki dayanaklarımız:</p>
       <ul>
-          <li><strong>Açık Rıza</strong> — sağlık verisi erişimi için (iOS izin diyalogları aracılığıyla verilir)</li>
-          <li><strong>Meşru Menfaat</strong> — uygulamayı sürdürmek ve geliştirmek için gereken çökme günlükleri ve anonimleştirilmiş analitikler</li>
-          <li><strong>Sözleşme İfası</strong> — hizmeti kullanırken talep ettiğiniz temel uygulama işlevselliği</li>
+          <li><strong>Açık Rıza:</strong> sağlık verisi erişimi için (iOS izin diyalogları aracılığıyla verilir)</li>
+          <li><strong>Meşru Menfaat:</strong> uygulamayı sürdürmek ve geliştirmek için gereken çökme günlükleri ve anonimleştirilmiş analitikler</li>
+          <li><strong>Sözleşme İfası:</strong> hizmeti kullanırken talep ettiğiniz temel uygulama işlevselliği ve satın aldığınız Velora Pro aboneliği</li>
       </ul>
 
       <h2>10. Haklarınız</h2>
       <p>Yargı alanınıza bağlı olarak aşağıdaki haklara sahip olabilirsiniz:</p>
       <ul>
-          <li><strong>Erişim</strong> — hakkınızda işlediğimiz verilerin bir kopyasını talep etme</li>
-          <li><strong>Düzeltme</strong> — yanlış kişisel verileri düzeltme</li>
-          <li><strong>Silme</strong> — verilerinizin silinmesini talep etme</li>
-          <li><strong>Taşınabilirlik</strong> — verilerinizi taşınabilir bir formatta alma</li>
-          <li><strong>İşlemeyi Kısıtlama</strong> — verilerinizin nasıl kullanıldığını sınırlama</li>
-          <li><strong>İtiraz</strong> — meşru menfaate dayalı işlemeye itiraz etme</li>
-          <li><strong>Rızayı Geri Çekme</strong> — daha önce verilen rızayı istediğiniz zaman geri çekme</li>
-          <li><strong>Şikayet</strong> — yerel veri koruma otoritenize şikayette bulunma</li>
+          <li><strong>Erişim:</strong> hakkınızda işlediğimiz verilerin bir kopyasını talep etme</li>
+          <li><strong>Düzeltme:</strong> yanlış kişisel verileri düzeltme</li>
+          <li><strong>Silme:</strong> verilerinizin silinmesini talep etme</li>
+          <li><strong>Taşınabilirlik:</strong> verilerinizi taşınabilir bir formatta alma</li>
+          <li><strong>İşlemeyi Kısıtlama:</strong> verilerinizin nasıl kullanıldığını sınırlama</li>
+          <li><strong>İtiraz:</strong> meşru menfaate dayalı işlemeye itiraz etme</li>
+          <li><strong>Rızayı Geri Çekme:</strong> daha önce verilen rızayı istediğiniz zaman geri çekme</li>
+          <li><strong>Şikayet:</strong> yerel veri koruma otoritenize şikayette bulunma</li>
       </ul>
       <p><strong>Kaliforniya Sakinleri (CCPA/CPRA):</strong> Bilme, silme ve kişisel bilgilerin satışından vazgeçme hakkına sahipsiniz. <strong>Kişisel bilgilerinizi satmıyoruz.</strong></p>
-      <p>Bu haklardan herhangi birini kullanmak için <strong>dnf.velora@gmail.com</strong> adresinden bize ulaşın. Ayrıca uygulamayı kaldırarak tüm yerel veri toplamayı durdurabilir, iOS Ayarları'ndan Sağlık izinlerini iptal edebilir veya cihaz ayarlarından reklam tanımlayıcınızı sıfırlayabilirsiniz.</p>
+      <p>Bu haklardan herhangi birini kullanmak için <strong>dnf.velora@gmail.com</strong> adresinden bize ulaşın. Ayrıca iOS Ayarları'ndan Sağlık izinlerini iptal edebilir, uygulamanın Ayarlar bölümünden iCloud yedeklemeyi kapatabilir (bu, senkronizasyonu durdurur) veya uygulamayı silerek cihazdaki tüm verileri kaldırabilirsiniz. iCloud'a zaten yedeklenmiş veriler iCloud ayarlarınızdan kaldırılabilir.</p>
 
       <h2>11. Veri Saklama</h2>
       <ul>
           <li><strong>Cihaz verileri:</strong> Uygulamayı silene veya verileri manuel olarak temizleyene kadar saklanır</li>
+          <li><strong>iCloud yedekleme verileri:</strong> Yedeklemeyi kapatıp verileri silene veya uygulamanın iCloud verilerini iCloud ayarlarınızdan silene kadar iCloud alanınızda saklanır</li>
           <li><strong>Analitik ve çökme günlükleri:</strong> Firebase tarafından teşhis için gereken minimum süre boyunca saklanır, ardından Google'ın saklama politikaları uyarınca otomatik olarak temizlenir</li>
       </ul>
 
       <h2>12. Uluslararası Veri Aktarımları</h2>
-      <p>Firebase Analytics, Crashlytics, Remote Config ve AdMob, toplu/anonimleştirilmiş verileri ikamet ettiğiniz ülke dışındaki Google sunucularına (ABD dahil) aktarabilir. Bu aktarımlar Google'ın veri işleme şartları ve standart sözleşme maddeleri kapsamında gerçekleştirilir.</p>
+      <p>Firebase Analytics, Crashlytics ve Remote Config, toplu/anonimleştirilmiş verileri ikamet ettiğiniz ülke dışındaki Google sunucularına (ABD dahil) aktarabilir. Bu aktarımlar Google'ın veri işleme şartları ve standart sözleşme maddeleri kapsamında gerçekleştirilir. Apple (iCloud, App Store), satın alma ve yedekleme verilerini Apple'ın gizlilik politikası kapsamında, ülkenizin dışında da bulunabilen kendi altyapısında işler.</p>
 
       <h2>13. Çocukların Gizliliği</h2>
       <p>Velora, 13 yaşın altındaki (AEA'da 16 yaşın altındaki) çocuklara yönelik değildir. Çocuklardan bilerek veri toplamıyoruz. Bir çocuğun kişisel veri sağladığını tespit edersek, bu verileri derhal sileriz.</p>
 
       <h2>14. Bu Politikadaki Değişiklikler</h2>
-      <p>Bu Politikayı zaman zaman güncelleyebiliriz. Değişiklikler uygulama içinde görünecektir. Değişikliklerden sonra kullanıma devam etmeniz, revize edilmiş Politikayı kabul ettiğiniz anlamına gelir. Önemli değişiklikler bir bildirim ile vurgulanacaktır.</p>
+      <p>Bu Politikayı zaman zaman güncelleyebiliriz. Güncel sürüm her zaman <a href="https://velorahealthcompanion.com/tr/privacy-policy/">https://velorahealthcompanion.com/tr/privacy-policy/</a> adresinde yayımlanır ve değiştiğinde bu sayfanın üstündeki Yürürlük Tarihi güncellenir. Değişikliklerden sonra kullanıma devam etmeniz, revize edilmiş Politikayı kabul ettiğiniz anlamına gelir. Önemli değişiklikler bir bildirim ile vurgulanacaktır.</p>
 
       <div class="warning-box">
           <h2>15. Tıbbi Sorumluluk Reddi</h2>

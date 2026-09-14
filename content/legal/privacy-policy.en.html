@@ -1,6 +1,6 @@
 <!-- Source of truth for /privacy-policy/ (en). Edit here, then run: node tools/build-legal.mjs -->
 <h1>Velora Privacy Policy</h1>
-<p class="last-updated">Effective Date: 1 April 2026</p>
+<p class="last-updated">Effective Date: 14 September 2026</p>
 
 <h2>1. Introduction</h2>
 <p>This Privacy Policy explains how Velora (the "Application"), developed and operated by Doğaç Oğuz ("Data Controller", "we", "us"), collects, uses, stores, and protects information. Velora is offered as a Freemium service and is provided "AS IS." By using the Application you agree to the practices described herein.</p>
@@ -20,13 +20,13 @@
     </tr>
     <tr>
         <td>Health Data (Read)</td>
-        <td>Step count, active energy burned, heart rate, resting heart rate, workout effort score, workouts, height, body mass, biological sex, date of birth, alcohol consumption, dietary water</td>
+        <td>Step count, walking and running distance, active energy burned, heart rate, resting heart rate, heart rate variability (HRV), sleep analysis, workout effort score, workouts (including GPS routes recorded by other apps or Apple Watch), activity summaries (Move and Exercise rings), height, body mass, biological sex, date of birth, alcohol consumption, dietary water</td>
         <td>Provide personalized fitness insights and track progress</td>
         <td>On-device via Apple Health</td>
     </tr>
     <tr>
         <td>Health Data (Write)</td>
-        <td>Alcohol consumption, dietary water intake</td>
+        <td>Alcohol consumption, dietary water intake, body mass (weight)</td>
         <td>Allow you to log data back into Apple Health</td>
         <td>On-device via Apple Health</td>
     </tr>
@@ -40,7 +40,7 @@
         <td>Profile Data</td>
         <td>Profile photo (optional)</td>
         <td>Personalize your profile</td>
-        <td>On-device file system only</td>
+        <td>On-device file system; additionally your private iCloud when iCloud backup is on</td>
     </tr>
     <tr>
         <td>Device &amp; Usage Data</td>
@@ -55,21 +55,27 @@
         <td>Firebase Crashlytics</td>
     </tr>
     <tr>
-        <td>Advertising Data</td>
-        <td>Device advertising identifier (IDFA)</td>
-        <td>Display non-personalized ads; measure ad performance</td>
-        <td>Google AdMob</td>
+        <td>Subscription Status</td>
+        <td>Apple-provided purchase and entitlement status for Velora Pro, plus an anonymous per-install token used only to link the purchase to this installation</td>
+        <td>Unlock Velora Pro features</td>
+        <td>Processed by Apple (App Store); cached on-device. We never receive your payment details</td>
+    </tr>
+    <tr>
+        <td>iCloud Backup (Velora Pro, optional)</td>
+        <td>Body-region tags you add to strength workouts and your profile photo</td>
+        <td>Restore them across your own devices</td>
+        <td>Your private iCloud database (CloudKit), never our servers; only while Velora Pro is active and the iCloud backup switch in Settings is on</td>
     </tr>
     <tr>
         <td>Preferences</td>
-        <td>Theme, language, step goal, water goal, notification settings</td>
+        <td>Theme, language, step goal, water goal, notification settings, iCloud backup switch</td>
         <td>Remember your choices</td>
         <td>On-device (UserDefaults)</td>
     </tr>
 </table>
 
 <h2>3. On-Device AI Processing</h2>
-<p>Velora uses Apple Intelligence (on-device Foundation Models) to generate workout insights in real time. This processing happens entirely on your device — <strong>no health data is transmitted to any external server</strong> for AI processing. AI-generated insights are informational only and may be inaccurate, incomplete, or unexpected. We do not guarantee the accuracy of any AI-generated content.</p>
+<p>Velora uses Apple Intelligence (on-device Foundation Models) to generate workout insights in real time. This processing happens entirely on your device: <strong>no health data is transmitted to any external server</strong> for AI processing. AI-generated insights are informational only and may be inaccurate, incomplete, or unexpected. We do not guarantee the accuracy of any AI-generated content.</p>
 
 <h2>4. Apple Health Integration</h2>
 <p>When you connect Velora with Apple Health:</p>
@@ -77,75 +83,78 @@
     <li>You choose exactly which data types to share via iOS permission dialogs</li>
     <li>You can revoke access at any time through <strong>Settings → Privacy &amp; Security → Health</strong></li>
     <li>Health data is accessed for the sole purpose of delivering fitness insights within the app</li>
-    <li>The app also writes alcohol consumption and water intake records back to Apple Health when you log them</li>
-    <li>We comply with Apple's HealthKit usage guidelines — <strong>HealthKit data is never used for advertising, never sold, and never shared with third parties</strong> except as required to provide the app's core functionality</li>
+    <li>The app also writes alcohol consumption, water intake, and body weight records back to Apple Health when you log them</li>
+    <li>Velora widgets read step data directly from Apple Health to show live counts; this happens on your device only</li>
+    <li>We comply with Apple's HealthKit usage guidelines: <strong>HealthKit data is never used for advertising, never sold, and never shared with third parties</strong> except as required to provide the app's core functionality</li>
 </ul>
 
 <h2>5. Third-Party Services</h2>
 <p>Velora integrates the following services, each governed by their own privacy policies:</p>
 <ul>
-    <li><strong>Firebase Analytics</strong> (Google) — anonymous usage analytics</li>
-    <li><strong>Firebase Crashlytics</strong> (Google) — crash reporting</li>
-    <li><strong>Firebase Remote Config</strong> (Google) — feature flags and configuration</li>
-    <li><strong>Google AdMob</strong> — non-personalized advertising</li>
+    <li><strong>Firebase Analytics</strong> (Google): anonymous usage analytics</li>
+    <li><strong>Firebase Crashlytics</strong> (Google): crash reporting</li>
+    <li><strong>Firebase Remote Config</strong> (Google): feature flags only</li>
+    <li><strong>Apple</strong>: App Store / StoreKit for subscription purchases and CloudKit for the optional iCloud backup, governed by Apple's privacy policy</li>
 </ul>
-<p>These services may collect device identifiers and aggregated usage data per their own policies. We do not share your health data, location, or profile photo with any third party.</p>
+<p>These services may collect device identifiers and aggregated usage data per their own policies. We do not share your health data, location, or profile photo with any third party, except your own iCloud account when you enable backup.</p>
 
 <h2>6. Background Processing &amp; Notifications</h2>
 <ul>
     <li>The app may run periodic background tasks to monitor workout completions and sync step counts to widgets</li>
-    <li>Local notifications (not push) may be sent for workout summaries — you control this via notification settings</li>
+    <li>Local notifications may be sent for workout summaries, milestones, streaks, and water reminders. The app sends no push notifications, and you control local notifications via notification settings</li>
     <li>No background data is sent to external servers</li>
 </ul>
 
 <h2>7. Widgets &amp; App Group Data</h2>
-<p>Step counts, alcohol intake data, daily goals, and language preference are shared with Velora widgets via a secure App Group container on your device. This data never leaves your device.</p>
+<p>Step counts, water and alcohol intake, daily goals, and language preference are shared with Velora widgets via a secure App Group container on your device. Widgets also query Apple Health directly for live step counts. None of this data leaves your device.</p>
 
 <h2>8. Data Storage &amp; Security</h2>
 <ul>
     <li><strong>Local-first:</strong> Health data, profile photo, and preferences remain on your device</li>
     <li><strong>Encryption:</strong> Data is encrypted in transit (TLS) and at rest (iOS Data Protection)</li>
-    <li><strong>No custom backend:</strong> Velora does not operate its own servers — all server-side processing is handled by Google/Firebase infrastructure</li>
+    <li><strong>iCloud backup (Velora Pro, optional):</strong> Stored in your private iCloud database using Apple's encryption; we cannot read it. You can turn it off at any time in Settings</li>
+    <li><strong>No custom backend:</strong> Velora does not operate its own servers. All server-side processing is handled by Google/Firebase infrastructure and, for purchases and the optional iCloud backup, by Apple</li>
     <li><strong>No sale:</strong> We never sell your personal information</li>
 </ul>
 
-<h2>9. Legal Basis for Processing (GDPR)</h2>
-<p>If you are located in the European Economic Area (EEA), the United Kingdom, or Switzerland, our legal bases for processing are:</p>
+<h2>9. Legal Basis for Processing (KVKK / GDPR)</h2>
+<p>If you are located in the European Economic Area (EEA), the United Kingdom, Switzerland, or Türkiye, our legal bases for processing are:</p>
 <ul>
-    <li><strong>Explicit Consent</strong> — for health data access (granted via iOS permission dialogs)</li>
-    <li><strong>Legitimate Interest</strong> — for crash logs and anonymized analytics needed to maintain and improve the app</li>
-    <li><strong>Contract Performance</strong> — for core app functionality you request when using the service</li>
+    <li><strong>Explicit Consent:</strong> for health data access (granted via iOS permission dialogs)</li>
+    <li><strong>Legitimate Interest:</strong> for crash logs and anonymized analytics needed to maintain and improve the app</li>
+    <li><strong>Contract Performance:</strong> for core app functionality you request when using the service, and for the Velora Pro subscription you purchase</li>
 </ul>
 
 <h2>10. Your Rights</h2>
 <p>Depending on your jurisdiction, you may have the following rights:</p>
 <ul>
-    <li><strong>Access</strong> — request a copy of the data we process about you</li>
-    <li><strong>Rectification</strong> — correct inaccurate personal data</li>
-    <li><strong>Erasure</strong> — request deletion of your data</li>
-    <li><strong>Portability</strong> — receive your data in a portable format</li>
-    <li><strong>Restrict Processing</strong> — limit how your data is used</li>
-    <li><strong>Object</strong> — object to processing based on legitimate interest</li>
-    <li><strong>Withdraw Consent</strong> — revoke previously given consent at any time</li>
-    <li><strong>Lodge a Complaint</strong> — file a complaint with your local data protection authority</li>
+    <li><strong>Access:</strong> request a copy of the data we process about you</li>
+    <li><strong>Rectification:</strong> correct inaccurate personal data</li>
+    <li><strong>Erasure:</strong> request deletion of your data</li>
+    <li><strong>Portability:</strong> receive your data in a portable format</li>
+    <li><strong>Restrict Processing:</strong> limit how your data is used</li>
+    <li><strong>Object:</strong> object to processing based on legitimate interest</li>
+    <li><strong>Withdraw Consent:</strong> revoke previously given consent at any time</li>
+    <li><strong>Lodge a Complaint:</strong> file a complaint with your local data protection authority</li>
 </ul>
 <p><strong>California Residents (CCPA/CPRA):</strong> You have the right to know, delete, and opt out of the sale of personal information. <strong>We do not sell your personal information.</strong></p>
-<p>To exercise any of these rights, contact us at <strong>dnf.velora@gmail.com</strong>. You can also uninstall the app to cease all local data collection, revoke Health permissions in iOS Settings, or reset your advertising identifier in device settings.</p>
+<p>To exercise any of these rights, contact us at <strong>dnf.velora@gmail.com</strong>. You can also revoke Health permissions in iOS Settings, turn off iCloud backup in the app's Settings (which stops syncing), or delete the app to remove all on-device data. Data already backed up to iCloud can be removed from your iCloud settings.</p>
 
 <h2>11. Data Retention</h2>
 <ul>
     <li><strong>On-device data:</strong> Retained until you delete the app or manually clear data</li>
+    <li><strong>iCloud backup data:</strong> Retained in your iCloud until you turn backup off and delete it, or delete the app's iCloud data from your iCloud settings</li>
     <li><strong>Analytics &amp; crash logs:</strong> Retained by Firebase for the minimum period needed for diagnostics, then automatically purged per Google's retention policies</li>
 </ul>
 
 <h2>12. International Data Transfers</h2>
-<p>Firebase Analytics, Crashlytics, Remote Config, and AdMob may transfer aggregated/anonymized data to Google servers located outside your country of residence, including the United States. These transfers are covered by Google's data processing terms and standard contractual clauses.</p>
+<p>Firebase Analytics, Crashlytics, and Remote Config may transfer aggregated/anonymized data to Google servers located outside your country of residence, including the United States. These transfers are covered by Google's data processing terms and standard contractual clauses. Apple (iCloud, App Store) processes purchase and backup data on its own infrastructure, which may also be located outside your country, under Apple's privacy policy.</p>
 
 <h2>13. Children's Privacy</h2>
 <p>Velora is not directed to children under 13 (or under 16 in the EEA). We do not knowingly collect data from children. If we discover that a child has provided personal data, we will delete it promptly.</p>
 
 <h2>14. Changes to This Policy</h2>
-<p>We may update this Policy periodically. Changes will appear in-app. Continued use after changes constitutes acceptance of the revised Policy. Material changes will be highlighted with a notice.</p>
+<p>We may update this Policy periodically. The current version is always published at <a href="https://velorahealthcompanion.com/privacy-policy/">https://velorahealthcompanion.com/privacy-policy/</a>, and we update the Effective Date at the top of this page when it changes. Continued use after changes constitutes acceptance of the revised Policy. Material changes will be highlighted with a notice.</p>
 
 <div class="warning-box">
     <h2>15. Medical Disclaimer</h2>
