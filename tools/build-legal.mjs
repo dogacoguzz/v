@@ -241,17 +241,17 @@ ${reindent(body, '      ')}
   return rewriteRootRelativePaths(page, { localePrefix: prefix });
 }
 
-// eula.html carries the URL three times; all copies must agree before the export is compared against it.
+// eula/index.html carries the URL three times; all copies must agree before the export is compared against it.
 const EULA_URL_SOURCES = [
   /<meta http-equiv="refresh" content="0; url=([^"]+)" \/>/,
   /<a href="([^"]+)"/,
   /location\.replace\('([^']+)'\)/,
 ];
 
-export function readEulaUrl(eulaHtml = readFileSync(join(ROOT, 'eula.html'), 'utf8')) {
+export function readEulaUrl(eulaHtml = readFileSync(join(ROOT, 'eula/index.html'), 'utf8')) {
   const urls = EULA_URL_SOURCES.map((re) => re.exec(eulaHtml)?.[1]);
   if (urls.some((url) => !url) || new Set(urls).size !== 1) {
-    throw new Error('eula.html: meta refresh, link and location.replace URLs differ');
+    throw new Error('eula/index.html: meta refresh, link and location.replace URLs differ');
   }
   return urls[0];
 }
@@ -299,7 +299,7 @@ export function build({ exportPath, outDir = ROOT, log = console.log }) {
   const eulaUrl = readEulaUrl();
   const exportEula = param('eula_url');
   if (exportEula !== eulaUrl) {
-    throw new Error(`eula_url mismatch: export has ${exportEula}, eula.html has ${eulaUrl}`);
+    throw new Error(`eula_url mismatch: export has ${exportEula}, eula/index.html has ${eulaUrl}`);
   }
 
   const chrome = loadChrome();
@@ -315,7 +315,7 @@ export function build({ exportPath, outDir = ROOT, log = console.log }) {
     return { ...doc, path: outputPath(doc), page, checks: pageChecks({ page, source, ...doc }) };
   });
 
-  log(`eula_url matches eula.html: ${eulaUrl}`);
+  log(`eula_url matches eula/index.html: ${eulaUrl}`);
   let failed = false;
   for (const p of pages) {
     printChecks(log, p.path, p.checks);

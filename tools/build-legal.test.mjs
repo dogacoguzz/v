@@ -267,7 +267,7 @@ test('keyParity compares flattened key sets', () => {
 });
 
 test('readEulaUrl returns the URL when meta refresh, link and location.replace agree', () => {
-  const eula = readFileSync(join(ROOT, 'eula.html'), 'utf8');
+  const eula = readFileSync(join(ROOT, 'eula/index.html'), 'utf8');
   const url = readEulaUrl(eula);
   assert.match(url, /^https:\/\/www\.apple\.com\/legal\//);
   assert.equal(readEulaUrl(), url);
@@ -275,7 +275,7 @@ test('readEulaUrl returns the URL when meta refresh, link and location.replace a
 });
 
 test('readEulaUrl throws when one copy of the URL drifts or the meta refresh is missing', () => {
-  const eula = readFileSync(join(ROOT, 'eula.html'), 'utf8');
+  const eula = readFileSync(join(ROOT, 'eula/index.html'), 'utf8');
   const drifted = eula.replace(/location\.replace\('[^']+'\)/, "location.replace('https://example.com/eula')");
   assert.notEqual(drifted, eula);
   assert.throws(() => readEulaUrl(drifted), /meta refresh, link and location\.replace URLs differ/);
@@ -390,7 +390,7 @@ test('build fails on a missing parameter and writes nothing', () => {
   assert.ok(!existsSync(outDir) || listFiles(outDir).length === 0);
 });
 
-test('build fails when eula_url differs from eula.html and writes nothing', () => {
+test('build fails when eula_url differs from eula/index.html and writes nothing', () => {
   const parameters = syntheticParameters();
   parameters.eula_url = param('https://example.com/eula');
   const dir = tmpDir();
