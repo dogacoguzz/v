@@ -18,10 +18,17 @@ const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
 const SITE = 'https://velorahealthcompanion.com';
 
 const strings = JSON.parse(readFileSync(join(ROOT, 'assets/data/strings.tr.json'), 'utf8'));
+const stringsEn = JSON.parse(readFileSync(join(ROOT, 'assets/data/strings.en.json'), 'utf8'));
 let html = readFileSync(join(ROOT, 'index.html'), 'utf8');
 
 const get = (path) => path.split('.').reduce((a, k) => (a && a[k] !== undefined ? a[k] : undefined), strings);
 const esc = (s) => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+
+// flattens a nested strings object into dotted key paths, for key-parity checks
+const flattenKeys = (obj, prefix = '') =>
+  Object.entries(obj).flatMap(([k, v]) =>
+    v && typeof v === 'object' ? flattenKeys(v, `${prefix}${k}.`) : [`${prefix}${k}`]
+  );
 
 let missing = [];
 
@@ -111,6 +118,11 @@ html = html.replace(/(data-src-(?:en|tr))="images\//g, '$1="/images/');
 // section-level attrs used by app.js
 html = html.replace(/(data-(?:src|alt)-(?:en|tr))="images\//g, '$1="/images/');
 
+// --- footer legal links: point at the /tr/ siblings (EULA stays absolute) ---
+html = html
+  .replace(/href="privacy-policy\//g, 'href="/tr/privacy-policy/')
+  .replace(/href="terms-of-service\//g, 'href="/tr/terms-of-service/');
+
 // lang buttons: aria-current defaults
 html = html
   .replace('<button type="button" data-locale="en" aria-current="true">', '<button type="button" data-locale="en" aria-current="false">')
@@ -132,6 +144,13 @@ const checks = {
   'no bare assets/ path': !/(?:href|src)="assets\//.test(html),
   'tr screenshot': html.includes('/images/tr1.webp'),
   'no EN hero left': !html.includes('Your week,'),
+  'legal links /tr/': html.includes('/tr/privacy-policy/') && html.includes('/tr/terms-of-service/')
+    && !/href="(privacy-policy|terms-of-service)\//.test(html),
+  'strings key parity': (() => {
+    const a = flattenKeys(stringsEn).sort();
+    const b = flattenKeys(strings).sort();
+    return a.length === b.length && a.every((k, i) => k === b[i]);
+  })(),
 };
 console.log('tr/index.html written.');
 for (const [k, v] of Object.entries(checks)) console.log(`${v ? 'ok ' : 'FAIL'} ${k}`);

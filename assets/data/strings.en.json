@@ -111,6 +111,20 @@
   },
   "footer": {
     "copy": "© 2026 Velora",
-    "disclaimer": "Velora is a wellness companion, not a medical device. Consult a clinician for medical advice."
+    "disclaimer": "Velora is a wellness companion, not a medical device. Consult a clinician for medical advice.",
+    "legalAria": "Legal",
+    "privacy": "Privacy Policy",
+    "terms": "Terms of Service",
+    "eula": "EULA"
+  },
+  "legal": {
+    "privacy": {
+      "title": "Privacy Policy · Velora",
+      "description": "How Velora handles your data: everything stays on your device, nothing is sold, and you control every permission."
+    },
+    "terms": {
+      "title": "Terms of Service · Velora",
+      "description": "The terms that apply when you use the Velora iOS app."
+    }
   }
 }

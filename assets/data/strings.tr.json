@@ -111,6 +111,20 @@
   },
   "footer": {
     "copy": "© 2026 Velora",
-    "disclaimer": "Velora bir sağlık eşlikçisidir, tıbbi cihaz değildir. Tıbbi tavsiye için bir hekime danışın."
+    "disclaimer": "Velora bir sağlık eşlikçisidir, tıbbi cihaz değildir. Tıbbi tavsiye için bir hekime danışın.",
+    "legalAria": "Yasal",
+    "privacy": "Gizlilik Politikası",
+    "terms": "Kullanım Koşulları",
+    "eula": "EULA"
+  },
+  "legal": {
+    "privacy": {
+      "title": "Gizlilik Politikası · Velora",
+      "description": "Velora verilerinizi nasıl işler: her şey cihazınızda kalır, hiçbir şey satılmaz ve her izni siz kontrol edersiniz."
+    },
+    "terms": {
+      "title": "Kullanım Koşulları · Velora",
+      "description": "Velora iOS uygulamasını kullanırken geçerli olan koşullar."
+    }
   }
 }
