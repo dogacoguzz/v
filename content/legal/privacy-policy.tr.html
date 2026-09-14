@@ -1,0 +1,160 @@
+<!-- Source of truth for /privacy-policy/ (tr). Edit here, then run: node tools/build-legal.mjs -->
+<h1>Velora Gizlilik Politikası</h1>
+<p class="last-updated">Yürürlük Tarihi: 1 Nisan 2026</p>
+
+<h2>1. Giriş</h2>
+<p>Bu Gizlilik Politikası, Doğaç Oğuz ("Veri Sorumlusu", "biz") tarafından geliştirilen ve işletilen Velora ("Uygulama") uygulamasının bilgileri nasıl topladığını, kullandığını, sakladığını ve koruduğunu açıklar. Velora Freemium bir hizmet olarak sunulmakta ve "OLDUĞU GİBİ" sağlanmaktadır. Uygulamayı kullanarak burada açıklanan uygulamaları kabul etmiş olursunuz.</p>
+
+<div class="highlight">
+    <strong>Gizliliğiniz Önemlidir:</strong> Yerel-öncelikli bir mimari izliyoruz. Sağlık verileriniz cihazınızda kalır ve asla sunucularımıza yüklenmez.
+</div>
+
+<h2>2. Topladığımız Bilgiler</h2>
+
+<table class="data-table">
+    <tr>
+        <th>Kategori</th>
+        <th>Veri Noktaları</th>
+        <th>Amaç</th>
+        <th>Depolama</th>
+    </tr>
+    <tr>
+        <td>Sağlık Verileri (Okuma)</td>
+        <td>Adım sayısı, aktif enerji, kalp atış hızı, dinlenme kalp atış hızı, antrenman efor skoru, antrenmanlar, boy, kilo, biyolojik cinsiyet, doğum tarihi, alkol tüketimi, su tüketimi</td>
+        <td>Kişiselleştirilmiş fitness bilgileri sunma ve ilerleme takibi</td>
+        <td>Apple Sağlık aracılığıyla cihazda</td>
+    </tr>
+    <tr>
+        <td>Sağlık Verileri (Yazma)</td>
+        <td>Alkol tüketimi, su tüketimi</td>
+        <td>Verileri Apple Sağlık'a geri kaydetmenize olanak tanıma</td>
+        <td>Apple Sağlık aracılığıyla cihazda</td>
+    </tr>
+    <tr>
+        <td>Konum Verisi</td>
+        <td>Yaklaşık konum (düşük doğruluk) — gün doğumu/batımı zamanları için</td>
+        <td>Otomatik açık/koyu tema geçişi</td>
+        <td>Cihazda önbelleğe alınmış koordinatlar (UserDefaults)</td>
+    </tr>
+    <tr>
+        <td>Profil Verisi</td>
+        <td>Profil fotoğrafı (isteğe bağlı)</td>
+        <td>Profilinizi kişiselleştirme</td>
+        <td>Yalnızca cihaz dosya sistemi</td>
+    </tr>
+    <tr>
+        <td>Cihaz ve Kullanım Verileri</td>
+        <td>Anonimleştirilmiş IP adresi, işletim sistemi sürümü, cihaz modeli, oturum süresi, ziyaret edilen ekranlar</td>
+        <td>Analitik ve performans izleme</td>
+        <td>Cihazda; Firebase Analytics aracılığıyla toplu raporlar</td>
+    </tr>
+    <tr>
+        <td>Çökme Günlükleri</td>
+        <td>Yığın izleri ve minimum cihaz bağlamı</td>
+        <td>Hataları teşhis etme ve düzeltme</td>
+        <td>Firebase Crashlytics</td>
+    </tr>
+    <tr>
+        <td>Reklam Verileri</td>
+        <td>Cihaz reklam tanımlayıcısı (IDFA)</td>
+        <td>Kişiselleştirilmemiş reklamlar gösterme; reklam performansı ölçme</td>
+        <td>Google AdMob</td>
+    </tr>
+    <tr>
+        <td>Tercihler</td>
+        <td>Tema, dil, adım hedefi, su hedefi, bildirim ayarları</td>
+        <td>Tercihlerinizi hatırlama</td>
+        <td>Cihazda (UserDefaults)</td>
+    </tr>
+</table>
+
+<h2>3. Cihaz Üzerinde Yapay Zeka İşleme</h2>
+<p>Velora, antrenman içgörülerini gerçek zamanlı olarak oluşturmak için Apple Intelligence (cihaz üzerinde Foundation Models) kullanmaktadır. Bu işlem tamamen cihazınızda gerçekleşir — <strong>yapay zeka işleme için hiçbir sağlık verisi harici bir sunucuya iletilmez</strong>. Yapay zeka tarafından üretilen içgörüler yalnızca bilgilendirme amaçlıdır ve hatalı, eksik veya beklenmedik olabilir. Yapay zeka tarafından üretilen içeriklerin doğruluğunu garanti etmiyoruz.</p>
+
+<h2>4. Apple Sağlık Entegrasyonu</h2>
+<p>Velora uygulamasını Apple Sağlık ile bağladığınızda:</p>
+<ul>
+    <li>iOS izin diyalogları aracılığıyla hangi veri türlerini paylaşacağınızı siz seçersiniz</li>
+    <li>Erişimi istediğiniz zaman <strong>Ayarlar → Gizlilik ve Güvenlik → Sağlık</strong> üzerinden iptal edebilirsiniz</li>
+    <li>Sağlık verileri yalnızca uygulama içinde fitness bilgileri sunmak amacıyla erişilir</li>
+    <li>Uygulama ayrıca kaydettiğiniz alkol tüketimi ve su alımı kayıtlarını Apple Sağlık'a geri yazar</li>
+    <li>Apple'ın HealthKit kullanım yönergelerine uyuyoruz — <strong>HealthKit verileri asla reklam için kullanılmaz, asla satılmaz ve uygulamanın temel işlevselliğini sağlamak dışında üçüncü taraflarla paylaşılmaz</strong></li>
+</ul>
+
+<h2>5. Üçüncü Taraf Hizmetleri</h2>
+<p>Velora, her biri kendi gizlilik politikalarına tabi olan aşağıdaki hizmetleri entegre etmektedir:</p>
+<ul>
+    <li><strong>Firebase Analytics</strong> (Google) — anonim kullanım analitikleri</li>
+    <li><strong>Firebase Crashlytics</strong> (Google) — çökme raporlama</li>
+    <li><strong>Firebase Remote Config</strong> (Google) — özellik bayrakları ve yapılandırma</li>
+    <li><strong>Google AdMob</strong> — kişiselleştirilmemiş reklamlar</li>
+</ul>
+<p>Bu hizmetler kendi politikaları uyarınca cihaz tanımlayıcıları ve toplu kullanım verileri toplayabilir. Sağlık verilerinizi, konumunuzu veya profil fotoğrafınızı hiçbir üçüncü tarafla paylaşmıyoruz.</p>
+
+<h2>6. Arka Plan İşleme ve Bildirimler</h2>
+<ul>
+    <li>Uygulama, antrenman tamamlamalarını izlemek ve adım sayılarını widget'lara senkronize etmek için periyodik arka plan görevleri çalıştırabilir</li>
+    <li>Antrenman özetleri için yerel bildirimler (push değil) gönderilebilir — bunu bildirim ayarlarından kontrol edebilirsiniz</li>
+    <li>Arka planda harici sunuculara veri gönderilmez</li>
+</ul>
+
+<h2>7. Widget'lar ve Uygulama Grubu Verisi</h2>
+<p>Adım sayıları, alkol alımı verileri, günlük hedefler ve dil tercihi, cihazınızdaki güvenli bir Uygulama Grubu kapsayıcısı aracılığıyla Velora widget'ları ile paylaşılır. Bu veriler asla cihazınızdan ayrılmaz.</p>
+
+<h2>8. Veri Depolama ve Güvenlik</h2>
+<ul>
+    <li><strong>Yerel-öncelikli:</strong> Sağlık verileri, profil fotoğrafı ve tercihler cihazınızda kalır</li>
+    <li><strong>Şifreleme:</strong> Veriler aktarım sırasında (TLS) ve beklemedeyken (iOS Veri Koruması) şifrelenir</li>
+    <li><strong>Özel sunucu yok:</strong> Velora kendi sunucularını işletmez — tüm sunucu taraflı işlemler Google/Firebase altyapısı tarafından gerçekleştirilir</li>
+    <li><strong>Satış yok:</strong> Kişisel bilgilerinizi asla satmayız</li>
+</ul>
+
+<h2>9. İşlemenin Hukuki Dayanağı (KVKK / GDPR)</h2>
+<p>Avrupa Ekonomik Alanı (AEA), Birleşik Krallık, İsviçre veya Türkiye'de bulunuyorsanız, işleme için hukuki dayanaklarımız:</p>
+<ul>
+    <li><strong>Açık Rıza</strong> — sağlık verisi erişimi için (iOS izin diyalogları aracılığıyla verilir)</li>
+    <li><strong>Meşru Menfaat</strong> — uygulamayı sürdürmek ve geliştirmek için gereken çökme günlükleri ve anonimleştirilmiş analitikler</li>
+    <li><strong>Sözleşme İfası</strong> — hizmeti kullanırken talep ettiğiniz temel uygulama işlevselliği</li>
+</ul>
+
+<h2>10. Haklarınız</h2>
+<p>Yargı alanınıza bağlı olarak aşağıdaki haklara sahip olabilirsiniz:</p>
+<ul>
+    <li><strong>Erişim</strong> — hakkınızda işlediğimiz verilerin bir kopyasını talep etme</li>
+    <li><strong>Düzeltme</strong> — yanlış kişisel verileri düzeltme</li>
+    <li><strong>Silme</strong> — verilerinizin silinmesini talep etme</li>
+    <li><strong>Taşınabilirlik</strong> — verilerinizi taşınabilir bir formatta alma</li>
+    <li><strong>İşlemeyi Kısıtlama</strong> — verilerinizin nasıl kullanıldığını sınırlama</li>
+    <li><strong>İtiraz</strong> — meşru menfaate dayalı işlemeye itiraz etme</li>
+    <li><strong>Rızayı Geri Çekme</strong> — daha önce verilen rızayı istediğiniz zaman geri çekme</li>
+    <li><strong>Şikayet</strong> — yerel veri koruma otoritenize şikayette bulunma</li>
+</ul>
+<p><strong>Kaliforniya Sakinleri (CCPA/CPRA):</strong> Bilme, silme ve kişisel bilgilerin satışından vazgeçme hakkına sahipsiniz. <strong>Kişisel bilgilerinizi satmıyoruz.</strong></p>
+<p>Bu haklardan herhangi birini kullanmak için <strong>dnf.velora@gmail.com</strong> adresinden bize ulaşın. Ayrıca uygulamayı kaldırarak tüm yerel veri toplamayı durdurabilir, iOS Ayarları'ndan Sağlık izinlerini iptal edebilir veya cihaz ayarlarından reklam tanımlayıcınızı sıfırlayabilirsiniz.</p>
+
+<h2>11. Veri Saklama</h2>
+<ul>
+    <li><strong>Cihaz verileri:</strong> Uygulamayı silene veya verileri manuel olarak temizleyene kadar saklanır</li>
+    <li><strong>Analitik ve çökme günlükleri:</strong> Firebase tarafından teşhis için gereken minimum süre boyunca saklanır, ardından Google'ın saklama politikaları uyarınca otomatik olarak temizlenir</li>
+</ul>
+
+<h2>12. Uluslararası Veri Aktarımları</h2>
+<p>Firebase Analytics, Crashlytics, Remote Config ve AdMob, toplu/anonimleştirilmiş verileri ikamet ettiğiniz ülke dışındaki Google sunucularına (ABD dahil) aktarabilir. Bu aktarımlar Google'ın veri işleme şartları ve standart sözleşme maddeleri kapsamında gerçekleştirilir.</p>
+
+<h2>13. Çocukların Gizliliği</h2>
+<p>Velora, 13 yaşın altındaki (AEA'da 16 yaşın altındaki) çocuklara yönelik değildir. Çocuklardan bilerek veri toplamıyoruz. Bir çocuğun kişisel veri sağladığını tespit edersek, bu verileri derhal sileriz.</p>
+
+<h2>14. Bu Politikadaki Değişiklikler</h2>
+<p>Bu Politikayı zaman zaman güncelleyebiliriz. Değişiklikler uygulama içinde görünecektir. Değişikliklerden sonra kullanıma devam etmeniz, revize edilmiş Politikayı kabul ettiğiniz anlamına gelir. Önemli değişiklikler bir bildirim ile vurgulanacaktır.</p>
+
+<div class="warning-box">
+    <h2>15. Tıbbi Sorumluluk Reddi</h2>
+    <p><strong>Önemli:</strong> Velora bir tıbbi cihaz değildir, tıbbi tavsiye vermez ve profesyonel sağlık hizmetinin yerini tutmaz. Yapay zeka tarafından üretilen içgörüler hatalı veya yanıltıcı olabilir. Bu Uygulama tarafından sağlanan bilgilere dayanarak herhangi bir sağlıkla ilgili karar vermeden önce her zaman nitelikli bir sağlık uzmanına danışın.</p>
+</div>
+
+<div class="contact-info">
+    <h2>16. İletişim</h2>
+    <p>Veri Sorumlusu: <strong>Doğaç Oğuz</strong></p>
+    <p>E-posta: <strong>dnf.velora@gmail.com</strong></p>
+    <p>© Velora / Doğaç Oğuz. Tüm Hakları Saklıdır.</p>
+</div>
