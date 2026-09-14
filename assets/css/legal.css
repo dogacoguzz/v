@@ -1,0 +1,130 @@
+/* legal.css — Remote Config legal-document markup, scoped to .legal
+   Loaded after sections.css. */
+
+.legal {
+  --legal-danger: #F26D6D;
+  max-width: 72ch;
+  margin-inline: auto;
+  padding-block: var(--space-8) var(--space-section);
+  font-family: var(--font-sans);
+  font-size: var(--fs-body);
+  line-height: var(--lh-body);
+  color: var(--text);
+}
+
+.legal h1 {
+  font-family: var(--font-display);
+  font-size: var(--fs-2);
+}
+
+.legal h2 {
+  font-family: var(--font-display);
+  font-size: var(--fs-3);
+  margin-top: var(--space-7);
+  margin-bottom: var(--space-3);
+}
+
+.legal p,
+.legal li {
+  color: var(--text-muted);
+}
+
+.legal .last-updated {
+  color: var(--text-soft);
+  font-size: var(--fs-small);
+}
+
+.legal ul {
+  padding-left: 1.25rem;
+}
+
+.legal li {
+  margin-block: var(--space-2);
+}
+
+.legal a {
+  color: var(--accent-activities);
+  text-decoration: underline;
+  text-underline-offset: 0.15em;
+}
+
+.legal strong {
+  color: var(--text);
+  font-weight: 600;
+}
+
+/* Callout cards — one shared shape, border colour signals severity */
+.legal .highlight,
+.legal .warning-box,
+.legal .danger-box,
+.legal .contact-info {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: var(--space-5) var(--space-6);
+  margin-block: var(--space-6);
+  border-left-width: 3px;
+}
+
+.legal .highlight { border-left-color: var(--accent-activities); }
+.legal .warning-box { border-left-color: var(--accent-trends); }
+.legal .danger-box { border-left-color: var(--legal-danger); }
+.legal .contact-info { border-left-color: var(--border-strong); }
+
+.legal .highlight > h2:first-child,
+.legal .warning-box > h2:first-child,
+.legal .danger-box > h2:first-child,
+.legal .contact-info > h2:first-child {
+  margin-top: 0;
+}
+
+.legal__table-scroll {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  margin-block: var(--space-6);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+}
+
+.legal table.data-table {
+  width: 100%;
+  min-width: 640px;
+  border-collapse: collapse;
+  font-size: var(--fs-small);
+}
+
+.legal table.data-table th,
+.legal table.data-table td {
+  padding: var(--space-3) var(--space-4);
+  border-bottom: 1px solid var(--border);
+}
+
+.legal table.data-table th {
+  text-align: left;
+  font-weight: 600;
+  color: var(--text);
+  background: var(--bg-elevated);
+  position: sticky;
+  top: 0;
+}
+
+.legal table.data-table td {
+  vertical-align: top;
+  color: var(--text-muted);
+}
+
+@media print {
+  body::before, body::after, .site-nav, .site-footer, .skip-link { display: none !important; }
+  body { background: #fff !important; color: #111 !important; }
+  .legal, .legal p, .legal li, .legal td, .legal th, .legal h1, .legal h2, .legal strong {
+    color: #111 !important;
+  }
+  .legal .highlight, .legal .warning-box, .legal .danger-box, .legal .contact-info {
+    background: #fff !important;
+    border-color: #bbb !important;
+    break-inside: avoid;
+  }
+  .legal__table-scroll { overflow: visible; border: 0; }
+  .legal table.data-table { min-width: 0; }
+  .legal table.data-table th { position: static; background: #f2f2f2 !important; }
+}
