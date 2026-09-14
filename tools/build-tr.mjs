@@ -13,6 +13,7 @@
 import { readFileSync, writeFileSync, mkdirSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { applyI18nStrings, keyParity, markLangSwitch, rewriteRootRelativePaths } from './lib/prerender.mjs';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
 const SITE = 'https://velorahealthcompanion.com';
@@ -22,15 +23,6 @@ const stringsEn = JSON.parse(readFileSync(join(ROOT, 'assets/data/strings.en.jso
 let html = readFileSync(join(ROOT, 'index.html'), 'utf8');
 
 const get = (path) => path.split('.').reduce((a, k) => (a && a[k] !== undefined ? a[k] : undefined), strings);
-const esc = (s) => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-
-// flattens a nested strings object into dotted key paths, for key-parity checks
-const flattenKeys = (obj, prefix = '') =>
-  Object.entries(obj).flatMap(([k, v]) =>
-    v && typeof v === 'object' ? flattenKeys(v, `${prefix}${k}.`) : [`${prefix}${k}`]
-  );
-
-let missing = [];
 
 // --- <html lang> ---
 html = html.replace('<html lang="en">', '<html lang="tr">');
@@ -62,36 +54,9 @@ html = html.replace(
   '  <link rel="preload" as="image" href="/images/tr1.webp" />\n'
 );
 
-// --- data-i18n text nodes (plain text content) ---
-for (const m of [...html.matchAll(/data-i18n="([^"]+)"/g)]) {
-  const key = m[1];
-  const value = get(key);
-  if (typeof value !== 'string') { missing.push(key); continue; }
-  if (key === 'hero.h1') continue; // handled as data-i18n-html below
-  html = html.replace(
-    new RegExp(`(data-i18n="${esc(key)}"[^>]*>)([^<]*)`, 'g'),
-    (_, open) => `${open}${value}`
-  );
-}
-
-// --- data-i18n-html (hero h1 contains <br>/<em>) ---
-{
-  const value = get('hero.h1');
-  html = html.replace(
-    /(<h1[^>]*data-i18n-html="hero\.h1"[^>]*>)[\s\S]*?(<\/h1>)/,
-    (_, open, close) => `${open}${value}${close}`
-  );
-}
-
-// --- data-i18n-alt / data-i18n-aria-label attributes ---
-for (const attr of ['alt', 'aria-label']) {
-  const re = new RegExp(`<[^>]*data-i18n-${attr === 'alt' ? 'alt' : 'aria-label'}="([^"]+)"[^>]*>`, 'g');
-  html = html.replace(re, (tag, key) => {
-    const value = get(key);
-    if (typeof value !== 'string') { missing.push(key); return tag; }
-    return tag.replace(new RegExp(`${attr}="[^"]*"`), `${attr}="${value}"`);
-  });
-}
+// --- data-i18n / data-i18n-html / data-i18n-alt / data-i18n-aria-label ---
+const { html: localized, missing } = applyI18nStrings(html, strings);
+html = localized;
 
 // --- per-locale image sources: point every swappable img at its TR variant ---
 html = html.replace(/<img[^>]*data-src-tr="([^"]+)"[^>]*>/g, (tag, trSrc) =>
@@ -108,25 +73,8 @@ html = html.replace(
   `$1${get('showcase.metrics.imgAlt')}$2`
 );
 
-// --- root-relative asset/image paths (page lives under /tr/) ---
-html = html
-  .replace(/(href|src)="assets\//g, '$1="/assets/')
-  .replace(/(href|src|content)="images\//g, '$1="/images/')
-  .replace(/data-src-(en|tr)="images\//g, 'data-src-$1="/images/')
-  .replace(/data-showcase-section"?([^>]*)data-src-en="images\//g, (s) => s); // sections handled below
-html = html.replace(/(data-src-(?:en|tr))="images\//g, '$1="/images/');
-// section-level attrs used by app.js
-html = html.replace(/(data-(?:src|alt)-(?:en|tr))="images\//g, '$1="/images/');
-
-// --- footer legal links: point at the /tr/ siblings (EULA stays absolute) ---
-html = html
-  .replace(/href="privacy-policy\//g, 'href="/tr/privacy-policy/')
-  .replace(/href="terms-of-service\//g, 'href="/tr/terms-of-service/');
-
-// lang buttons: aria-current defaults
-html = html
-  .replace('<button type="button" data-locale="en" aria-current="true">', '<button type="button" data-locale="en" aria-current="false">')
-  .replace('<button type="button" data-locale="tr" aria-current="false">', '<button type="button" data-locale="tr" aria-current="true">');
+// --- root-relative asset/image/legal paths (page lives under /tr/) + lang switch state ---
+html = markLangSwitch(rewriteRootRelativePaths(html, { localePrefix: '/tr' }), 'tr');
 
 if (missing.length) {
   console.error('MISSING TR KEYS:', [...new Set(missing)].join(', '));
@@ -146,11 +94,8 @@ const checks = {
   'no EN hero left': !html.includes('Your week,'),
   'legal links /tr/': html.includes('/tr/privacy-policy/') && html.includes('/tr/terms-of-service/')
     && !/href="(privacy-policy|terms-of-service)\//.test(html),
-  'strings key parity': (() => {
-    const a = flattenKeys(stringsEn).sort();
-    const b = flattenKeys(strings).sort();
-    return a.length === b.length && a.every((k, i) => k === b[i]);
-  })(),
+  'i18n attr keys intact': ![...html.matchAll(/data-i18n-(?:aria-label|alt)="([^"]*)"/g)].some((m) => /\s/.test(m[1])),
+  'strings key parity': keyParity(stringsEn, strings),
 };
 console.log('tr/index.html written.');
 for (const [k, v] of Object.entries(checks)) console.log(`${v ? 'ok ' : 'FAIL'} ${k}`);
