@@ -8,7 +8,13 @@
     "langEn": "EN",
     "langTr": "TR",
     "skipLink": "İçeriğe atla",
-    "ctaAria": "Velora'yı App Store'dan indir"
+    "ctaAria": "Velora'yı App Store'dan indir",
+    "homeAria": "Velora ana sayfa",
+    "primaryAria": "Ana menü",
+    "coach": "Koç",
+    "guides": "Rehberler",
+    "privacy": "Gizlilik",
+    "getApp": "Uygulamayı indir"
   },
   "hero": {
     "eyebrow": "iOS · iPhone ve Apple Watch",

@@ -8,7 +8,13 @@
     "langEn": "EN",
     "langTr": "TR",
     "skipLink": "Skip to content",
-    "ctaAria": "Download Velora on the App Store"
+    "ctaAria": "Download Velora on the App Store",
+    "homeAria": "Velora home",
+    "primaryAria": "Primary",
+    "coach": "Coach",
+    "guides": "Guides",
+    "privacy": "Privacy",
+    "getApp": "Get the app"
   },
   "hero": {
     "eyebrow": "iOS · iPhone & Apple Watch",
