@@ -8,10 +8,9 @@
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
-import { applyI18nStrings, markLangSwitch, rewriteRootRelativePaths } from './lib/prerender.mjs';
+import { LOCALE_PATHS, PARTIALS_DIR, SITE, composePage as composeSitePage, hashAssetRefs } from './lib/page.mjs';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
-const SITE = 'https://velorahealthcompanion.com';
 const CONTENT_DIR = join(ROOT, 'content/legal');
 
 const DOCUMENTS = [
@@ -21,7 +20,6 @@ const DOCUMENTS = [
   { locale: 'tr', kind: 'terms' },
 ];
 const SLUGS = { privacy: 'privacy-policy', terms: 'terms-of-service' };
-const OG_LOCALES = { en: 'en_US', tr: 'tr_TR' };
 const PREFIX = { en: '', tr: '/tr' };
 
 export const outputPath = ({ locale, kind }) => `${locale === 'tr' ? 'tr/' : ''}${SLUGS[kind]}/index.html`;
@@ -99,32 +97,9 @@ export function normaliseDocument(source) {
   return body;
 }
 
-const sliceBetween = (html, startMarker, endMarker, label) => {
-  const start = html.indexOf(startMarker);
-  const end = html.indexOf(endMarker, start);
-  if (start === -1 || end === -1) throw new Error(`loadChrome: ${label} not found in index.html`);
-  return html.slice(start, end + endMarker.length);
-};
-
-// index.html is the single source of chrome: skip link, nav, footer, font and stylesheet links.
-export function loadChrome(indexHtml = readFileSync(join(ROOT, 'index.html'), 'utf8')) {
-  const skipLink = /<a class="skip-link"[^>]*>[^<]*<\/a>/.exec(indexHtml)?.[0];
-  if (!skipLink) throw new Error('loadChrome: skip link not found in index.html');
-  const fonts = indexHtml.match(/<link rel="(?:preconnect|stylesheet)" href="https:\/\/fonts\.[^"]+"[^>]*\/>/g) || [];
-  if (fonts.length !== 3) throw new Error(`loadChrome: expected 3 font links in index.html, found ${fonts.length}`);
-  const stylesheets = indexHtml.match(/<link rel="stylesheet" href="assets\/css\/[^"]+" \/>/g) || [];
-  if (!stylesheets.length) throw new Error('loadChrome: no site stylesheets found in index.html');
-  return {
-    skipLink,
-    nav: sliceBetween(indexHtml, '<!-- ========== NAV ========== -->', '</header>', 'nav block'),
-    footer: sliceBetween(indexHtml, '<!-- ========== FOOTER ========== -->', '</footer>', 'footer block'),
-    fonts,
-    stylesheets: [...stylesheets, '<link rel="stylesheet" href="assets/css/legal.css" />'],
-  };
-}
-
-const attr = (s) => s.replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;');
-const text = (s) => s.replace(/&/g, '&amp;').replace(/</g, '&lt;');
+const STYLESHEETS = ['tokens', 'base', 'layout', 'components', 'legal'].map((name) => `/assets/css/${name}.css`);
+const MODULES = ['/assets/js/app.js'];
+const CT_PAGE = 'legal';
 
 const reindent = (html, indent) => {
   const lines = html.replace(/^\s*\n|\s+$/g, '').split('\n');
@@ -132,87 +107,26 @@ const reindent = (html, indent) => {
   return lines.map((l) => (l.trim() ? indent + l.slice(common) : '')).join('\n');
 };
 
-export function composePage({ locale, kind, body, strings, chrome }) {
-  const slug = SLUGS[kind];
-  const prefix = PREFIX[locale];
-  const title = strings.legal[kind].title;
-  const description = strings.legal[kind].description;
-  const url = `${SITE}${prefix}/${slug}/`;
-
-  let { skipLink, nav, footer } = chrome;
-  if (locale === 'tr') {
-    const missing = [];
-    [skipLink, nav, footer] = [skipLink, nav, footer].map((piece) => {
-      const applied = applyI18nStrings(piece, strings);
-      missing.push(...applied.missing);
-      return applied.html;
-    });
-    if (missing.length) throw new Error(`MISSING TR KEYS: ${[...new Set(missing)].join(', ')}`);
-  }
-  nav = markLangSwitch(nav.replace('<a href="#top" class="brand-mark"', `<a href="${prefix}/" class="brand-mark"`), locale);
-
-  const head = [
-    '<meta charset="UTF-8" />',
-    '<meta name="viewport" content="width=device-width, initial-scale=1" />',
-    `<title>${text(title)}</title>`,
-    `<meta name="description" content="${attr(description)}" />`,
-    '<meta name="color-scheme" content="dark" />',
-    '<meta name="theme-color" content="#0c0f12" />',
-    '',
-    `<link rel="canonical" href="${url}" />`,
-    `<link rel="alternate" hreflang="en" href="${SITE}/${slug}/" />`,
-    `<link rel="alternate" hreflang="tr" href="${SITE}/tr/${slug}/" />`,
-    `<link rel="alternate" hreflang="x-default" href="${SITE}/${slug}/" />`,
-    '',
-    '<link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32.png" />',
-    '<link rel="apple-touch-icon" href="/images/apple-touch-icon.png" />',
-    '',
-    '<!-- Open Graph -->',
-    '<meta property="og:type" content="website" />',
-    '<meta property="og:site_name" content="Velora" />',
-    `<meta property="og:url" content="${url}" />`,
-    `<meta property="og:title" content="${attr(title)}" />`,
-    `<meta property="og:description" content="${attr(description)}" />`,
-    `<meta property="og:locale" content="${OG_LOCALES[locale]}" />`,
-    '',
-    '<!-- Twitter -->',
-    '<meta name="twitter:card" content="summary" />',
-    `<meta name="twitter:title" content="${attr(title)}" />`,
-    `<meta name="twitter:description" content="${attr(description)}" />`,
-    '',
-    '<!-- Fonts -->',
-    ...chrome.fonts,
-    '',
-    '<!-- Stylesheets (load order matters: tokens first, legal last) -->',
-    ...chrome.stylesheets,
-    '',
-    '<script type="module" src="assets/js/app.js"></script>',
-  ].map((line) => (line ? `  ${line}` : '')).join('\n');
-
-  const page = `<!DOCTYPE html>
-<html lang="${locale}" data-locale="${locale}">
-<head>
-${head}
-</head>
-
-<body data-accent="activities">
-
-  ${skipLink}
-
-  ${nav}
-
-  <main id="top">
-    <article class="legal">
-${reindent(body, '      ')}
-    </article>
-  </main>
-
-  ${footer}
-
-</body>
-</html>
-`;
-  return rewriteRootRelativePaths(page, { localePrefix: prefix });
+// Chrome (skip link, nav, footer) comes from tools/partials via the shared page library.
+export function composePage({ locale, kind, body, strings, partialsDir = PARTIALS_DIR, rootDir = ROOT }) {
+  const alternates = { en: LOCALE_PATHS.en[kind], tr: LOCALE_PATHS.tr[kind] };
+  const html = composeSitePage({
+    locale,
+    page: CT_PAGE,
+    strings,
+    partialsDir,
+    bodyAttrs: { 'data-page': 'legal' },
+    head: {
+      title: strings.legal[kind].title,
+      description: strings.legal[kind].description,
+      canonicalPath: alternates[locale],
+      alternates,
+      stylesheets: STYLESHEETS,
+      modules: MODULES,
+    },
+    body: `<article class="legal">\n${reindent(body, '  ')}\n</article>`,
+  });
+  return hashAssetRefs(html, rootDir);
 }
 
 // eula/index.html carries the URL three times; all copies must agree with each other.
@@ -262,9 +176,8 @@ const printChecks = (log, label, checks) => {
 };
 
 // Builds all four pages from content/legal/*.html and prints the sanity table before writing.
-export function build({ outDir = ROOT, contentDir = CONTENT_DIR, log = console.log } = {}) {
+export function build({ outDir = ROOT, contentDir = CONTENT_DIR, partialsDir = PARTIALS_DIR, log = console.log } = {}) {
   const eulaUrl = readEulaUrl();
-  const chrome = loadChrome();
   const strings = {
     en: JSON.parse(readFileSync(join(ROOT, 'assets/data/strings.en.json'), 'utf8')),
     tr: JSON.parse(readFileSync(join(ROOT, 'assets/data/strings.tr.json'), 'utf8')),
@@ -275,7 +188,7 @@ export function build({ outDir = ROOT, contentDir = CONTENT_DIR, log = console.l
     if (!existsSync(file)) throw new Error(`source not found: ${file}`);
     const source = readFileSync(file, 'utf8');
     const body = normaliseDocument(source);
-    const page = composePage({ ...doc, body, strings: strings[doc.locale], chrome });
+    const page = composePage({ ...doc, body, strings: strings[doc.locale], partialsDir });
     return { ...doc, path: outputPath(doc), page, checks: pageChecks({ page, source, ...doc }) };
   });
 

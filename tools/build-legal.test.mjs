@@ -2,7 +2,7 @@
 
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { existsSync, mkdtempSync, mkdirSync, readdirSync, readFileSync, statSync, writeFileSync } from 'node:fs';
+import { copyFileSync, existsSync, mkdtempSync, mkdirSync, readdirSync, readFileSync, statSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -14,7 +14,6 @@ import {
   assertClean,
   build,
   composePage,
-  loadChrome,
   normaliseDocument,
   main,
   pageChecks,
@@ -223,19 +222,21 @@ test('readEulaUrl throws when one copy of the URL drifts or the meta refresh is 
   assert.throws(() => readEulaUrl(noMeta), /meta refresh, link and location\.replace URLs differ/);
 });
 
+const footerOf = (page) => /<footer class="site-footer">[\s\S]*?<\/footer>/.exec(page)?.[0] ?? '';
+const footerHrefs = (page) => [...footerOf(page).matchAll(/<a href="([^"]+)"/g)].map((m) => m[1]);
+
 test('composePage keeps English chrome, root brand href and EN canonical for locale en', () => {
-  const chrome = loadChrome();
   const strings = loadStrings('en');
-  const page = composePage({ locale: 'en', kind: 'privacy', body: '<h1>Title</h1>\n<p>Text</p>', strings, chrome });
+  const page = composePage({ locale: 'en', kind: 'privacy', body: '<h1>Title</h1>\n<p>Text</p>', strings });
   assert.ok(page.startsWith('<!DOCTYPE html>\n<html lang="en" data-locale="en">'));
   assert.ok(page.includes(`<title>${strings.legal.privacy.title}</title>`));
   assert.ok(page.includes('<link rel="canonical" href="https://velorahealthcompanion.com/privacy-policy/" />'));
   assert.ok(page.includes('<meta property="og:locale" content="en_US" />'));
   assert.ok(page.includes('<a href="/" class="brand-mark"'));
-  assert.ok(page.includes('data-i18n="nav.skipLink">Skip to content</a>'));
-  assert.ok(page.includes('data-i18n-aria-label="nav.langGroupAria" aria-label="Language"'));
-  assert.ok(page.includes('href="/privacy-policy/"'));
-  assert.ok(page.includes('href="/terms-of-service/"'));
+  assert.ok(page.includes('<a class="skip-link" href="#main">Skip to content</a>'));
+  assert.ok(page.includes('role="group" aria-label="Language"'));
+  assert.ok(page.includes('ct=en-legal-nav'));
+  assert.deepEqual(footerHrefs(page), ['/privacy-policy/', '/terms-of-service/', '/eula']);
   assert.ok(!page.includes('href="/tr/privacy-policy/"'));
   assert.ok(page.includes('data-locale="en" aria-current="true"'));
   assert.ok(page.includes('data-locale="tr" aria-current="false"'));
@@ -243,27 +244,28 @@ test('composePage keeps English chrome, root brand href and EN canonical for loc
 });
 
 test('composePage builds the locale-specific head and chrome around the body', () => {
-  const chrome = loadChrome();
   const strings = loadStrings('tr');
-  const page = composePage({ locale: 'tr', kind: 'privacy', body: '<h1>Başlık</h1>\n<p>Metin</p>', strings, chrome });
+  const page = composePage({ locale: 'tr', kind: 'privacy', body: '<h1>Başlık</h1>\n<p>Metin</p>', strings });
   assert.ok(page.startsWith('<!DOCTYPE html>\n<html lang="tr" data-locale="tr">'));
   assert.ok(page.includes(`<title>${strings.legal.privacy.title}</title>`));
   assert.ok(page.includes('<link rel="canonical" href="https://velorahealthcompanion.com/tr/privacy-policy/" />'));
   assert.ok(page.includes('<link rel="alternate" hreflang="en" href="https://velorahealthcompanion.com/privacy-policy/" />'));
   assert.ok(page.includes('<link rel="alternate" hreflang="tr" href="https://velorahealthcompanion.com/tr/privacy-policy/" />'));
   assert.ok(page.includes('<link rel="alternate" hreflang="x-default" href="https://velorahealthcompanion.com/privacy-policy/" />'));
-  assert.ok(page.includes('<link rel="stylesheet" href="/assets/css/legal.css" />'));
-  assert.ok(page.includes('<script type="module" src="/assets/js/app.js"></script>'));
+  const stylesheets = [...page.matchAll(/<link rel="stylesheet" href="([^"?]+)\?v=[0-9a-f]{8}" \/>/g)].map((m) => m[1]);
+  assert.deepEqual(stylesheets, ['tokens', 'base', 'layout', 'components', 'legal'].map((n) => `/assets/css/${n}.css`));
+  assert.match(page, /<script type="module" src="\/assets\/js\/app\.js\?v=[0-9a-f]{8}"><\/script>/);
   assert.ok(page.includes('<meta property="og:locale" content="tr_TR" />'));
   assert.ok(page.includes('<a href="/tr/" class="brand-mark"'));
-  assert.ok(page.includes('data-i18n-aria-label="nav.langGroupAria" aria-label="Dil"'));
-  assert.ok(page.includes('data-i18n="nav.skipLink">İçeriğe atla</a>'));
-  assert.ok(page.includes('href="/tr/privacy-policy/"'));
-  assert.ok(page.includes('href="/tr/terms-of-service/"'));
-  assert.ok(page.includes('href="/eula"'));
+  assert.ok(page.includes('role="group" aria-label="Dil"'));
+  assert.ok(page.includes('<a class="skip-link" href="#main">İçeriğe atla</a>'));
+  assert.ok(page.includes('ct=tr-legal-nav'));
+  assert.deepEqual(footerHrefs(page), ['/tr/privacy-policy/', '/tr/terms-of-service/', '/eula']);
   assert.ok(page.includes('data-locale="tr" aria-current="true"'));
-  assert.ok(page.includes('<main id="top">'));
-  assert.ok(page.includes('<article class="legal">'));
+  assert.ok(page.includes('<main id="main">\n    <article class="legal">\n      <h1>Başlık</h1>\n      <p>Metin</p>\n    </article>\n  </main>'));
+  assert.ok(!page.includes('sections.css'));
+  assert.ok(!page.includes('noindex'));
+  assert.ok(!page.includes('apple-itunes-app'));
   assert.ok(!page.includes('application/ld+json'));
   assert.ok(!page.includes('Early locale'));
   assert.ok(!/(?:href|src)="(?:assets|images)\//.test(page));
@@ -277,13 +279,13 @@ test('importing the generator module runs no CLI code and writes nothing', async
 });
 
 test('pageChecks passes every check for a well-formed page built from a clean fragment', () => {
-  const page = composePage({ locale: 'en', kind: 'privacy', body: normaliseDocument(SAMPLE_FRAGMENT), strings: loadStrings('en'), chrome: loadChrome() });
+  const page = composePage({ locale: 'en', kind: 'privacy', body: normaliseDocument(SAMPLE_FRAGMENT), strings: loadStrings('en') });
   const checks = pageChecks({ page, source: SAMPLE_FRAGMENT, locale: 'en', kind: 'privacy' });
   assert.deepEqual(Object.values(checks), Object.keys(checks).map(() => true));
 });
 
 test('pageChecks flags each defect it guards against', () => {
-  const page = composePage({ locale: 'en', kind: 'privacy', body: normaliseDocument(SAMPLE_FRAGMENT), strings: loadStrings('en'), chrome: loadChrome() });
+  const page = composePage({ locale: 'en', kind: 'privacy', body: normaliseDocument(SAMPLE_FRAGMENT), strings: loadStrings('en') });
   const swap = (from, to) => {
     assert.ok(page.includes(from), `fixture lacks ${from}`);
     return page.replace(from, to);
@@ -296,7 +298,7 @@ test('pageChecks flags each defect it guards against', () => {
     'top-level allowlist': swap('<article class="legal">', '<article class="legal"><blockquote>q</blockquote>'),
     'no em dash': swap('<p>Email: <strong>dnf.velora@gmail.com</strong></p>', '<p>Email — <strong>dnf.velora@gmail.com</strong></p>'),
     'no bare legal href': swap('href="/privacy-policy/"', 'href="privacy-policy/"'),
-    'no bare asset path': swap('href="/assets/css/legal.css"', 'href="assets/css/legal.css"'),
+    'no bare asset path': swap('href="/assets/css/legal.css?v=', 'href="assets/css/legal.css?v='),
     'brand href is locale home': swap('<a href="/" class="brand-mark"', '<a href="/tr/" class="brand-mark"'),
     'data-locale matches lang': swap('<html lang="en" data-locale="en">', '<html lang="en" data-locale="tr">'),
     'canonical ends with slug': swap('href="https://velorahealthcompanion.com/privacy-policy/" />', 'href="https://velorahealthcompanion.com/privacy-policy" />'),
@@ -354,6 +356,62 @@ test('build writes the four pages matching the committed output from the real so
   for (const p of OUTPUT_PATHS) {
     assert.equal(readFileSync(join(outDir, p), 'utf8'), readFileSync(join(ROOT, p), 'utf8'), p);
   }
+});
+
+const FIXTURE_DIR = join(ROOT, 'tools/fixtures/legal-articles');
+const ARTICLE_OPEN = '<article class="legal">';
+const articleInner = (page, label) => {
+  const start = page.indexOf(ARTICLE_OPEN);
+  assert.ok(start !== -1 && page.indexOf(ARTICLE_OPEN, start + 1) === -1, `${label}: expected exactly one ${ARTICLE_OPEN}`);
+  const end = page.indexOf('</article>', start);
+  assert.ok(end !== -1, `${label}: </article> missing`);
+  return page.slice(start + ARTICLE_OPEN.length, end);
+};
+const fixtureFor = (p) => {
+  const [, tr, slug] = /^(tr\/)?([a-z-]+)\/index\.html$/.exec(p);
+  return readFileSync(join(FIXTURE_DIR, `${slug}.${tr ? 'tr' : 'en'}.html`), 'utf8');
+};
+
+test('article inner HTML of every built and committed page equals its origin/main fixture', () => {
+  const outDir = join(tmpDir(), 'out');
+  build({ outDir, log: () => {} });
+  for (const p of OUTPUT_PATHS) {
+    const fixture = fixtureFor(p);
+    assert.ok(fixture.length > 1000, `${p}: fixture looks empty`);
+    assert.equal(articleInner(readFileSync(join(outDir, p), 'utf8'), p), fixture, `built ${p}`);
+    assert.equal(articleInner(readFileSync(join(ROOT, p), 'utf8'), p), fixture, `committed ${p}`);
+  }
+});
+
+test('build fails naming the partial and writes nothing when a chrome partial is missing', () => {
+  const dir = tmpDir();
+  const onlyNav = join(dir, 'partials-nav-only');
+  mkdirSync(onlyNav);
+  copyFileSync(join(ROOT, 'tools/partials/nav.html'), join(onlyNav, 'nav.html'));
+  const empty = join(dir, 'partials-empty');
+  mkdirSync(empty);
+  for (const [partialsDir, missing] of [[onlyNav, /partial not found: .*footer\.html/], [empty, /partial not found: .*nav\.html/]]) {
+    const outDir = join(dir, `out-${missing.source.length}`);
+    assert.throws(() => build({ outDir, partialsDir, log: () => {} }), missing);
+    assert.ok(!existsSync(outDir) || listFiles(outDir).length === 0);
+  }
+});
+
+test('footer links resolve to the locale legal pages and /eula on every page', () => {
+  for (const p of OUTPUT_PATHS) {
+    const page = readFileSync(join(ROOT, p), 'utf8');
+    const prefix = p.startsWith('tr/') ? '/tr' : '';
+    assert.deepEqual(footerHrefs(page), [`${prefix}/privacy-policy/`, `${prefix}/terms-of-service/`, '/eula'], p);
+  }
+});
+
+test('no page loads Google Fonts or reads chrome from index.html', () => {
+  for (const p of OUTPUT_PATHS) {
+    const page = readFileSync(join(ROOT, p), 'utf8');
+    assert.ok(!/fonts\.(?:googleapis|gstatic)\.com/.test(page), p);
+  }
+  const generator = readFileSync(join(ROOT, 'tools/build-legal.mjs'), 'utf8');
+  assert.ok(!/join\(ROOT, 'index\.html'\)/.test(generator));
 });
 
 test('main exits non-zero on an unexpected argument', () => {
