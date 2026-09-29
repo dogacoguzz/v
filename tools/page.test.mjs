@@ -242,7 +242,7 @@ test('hashing throws on a missing local asset and tolerates import cycles', () =
 
 // --- `/` pre-paint TR redirect (KTD2) ---
 
-test('shouldRedirectToTr follows ?lang, then a saved choice, then the first browser language', () => {
+test('shouldRedirectToTr follows ?lang, then a saved choice, then the first supported browser language', () => {
   assert.equal(shouldRedirectToTr({ search: '?lang=tr', saved: 'en', languages: ['en-US'] }), true);
   assert.equal(shouldRedirectToTr({ search: '?lang=en', saved: 'tr', languages: ['tr-TR'] }), false);
   assert.equal(shouldRedirectToTr({ search: '', saved: 'tr', languages: ['en-US'] }), true);
@@ -250,6 +250,11 @@ test('shouldRedirectToTr follows ?lang, then a saved choice, then the first brow
   assert.equal(shouldRedirectToTr({ search: '', saved: null, languages: ['tr-TR', 'en'] }), true);
   assert.equal(shouldRedirectToTr({ search: '', saved: null, languages: ['en-US', 'tr'] }), false);
   assert.equal(shouldRedirectToTr({ search: '', saved: null, languages: [] }), false);
+  assert.equal(shouldRedirectToTr({ search: '', saved: null, languages: ['de', 'tr'] }), true);
+  assert.equal(shouldRedirectToTr({ search: '', saved: null, languages: ['de-DE', 'EN-gb', 'tr'] }), false);
+  assert.equal(shouldRedirectToTr({ search: '', saved: null, languages: ['de', 'fr'] }), false);
+  assert.equal(shouldRedirectToTr({ search: '', saved: null, languages: ['tre', 'tr_TR'] }), true);
+  assert.equal(shouldRedirectToTr({ search: '?lang=tr', saved: null, languages: ['en'] }), true);
 });
 
 test('trRedirectScript is an inline pre-paint script that redirects to /tr/', () => {
@@ -270,6 +275,7 @@ test('trRedirectScript is an inline pre-paint script that redirects to /tr/', ()
   };
   assert.equal(run({ search: '?lang=tr', saved: null, languages: ['en'] }), '/tr/#coach');
   assert.equal(run({ search: '', saved: 'en', languages: ['tr-TR'] }), null);
+  assert.equal(run({ search: '', saved: null, languages: ['de', 'tr'] }), '/tr/#coach');
 });
 
 // --- build.mjs ---

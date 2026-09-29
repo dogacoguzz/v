@@ -4,23 +4,14 @@
 //
 //   npm run build   (or: node tools/build.mjs)
 
-import { spawnSync } from 'node:child_process';
-import { dirname, join } from 'node:path';
-import { fileURLToPath, pathToFileURL } from 'node:url';
+import { pathToFileURL } from 'node:url';
 import { build as buildGuides } from './build-guides.mjs';
+import { build as buildLanding } from './build-landing.mjs';
 import { build as buildLegal } from './build-legal.mjs';
-
-const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
-
-// build-tr.mjs runs on import and exits the process on failure, so it runs as a child process.
-function runNodeScript(path) {
-  const result = spawnSync(process.execPath, [join(ROOT, path)], { stdio: 'inherit' });
-  if (result.status !== 0) throw new Error(`${path} exited with status ${result.status ?? result.signal}`);
-}
 
 export const BUILDERS = [
   { name: 'legal', run: ({ log }) => buildLegal({ log }) },
-  { name: 'landing', run: () => runNodeScript('tools/build-tr.mjs') },
+  { name: 'landing', run: ({ log }) => buildLanding({ log }) },
   { name: 'guides', run: ({ log }) => buildGuides({ log }) },
 ];
 

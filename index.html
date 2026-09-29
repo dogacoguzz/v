@@ -13,8 +13,8 @@
   <link rel="alternate" hreflang="tr" href="https://velorahealthcompanion.com/tr/" />
   <link rel="alternate" hreflang="x-default" href="https://velorahealthcompanion.com/" />
 
-  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32.png" />
-  <link rel="apple-touch-icon" href="/images/apple-touch-icon.png" />
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32.png?v=3af68f18" />
+  <link rel="apple-touch-icon" href="/images/apple-touch-icon.png?v=09359130" />
   <meta name="apple-itunes-app" content="app-id=6748447208, affiliate-data=pt=TODO_PT&amp;ct=en-home-banner" />
 
   <meta property="og:type" content="website" />
@@ -33,32 +33,55 @@
 
   <link rel="preload" href="/assets/fonts/bricolage-grotesque-var.woff2" as="font" type="font/woff2" crossorigin />
   <link rel="preload" href="/assets/fonts/instrument-sans-var.woff2" as="font" type="font/woff2" crossorigin />
-  <link rel="stylesheet" href="/assets/css/tokens.css" />
-  <link rel="stylesheet" href="/assets/css/base.css" />
-  <link rel="stylesheet" href="/assets/css/layout.css" />
-  <link rel="stylesheet" href="/assets/css/components.css" />
-  <link rel="stylesheet" href="/assets/css/day.css" />
-  <script type="module" src="/assets/js/boot.js"></script>
-  <script type="module" src="/assets/js/day.js"></script>
+  <link rel="stylesheet" href="/assets/css/tokens.css?v=ef10ed8e" />
+  <link rel="stylesheet" href="/assets/css/base.css?v=41ae1bee" />
+  <link rel="stylesheet" href="/assets/css/layout.css?v=22f8bfd8" />
+  <link rel="stylesheet" href="/assets/css/components.css?v=1bf5fb43" />
+  <link rel="stylesheet" href="/assets/css/day.css?v=bb9ea8a6" />
+  <script type="module" src="/assets/js/boot.js?v=065fc015"></script>
+  <script type="module" src="/assets/js/day.js?v=0f7d13ec"></script>
   <script>document.documentElement.classList.add('js');</script>
   <script>(function () { try { var decide = function shouldRedirectToTr({ search = '', saved = null, languages = [] } = {}) {
-  var m = /[?&]lang=(en|tr)(?:&|#|$)/.exec(search || '');
-  if (m) return m[1] === 'tr';
-  if (saved === 'tr' || saved === 'en') return saved === 'tr';
-  var first = languages && languages.length ? String(languages[0]) : '';
-  return /^tr(?:-|_|$)/i.test(first);
-}; var saved = null; try { saved = localStorage.getItem('velora-lang'); } catch (e) {} var langs = navigator.languages && navigator.languages.length ? navigator.languages : [navigator.language || '']; if (decide({ search: location.search, saved: saved, languages: langs })) location.replace('/tr/' + location.hash); } catch (e) {} })();</script>
+    var m = /[?&]lang=(en|tr)(?:&|#|$)/.exec(search || '');
+    if (m) return m[1] === 'tr';
+    if (saved === 'tr' || saved === 'en') return saved === 'tr';
+    var list = languages || [];
+    for (var i = 0; i < list.length; i++) {
+      var hit = /^(en|tr)(?:-|_|$)/i.exec(String(list[i]));
+      if (hit) return hit[1].toLowerCase() === 'tr';
+    }
+    return false;
+  }; var saved = null; try { saved = localStorage.getItem('velora-lang'); } catch (e) {} var langs = navigator.languages && navigator.languages.length ? navigator.languages : [navigator.language || '']; if (decide({ search: location.search, saved: saved, languages: langs })) location.replace('/tr/' + location.hash); } catch (e) {} })();</script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "Velora: Health Companion",
+    "operatingSystem": "iOS",
+    "applicationCategory": "HealthApplication",
+    "inLanguage": "en",
+    "url": "https://velorahealthcompanion.com/",
+    "downloadUrl": "https://apps.apple.com/app/id6748447208?pt=TODO_PT&ct=en-home-schema&mt=8",
+    "image": "https://velorahealthcompanion.com/images/og.jpg",
+    "description": "Velora Coach reads the Health data on your iPhone and writes short, plain notes about your steps, workouts and water. On-device, no account.",
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "USD",
+      "description": "Free to download, Pro optional"
+    }
+  }
+  </script>
 </head>
 
 <body data-phase="morning">
 
-  <a class="skip-link" href="#main" data-i18n="nav.skipLink">Skip to content</a>
+  <a class="skip-link" href="#main">Skip to content</a>
 
-  <!-- chrome: rendered from tools/partials/nav.html (EN); the landing builder regenerates it -->
   <header class="site-nav">
     <div class="site-nav__row">
       <a href="/" class="brand-mark" aria-label="Velora home">
-        <img class="brand-mark__logo" src="/images/logo-56.png" alt="" width="28" height="28" />
+        <img class="brand-mark__logo" src="/images/logo-56.png?v=7e0e8178" alt="" width="28" height="28" />
         <span class="brand-mark__text">Velora</span>
       </a>
       <nav class="site-nav__links" aria-label="Primary">
@@ -112,7 +135,7 @@
           <div class="hero__stack" data-goal-card data-goal="default">
             <article class="coach-card coach-card--hero" data-pop style="--d: 0.15s">
               <div class="coach-card__head">
-                <img src="/images/logo-56.png" alt="" width="26" height="26" />
+                <img src="/images/logo-56.png?v=7e0e8178" alt="" width="26" height="26" />
                 <strong data-i18n="day.coach.name">Velora Coach</strong>
                 <time datetime="06:40">06:40</time>
               </div>
@@ -145,7 +168,7 @@
             <p class="lede" data-i18n="day.hero.lede">Velora Coach reads the Health data already on your iPhone, then writes short, plain notes at the moments they matter. Here is one day of it.</p>
             <div class="hero__actions">
               <a class="store-badge" href="https://apps.apple.com/app/id6748447208?pt=TODO_PT&amp;ct=en-home-hero&amp;mt=8" target="_blank" rel="noopener noreferrer" aria-label="Download Velora on the App Store" data-i18n-aria-label="nav.ctaAria">
-                <img src="/images/badge-appstore-en.svg" data-src-en="/images/badge-appstore-en.svg" data-src-tr="/images/badge-appstore-tr.svg" alt="" width="156" height="52" />
+                <img src="/images/badge-appstore-en.svg?v=a26fc5b3" data-src-en="/images/badge-appstore-en.svg" data-src-tr="/images/badge-appstore-tr.svg" alt="" width="156" height="52" />
               </a>
               <a class="scroll-hint" href="#coach"><i aria-hidden="true"></i><span data-i18n="day.hero.scrollHint">Scroll the day</span></a>
             </div>
@@ -168,7 +191,7 @@
               </div>
               <article class="coach-card" data-pop style="--d: 0.35s; --tilt: 2deg">
                 <div class="coach-card__head">
-                  <img src="/images/logo-56.png" alt="" width="26" height="26" />
+                  <img src="/images/logo-56.png?v=7e0e8178" alt="" width="26" height="26" />
                   <strong data-i18n="day.coach.name">Velora Coach</strong>
                   <time datetime="07:30">07:30</time>
                 </div>
@@ -200,7 +223,7 @@
               </div>
               <article class="coach-card" data-pop style="--d: 0.3s; --tilt: -2deg">
                 <div class="coach-card__head">
-                  <img src="/images/logo-56.png" alt="" width="26" height="26" />
+                  <img src="/images/logo-56.png?v=7e0e8178" alt="" width="26" height="26" />
                   <strong data-i18n="day.coach.name">Velora Coach</strong>
                   <time datetime="12:40">12:40</time>
                 </div>
@@ -245,7 +268,7 @@
             <div class="runwrap__side">
               <article class="coach-card" data-pop style="--d: 0.45s; --tilt: -3deg">
                 <div class="coach-card__head">
-                  <img src="/images/logo-56.png" alt="" width="26" height="26" />
+                  <img src="/images/logo-56.png?v=7e0e8178" alt="" width="26" height="26" />
                   <strong data-i18n="day.coach.name">Velora Coach</strong>
                   <span class="persona" data-i18n="day.t1810.persona">Endurance</span>
                   <time datetime="18:10">18:10</time>
@@ -281,7 +304,7 @@
               </div>
               <article class="coach-card" data-pop style="--d: 0.35s; --tilt: 3deg">
                 <div class="coach-card__head">
-                  <img src="/images/logo-56.png" alt="" width="26" height="26" />
+                  <img src="/images/logo-56.png?v=7e0e8178" alt="" width="26" height="26" />
                   <strong data-i18n="day.coach.name">Velora Coach</strong>
                   <time datetime="21:30">21:30</time>
                 </div>
@@ -331,11 +354,11 @@
           </div>
           <div class="close__cta">
             <a class="store-badge" href="https://apps.apple.com/app/id6748447208?pt=TODO_PT&amp;ct=en-home-close&amp;mt=8" target="_blank" rel="noopener noreferrer" aria-label="Download Velora on the App Store" data-i18n-aria-label="nav.ctaAria">
-              <img src="/images/badge-appstore-en.svg" data-src-en="/images/badge-appstore-en.svg" data-src-tr="/images/badge-appstore-tr.svg" alt="" width="156" height="52" />
+              <img src="/images/badge-appstore-en.svg?v=a26fc5b3" data-src-en="/images/badge-appstore-en.svg" data-src-tr="/images/badge-appstore-tr.svg" alt="" width="156" height="52" />
             </a>
             <p class="close__price" data-i18n="day.close.price">Free to download · Pro optional</p>
             <figure class="close__qr">
-              <img src="/images/qr-en.svg" data-src-en="/images/qr-en.svg" data-src-tr="/images/qr-tr.svg" alt="QR code that opens Velora on the App Store" data-i18n-alt="day.close.qrAlt" width="112" height="112" loading="lazy" />
+              <img src="/images/qr-en.svg?v=866549bf" data-src-en="/images/qr-en.svg" data-src-tr="/images/qr-tr.svg" alt="QR code that opens Velora on the App Store" data-i18n-alt="day.close.qrAlt" width="112" height="112" loading="lazy" />
               <figcaption data-i18n="day.close.qrCaption">On a computer? Scan with your iPhone camera.</figcaption>
             </figure>
           </div>
@@ -345,11 +368,10 @@
     </div>
   </main>
 
-  <!-- chrome: rendered from tools/partials/footer.html (EN); the landing builder regenerates it -->
   <footer class="site-footer">
     <div class="site-footer__row">
       <span class="site-footer__brand">
-        <img src="/images/logo-56.png" alt="" width="18" height="18" />
+        <img src="/images/logo-56.png?v=7e0e8178" alt="" width="18" height="18" />
         <span>© 2026 Velora</span>
       </span>
       <p class="site-footer__disclaimer">Velora is a wellness companion, not a medical device. Consult a clinician for medical advice.</p>

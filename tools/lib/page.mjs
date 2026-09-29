@@ -299,13 +299,18 @@ export function hashAssetsInPlace(rootDir, files, { write = true } = {}) {
 
 // --- `/` pre-paint redirect to /tr/ (KTD2) ---
 
-// Precedence: ?lang= > saved choice > first browser language. Serialized into the inline script.
+// Precedence: ?lang= > saved choice > the first en/tr entry in the browser languages, as
+// i18n.js does. Serialized into the inline script via toString().
 export function shouldRedirectToTr({ search = '', saved = null, languages = [] } = {}) {
   var m = /[?&]lang=(en|tr)(?:&|#|$)/.exec(search || '');
   if (m) return m[1] === 'tr';
   if (saved === 'tr' || saved === 'en') return saved === 'tr';
-  var first = languages && languages.length ? String(languages[0]) : '';
-  return /^tr(?:-|_|$)/i.test(first);
+  var list = languages || [];
+  for (var i = 0; i < list.length; i++) {
+    var hit = /^(en|tr)(?:-|_|$)/i.exec(String(list[i]));
+    if (hit) return hit[1].toLowerCase() === 'tr';
+  }
+  return false;
 }
 
 export function trRedirectScript() {
