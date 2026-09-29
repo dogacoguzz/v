@@ -1,4 +1,4 @@
-/* components.css: buttons, language switch, store badge, chips, chunky card */
+/* components.css: buttons, language switch, store badge, chunky card */
 
 .button {
   display: inline-flex;
@@ -96,45 +96,12 @@
   width: auto;
 }
 
-.chip-row {
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--space-3);
-  margin-top: var(--space-5);
-}
-
-.chip {
-  display: inline-flex;
-  align-items: center;
-  gap: var(--space-2);
-  padding: 6px 14px;
-  border-radius: var(--radius-pill);
-  background: var(--surface-card);
-  border: 2px solid var(--line);
-  font-size: var(--fs-small);
-  font-weight: 600;
-  color: var(--text-secondary);
-}
-
-.chip__dot {
-  width: 10px;
-  height: 10px;
-  border-radius: 4px;
-  background: var(--chip-color, var(--coach));
-}
-
 .card {
   padding: var(--space-5);
   background: var(--surface-card);
   border: 2px solid var(--line);
   border-radius: var(--radius-lg);
   box-shadow: var(--edge-shadow);
-}
-
-.card--coach {
-  background: var(--coach-surface);
-  border-color: var(--coach-line);
-  box-shadow: var(--edge-shadow-coach);
 }
 
 .card__title {
@@ -154,5 +121,5 @@
   height: 10px;
   margin-right: var(--space-2);
   border-radius: 4px;
-  background: var(--card-color, var(--coach));
+  background: var(--coach);
 }

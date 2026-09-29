@@ -69,6 +69,8 @@ changed font or module changes the URL in every file and page that references it
 preloads use the same URL as the `@font-face` source. Run the build twice; the second run
 must leave `git status` unchanged.
 
+The share card `images/og.jpg` is rendered from `tools/og/og-card.html` with `node tools/og/render.mjs` (Playwright Chromium; set `PW_CHROMIUM_PATH` to override the browser).
+
 The shared page library is `tools/lib/page.mjs` (head, nav and footer partials from
 `tools/partials/`, App Store links, asset hashing).
 

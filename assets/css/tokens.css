@@ -91,7 +91,6 @@
   --edge-shadow-coach: 0 var(--edge-offset) 0 var(--coach-edge);
   --edge-shadow-pressed: 0 2px 0 var(--surface-edge);
 
-  --radius-xl: 34px;
   --radius-lg: 26px;
   --radius-md: 18px;
   --radius-sm: 12px;
@@ -114,7 +113,6 @@
   --font-sans: 'Instrument Sans', 'Instrument Fallback', system-ui, -apple-system, 'Segoe UI', sans-serif;
   --font-mono: 'JetBrains Mono', 'JetBrains Fallback', ui-monospace, SFMono-Regular, Menlo, monospace;
 
-  --fs-display: clamp(2.75rem, 6.4vw + 0.5rem, 6rem);
   --fs-h1: clamp(2.25rem, 4.6vw + 0.5rem, 4.25rem);
   --fs-h2: clamp(2rem, 3.4vw + 0.6rem, 3.25rem);
   --fs-h3: clamp(1.25rem, 1vw + 1rem, 1.6rem);
@@ -131,7 +129,6 @@
   --ease-soft: cubic-bezier(0.22, 1, 0.36, 1);
   --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
   --t-fast: 160ms var(--ease-soft);
-  --t-med: 320ms var(--ease-soft);
   --t-phase: 1100ms var(--ease-soft);
 }
 
