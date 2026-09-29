@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-// build-legal.mjs — generates the four legal pages from content/legal/*.html.
+// build-legal.mjs: generates the four legal pages from content/legal/*.html.
 //
 // Workflow: edit a fragment under content/legal/, then:
 //   node tools/build-legal.mjs
@@ -8,10 +8,13 @@
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
-import { applyI18nStrings, markLangSwitch, rewriteRootRelativePaths } from './lib/prerender.mjs';
+import {
+  LOCALE_PATHS, PARTIALS_DIR, SITE, composePage as composeSitePage, fontPreloads, hashAssetRefs,
+} from './lib/page.mjs';
+import { EM_DASH, count, indent, reindent, reportChecks } from './lib/util.mjs';
+import { BASE_ALLOWLIST, assertClean as assertAllowlisted } from './lib/validate.mjs';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
-const SITE = 'https://velorahealthcompanion.com';
 const CONTENT_DIR = join(ROOT, 'content/legal');
 
 const DOCUMENTS = [
@@ -21,7 +24,6 @@ const DOCUMENTS = [
   { locale: 'tr', kind: 'terms' },
 ];
 const SLUGS = { privacy: 'privacy-policy', terms: 'terms-of-service' };
-const OG_LOCALES = { en: 'en_US', tr: 'tr_TR' };
 const PREFIX = { en: '', tr: '/tr' };
 
 export const outputPath = ({ locale, kind }) => `${locale === 'tr' ? 'tr/' : ''}${SLUGS[kind]}/index.html`;
@@ -29,20 +31,7 @@ export const OUTPUT_PATHS = DOCUMENTS.map(outputPath);
 export const sourcePath = ({ locale, kind }) => `content/legal/${SLUGS[kind]}.${locale}.html`;
 export const SOURCE_PATHS = DOCUMENTS.map(sourcePath);
 
-const VOID_TAGS = new Set(['area', 'base', 'br', 'col', 'embed', 'hr', 'img', 'input', 'link', 'meta', 'source', 'track', 'wbr']);
-const TOP_LEVEL_ALLOWLIST = {
-  h1: [''],
-  h2: [''],
-  p: ['', 'last-updated'],
-  ul: [''],
-  table: ['data-table'],
-  div: ['legal__table-scroll', 'highlight', 'warning-box', 'danger-box', 'contact-info'],
-};
-
-const attrValue = (attrs, name) => {
-  const m = new RegExp(`(?:^|\\s)${name}="([^"]*)"`).exec(attrs);
-  return m ? m[1].trim() : '';
-};
+export const TOP_LEVEL_ALLOWLIST = { h1: [''], ...BASE_ALLOWLIST };
 
 export function stripInlineStyles(html) {
   return html.replace(/\s+style=(?:"[^"]*"|'[^']*')/g, '');
@@ -59,36 +48,9 @@ export function wrapTables(html) {
   );
 }
 
-// Top-level elements must match the allowlist; nested markup is the document's own business.
-export function assertClean(html) {
-  const placeholder = /\\\([^)]*\)?/.exec(html);
-  if (placeholder) throw new Error(`assertClean: unresolved placeholder ${placeholder[0]}`);
-  const embedded = /<(script|style)\b/i.exec(html);
-  if (embedded) throw new Error(`assertClean: embedded <${embedded[1].toLowerCase()}> element is not allowed`);
-  if (html.includes('—')) {
-    throw new Error('assertClean: em dash (U+2014) is not allowed in user-facing legal text');
-  }
-
-  const stripped = html.replace(/<!--[\s\S]*?-->/g, '');
-  const tagRe = /<(\/?)([a-zA-Z][a-zA-Z0-9]*)\b([^>]*)>/g;
-  let depth = 0;
-  for (let m = tagRe.exec(stripped); m; m = tagRe.exec(stripped)) {
-    const [, closing, rawTag, attrs] = m;
-    const tag = rawTag.toLowerCase();
-    if (closing) { depth = Math.max(0, depth - 1); continue; }
-    const selfClosing = VOID_TAGS.has(tag) || /\/\s*$/.test(attrs);
-    if (depth === 0) {
-      const cls = attrValue(attrs, 'class');
-      const allowed = TOP_LEVEL_ALLOWLIST[tag];
-      if (!allowed || !allowed.includes(cls)) {
-        const label = cls ? `<${tag} class="${cls}">` : `<${tag}>`;
-        throw new Error(`assertClean: top-level ${label} is outside the allowlist`);
-      }
-    }
-    if (!selfClosing) depth += 1;
-  }
-  if (depth !== 0) throw new Error(`assertClean: unbalanced markup, ${depth} element(s) never closed`);
-}
+// Legal fragments use the legal allowlist unless a caller passes another one.
+export const assertClean = (html, allowlist = TOP_LEVEL_ALLOWLIST) =>
+  assertAllowlisted(html, allowlist, { text: 'user-facing legal' });
 
 // Strips the file's leading `Source of truth` comment before any check or output.
 export function normaliseDocument(source) {
@@ -98,120 +60,31 @@ export function normaliseDocument(source) {
   return body;
 }
 
-const sliceBetween = (html, startMarker, endMarker, label) => {
-  const start = html.indexOf(startMarker);
-  const end = html.indexOf(endMarker, start);
-  if (start === -1 || end === -1) throw new Error(`loadChrome: ${label} not found in index.html`);
-  return html.slice(start, end + endMarker.length);
-};
+const STYLESHEETS = ['tokens', 'base', 'layout', 'components', 'legal'].map((name) => `/assets/css/${name}.css`);
+const MODULES = ['/assets/js/boot.js'];
+const CT_PAGE = 'legal';
 
-// index.html is the single source of chrome: skip link, nav, footer, font and stylesheet links.
-export function loadChrome(indexHtml = readFileSync(join(ROOT, 'index.html'), 'utf8')) {
-  const skipLink = /<a class="skip-link"[^>]*>[^<]*<\/a>/.exec(indexHtml)?.[0];
-  if (!skipLink) throw new Error('loadChrome: skip link not found in index.html');
-  const fonts = indexHtml.match(/<link rel="(?:preconnect|stylesheet)" href="https:\/\/fonts\.[^"]+"[^>]*\/>/g) || [];
-  if (fonts.length !== 3) throw new Error(`loadChrome: expected 3 font links in index.html, found ${fonts.length}`);
-  const stylesheets = indexHtml.match(/<link rel="stylesheet" href="assets\/css\/[^"]+" \/>/g) || [];
-  if (!stylesheets.length) throw new Error('loadChrome: no site stylesheets found in index.html');
-  return {
-    skipLink,
-    nav: sliceBetween(indexHtml, '<!-- ========== NAV ========== -->', '</header>', 'nav block'),
-    footer: sliceBetween(indexHtml, '<!-- ========== FOOTER ========== -->', '</footer>', 'footer block'),
-    fonts,
-    stylesheets: [...stylesheets, '<link rel="stylesheet" href="assets/css/legal.css" />'],
-  };
-}
-
-const attr = (s) => s.replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;');
-const text = (s) => s.replace(/&/g, '&amp;').replace(/</g, '&lt;');
-
-const reindent = (html, indent) => {
-  const lines = html.replace(/^\s*\n|\s+$/g, '').split('\n');
-  const common = Math.min(...lines.filter((l) => l.trim()).map((l) => /^[ \t]*/.exec(l)[0].length));
-  return lines.map((l) => (l.trim() ? indent + l.slice(common) : '')).join('\n');
-};
-
-export function composePage({ locale, kind, body, strings, chrome }) {
-  const slug = SLUGS[kind];
-  const prefix = PREFIX[locale];
-  const title = strings.legal[kind].title;
-  const description = strings.legal[kind].description;
-  const url = `${SITE}${prefix}/${slug}/`;
-
-  let { skipLink, nav, footer } = chrome;
-  if (locale === 'tr') {
-    const missing = [];
-    [skipLink, nav, footer] = [skipLink, nav, footer].map((piece) => {
-      const applied = applyI18nStrings(piece, strings);
-      missing.push(...applied.missing);
-      return applied.html;
-    });
-    if (missing.length) throw new Error(`MISSING TR KEYS: ${[...new Set(missing)].join(', ')}`);
-  }
-  nav = markLangSwitch(nav.replace('<a href="#top" class="brand-mark"', `<a href="${prefix}/" class="brand-mark"`), locale);
-
-  const head = [
-    '<meta charset="UTF-8" />',
-    '<meta name="viewport" content="width=device-width, initial-scale=1" />',
-    `<title>${text(title)}</title>`,
-    `<meta name="description" content="${attr(description)}" />`,
-    '<meta name="color-scheme" content="dark" />',
-    '<meta name="theme-color" content="#0c0f12" />',
-    '',
-    `<link rel="canonical" href="${url}" />`,
-    `<link rel="alternate" hreflang="en" href="${SITE}/${slug}/" />`,
-    `<link rel="alternate" hreflang="tr" href="${SITE}/tr/${slug}/" />`,
-    `<link rel="alternate" hreflang="x-default" href="${SITE}/${slug}/" />`,
-    '',
-    '<link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32.png" />',
-    '<link rel="apple-touch-icon" href="/images/apple-touch-icon.png" />',
-    '',
-    '<!-- Open Graph -->',
-    '<meta property="og:type" content="website" />',
-    '<meta property="og:site_name" content="Velora" />',
-    `<meta property="og:url" content="${url}" />`,
-    `<meta property="og:title" content="${attr(title)}" />`,
-    `<meta property="og:description" content="${attr(description)}" />`,
-    `<meta property="og:locale" content="${OG_LOCALES[locale]}" />`,
-    '',
-    '<!-- Twitter -->',
-    '<meta name="twitter:card" content="summary" />',
-    `<meta name="twitter:title" content="${attr(title)}" />`,
-    `<meta name="twitter:description" content="${attr(description)}" />`,
-    '',
-    '<!-- Fonts -->',
-    ...chrome.fonts,
-    '',
-    '<!-- Stylesheets (load order matters: tokens first, legal last) -->',
-    ...chrome.stylesheets,
-    '',
-    '<script type="module" src="assets/js/app.js"></script>',
-  ].map((line) => (line ? `  ${line}` : '')).join('\n');
-
-  const page = `<!DOCTYPE html>
-<html lang="${locale}" data-locale="${locale}">
-<head>
-${head}
-</head>
-
-<body data-accent="activities">
-
-  ${skipLink}
-
-  ${nav}
-
-  <main id="top">
-    <article class="legal">
-${reindent(body, '      ')}
-    </article>
-  </main>
-
-  ${footer}
-
-</body>
-</html>
-`;
-  return rewriteRootRelativePaths(page, { localePrefix: prefix });
+// Chrome (skip link, nav, footer) comes from tools/partials via the shared page library.
+export function composePage({ locale, kind, body, strings, partialsDir = PARTIALS_DIR, rootDir = ROOT }) {
+  const alternates = { en: LOCALE_PATHS.en[kind], tr: LOCALE_PATHS.tr[kind] };
+  const html = composeSitePage({
+    locale,
+    page: CT_PAGE,
+    strings,
+    partialsDir,
+    bodyAttrs: { 'data-page': 'legal' },
+    head: {
+      title: strings.legal[kind].title,
+      description: strings.legal[kind].description,
+      canonicalPath: alternates[locale],
+      alternates,
+      preloads: fontPreloads(rootDir),
+      stylesheets: STYLESHEETS,
+      modules: MODULES,
+    },
+    body: `<article class="legal">\n${indent(reindent(body), '  ')}\n</article>`,
+  });
+  return hashAssetRefs(html, rootDir);
 }
 
 // eula/index.html carries the URL three times; all copies must agree with each other.
@@ -229,15 +102,13 @@ export function readEulaUrl(eulaHtml = readFileSync(join(ROOT, 'eula/index.html'
   return urls[0];
 }
 
-export const count = (html, re) => (html.match(re) || []).length;
-
 export function pageChecks({ page, source, locale, kind }) {
   const slug = SLUGS[kind];
   const prefix = PREFIX[locale];
   const article = /<article class="legal">([\s\S]*?)<\/article>/.exec(page)?.[1] ?? '';
   let allowlist = true;
   // Em dashes are stripped here so the dedicated `no em dash` row below is the only one reporting them.
-  try { assertClean(article.replace(/—/g, '')); } catch (e) { allowlist = e.message; }
+  try { assertClean(article.replaceAll(EM_DASH, '')); } catch (e) { allowlist = e.message; }
   return {
     'exactly one h1': count(page, /<h1\b/g) === 1,
     'no unresolved placeholder': !page.includes('\\('),
@@ -245,7 +116,7 @@ export function pageChecks({ page, source, locale, kind }) {
     'no script/style in article': !/<(script|style)\b/i.test(article),
     'h2 count matches source': count(article, /<h2\b/g) === count(source, /<h2\b/g),
     'top-level allowlist': allowlist,
-    'no em dash': !article.includes('—'),
+    'no em dash': !article.includes(EM_DASH),
     'no bare legal href': !/href="(privacy-policy|terms-of-service)\//.test(page),
     'no bare asset path': !/(?:href|src)="(?:assets|images)\//.test(page),
     'brand href is locale home': page.includes(`<a href="${prefix}/" class="brand-mark"`),
@@ -254,16 +125,9 @@ export function pageChecks({ page, source, locale, kind }) {
   };
 }
 
-const printChecks = (log, label, checks) => {
-  for (const [k, v] of Object.entries(checks)) {
-    log(`${v === true ? 'ok  ' : 'FAIL'} ${label}: ${k}${typeof v === 'string' ? ` — ${v}` : ''}`);
-  }
-};
-
 // Builds all four pages from content/legal/*.html and prints the sanity table before writing.
-export function build({ outDir = ROOT, contentDir = CONTENT_DIR, log = console.log } = {}) {
+export function build({ outDir = ROOT, contentDir = CONTENT_DIR, partialsDir = PARTIALS_DIR, log = console.log } = {}) {
   const eulaUrl = readEulaUrl();
-  const chrome = loadChrome();
   const strings = {
     en: JSON.parse(readFileSync(join(ROOT, 'assets/data/strings.en.json'), 'utf8')),
     tr: JSON.parse(readFileSync(join(ROOT, 'assets/data/strings.tr.json'), 'utf8')),
@@ -274,17 +138,12 @@ export function build({ outDir = ROOT, contentDir = CONTENT_DIR, log = console.l
     if (!existsSync(file)) throw new Error(`source not found: ${file}`);
     const source = readFileSync(file, 'utf8');
     const body = normaliseDocument(source);
-    const page = composePage({ ...doc, body, strings: strings[doc.locale], chrome });
+    const page = composePage({ ...doc, body, strings: strings[doc.locale], partialsDir });
     return { ...doc, path: outputPath(doc), page, checks: pageChecks({ page, source, ...doc }) };
   });
 
   log(`eula_url is consistent in eula/index.html: ${eulaUrl}`);
-  let failed = false;
-  for (const p of pages) {
-    printChecks(log, p.path, p.checks);
-    if (Object.values(p.checks).some((v) => v !== true)) failed = true;
-  }
-  if (failed) throw new Error('sanity checks failed; nothing written');
+  reportChecks(pages, log);
 
   for (const p of pages) {
     const file = join(outDir, p.path);

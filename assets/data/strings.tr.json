@@ -1,117 +1,26 @@
 {
   "meta": {
-    "title": "Velora · Antrenman, metrik ve trendler tek yerde",
-    "description": "Gizliliği önemseyen iOS sağlık uygulaması. Antrenmanlarını kaydet, haftalık trendlerini izle, her metriği bir bakışta gör."
+    "title": "Velora · Gerçekten yaşadığın gün için bir koç",
+    "description": "Velora Koç, iPhone'undaki Sağlık verilerini okur; adımların, antrenmanların ve suyun hakkında kısa, sade notlar yazar. Cihazda çalışır, hesap gerekmez.",
+    "ogImageAlt": "Velora: yaşadığın günün koçu. Koç kartı ortalamanın 6.500 adım olduğunu söylüyor ve 7.000 öneriyor. İndirmesi ücretsiz, Pro isteğe bağlı.",
+    "offerDescription": "İndirmesi ücretsiz, Pro isteğe bağlı"
   },
   "nav": {
     "langGroupAria": "Dil",
     "langEn": "EN",
     "langTr": "TR",
     "skipLink": "İçeriğe atla",
-    "ctaAria": "Velora'yı App Store'dan indir"
-  },
-  "hero": {
-    "eyebrow": "iOS · iPhone ve Apple Watch",
-    "h1": "Haftan,<br /><em>sade bir akışta.</em>",
-    "sub": "Antrenman, kalori ve trendler. Tek bir sakin ekranda.",
-    "ctaSecondary": "Nasıl çalışıyor?",
-    "chip1": "Gizlilik öncelikli",
-    "chip2": "English · Türkçe",
-    "chip3": "Yerel iOS",
-    "constellation": {
-      "calories": "Kalori",
-      "caloriesValue": "179",
-      "caloriesUnit": " / 450 kcal",
-      "steps": "Adım",
-      "stepsValue": "3.825",
-      "stepsUnit": " / 8 bin",
-      "minutes": "Dakika",
-      "minutesValue": "25",
-      "minutesUnit": " / 30 dk",
-      "day": "Per"
-    }
-  },
-  "showcase": {
-    "title": "Velora ekranları",
-    "metrics": {
-      "eyebrow": "Anasayfa",
-      "h1": "Bütün metrikler aynı yerde.",
-      "sub": "Kalori, adım, su ve antrenman. Açar açmaz hazır.",
-      "imgAlt": "Velora ana ekranı: haftalık kalori, dakika, adım ve su tüketimi"
-    },
-    "trends": {
-      "eyebrow": "Trendler",
-      "h1": "Trendlerini izle.",
-      "sub": "İlerlemeni gör, limitlerini zorla.",
-      "imgAlt": "Velora trendler ekranı: haftalık kalori grafiği, aktif günler ve mesafe grafiği"
-    },
-    "activities": {
-      "eyebrow": "Aktiviteler",
-      "h1": "Aktivitelerini kolayca kaydet.",
-      "sub": "Tüm aktiviteler tek ekranda.",
-      "imgAlt": "Velora aktivite listesi: günlere göre gruplanmış antrenmanlar"
-    }
-  },
-  "pillars": {
-    "eyebrow": "Temeller",
-    "title": "Üç alışkanlık, sessiz bir yol arkadaşı.",
-    "track": {
-      "h": "Takip",
-      "p": "Kalori, adım ve dakika, bir bakışta.",
-      "f1": "Adım, mesafe ve yürüyüş süresi",
-      "f2": "Su takibi ve hatırlatıcılar",
-      "f3": "Kilo ve alkol kaydı",
-      "f4": "Takvim, adım ve su widget'ları",
-      "f5": "Metrik ve imperial birimler"
-    },
-    "trend": {
-      "h": "Trend",
-      "p": "Veriyi yöne çeviren haftalık örüntüler.",
-      "f1": "Haftalık ilerleme grafikleri",
-      "f2": "Aylık antrenman filtreleri",
-      "f3": "Uzun vadeli kilo grafikleri",
-      "f4": "Yapay zeka destekli içgörüler",
-      "f5": "Günlük ve haftalık fiziksel yük",
-      "f6": "Paylaşılabilir ilerleme kartları"
-    },
-    "train": {
-      "h": "Antrenman",
-      "p": "Yürüyüş, koşu ya da ağırlık. Hepsi tek dokunuşla.",
-      "f1": "Set, tekrar ve rota detayları",
-      "f2": "Nabız bölgeleri",
-      "f3": "Yükseklik profilli rota haritaları",
-      "f4": "Kalori yakımı ve verimlilik",
-      "f5": "Vücut bölgesi etiketleme"
-    }
-  },
-  "coach": {
-    "eyebrow": "Yapay Zeka Koçu",
-    "h": "Haftanı tanıyan bir koç.",
-    "sub": "Velora'nın yapay zeka koçu antrenmanlarını okur, ilerlemeni hatırlar ve verini net adımlara çevirir.",
-    "p1": "Antrenman geçmişini hatırlar",
-    "p2": "Eforu, toparlanmayı ve alışkanlıkları analiz eder",
-    "p3": "Bot gibi değil, koç gibi konuşur",
-    "q": "Bu hafta nasıldı?",
-    "label": "Velora Koç",
-    "a": "Ortalamanın 213 kcal altındasın. Toparlanmak için iyi bir pencere!",
-    "cta": "Velora'yı indir"
-  },
-  "privacy": {
-    "h": "Sadece sana ait.",
-    "p": "Sağlık verilerin yalnızca seni ilgilendirir.",
-    "p1": "Cihazında kalır",
-    "p2": "Hesap yok",
-    "p3": "Asla satılmaz.",
-    "p4": "Senkron kendi iCloud'unda"
-  },
-  "closing": {
-    "eyebrow": "Başla",
-    "h": "Bu haftayı sadeleştir.",
-    "sub": "App Store'da ücretsiz. Verilerin sende kalır."
+    "ctaAria": "Velora'yı App Store'dan indir",
+    "homeAria": "Velora ana sayfa",
+    "primaryAria": "Ana menü",
+    "coach": "Koç",
+    "guides": "Rehberler",
+    "privacy": "Gizlilik",
+    "getApp": "Uygulamayı indir"
   },
   "footer": {
     "copy": "© 2026 Velora",
-    "disclaimer": "Velora bir sağlık eşlikçisidir, tıbbi cihaz değildir. Tıbbi tavsiye için bir hekime danışın.",
+    "disclaimer": "Velora bir sağlık eşlikçisidir, tıbbi cihaz değildir. Tıbbi tavsiye için bir hekime danış.",
     "legalAria": "Yasal",
     "privacy": "Gizlilik Politikası",
     "terms": "Kullanım Koşulları",
@@ -125,6 +34,129 @@
     "terms": {
       "title": "Kullanım Koşulları · Velora",
       "description": "Velora iOS uygulamasını kullanırken geçerli olan koşullar."
+    }
+  },
+  "guides": {
+    "breadcrumb": "Rehberler",
+    "indexTitle": "Rehberler",
+    "indexMetaTitle": "Adım, su, alkol ve antrenman rehberi · Velora",
+    "indexDescription": "Günlük adım, su, alkol ve antrenman hakkında kaynaklı kısa cevaplar ve adımdan mesafe hesaplayıcı.",
+    "indexIntro": "Adım, su, alkol ve antrenmanla ilgili gündelik sorulara kısa cevaplar. Her rehber kaynaklarını ve en son ne zaman gözden geçirildiğini gösterir.",
+    "indexCoach": {
+      "title": "Bu sayıları kendi gününde gör",
+      "line": "Bugün 7.200 adım attın, ortalamanın üstündesin.",
+      "body": "Velora adımlarını ve antrenmanlarını Sağlık uygulamasından okur, suyunu ve içeceklerini takip eder. Velora Koç bunları kısa yorumlara ve hedef önerilerine çevirir."
+    },
+    "titleSuffix": " · Velora",
+    "sources": "Kaynaklar",
+    "lastReviewed": "Son gözden geçirme: {date}",
+    "note": "Genel bilgi amaçlıdır, tıbbi tavsiye değildir. Kendi sağlığınla ilgili soruların için bir doktora danış.",
+    "coachLabel": "Velora Koç"
+  },
+  "day": {
+    "rail": {
+      "morning": "Sabah",
+      "day": "Öğle",
+      "evening": "Akşam",
+      "night": "Gece"
+    },
+    "hero": {
+      "statusSet": "Günlük adım hedefin artık 7.000. 12:40'taki durum buna göre hesaplanacak.",
+      "statusReset": "Günlük adım hedefin yeniden 6.500.",
+      "coachLine": "Ortalaman 6.500 adım. 7.000'i dene.",
+      "dailyGoal": "Günlük hedef",
+      "setGoal": "7.000'e ayarla",
+      "goalSet": "Hedef ayarlandı",
+      "stickerIdle": "Hadi, dokun.",
+      "stickerDone": "Hedef güncellendi. Öğlen de bunu bilecek.",
+      "lede": "Velora Koç, iPhone'unda zaten olan Sağlık verilerini okur ve doğru anlarda kısa, sade notlar yazar. İşte onunla geçen bir gün.",
+      "scrollHint": "Günü kaydır",
+      "titleHtml": "<em>Gerçekten yaşadığın</em> gün için bir koç."
+    },
+    "coach": {
+      "name": "Velora Koç",
+      "onDevice": "Bu iPhone'da yazıldı"
+    },
+    "num": {
+      "goalDefault": "6.500",
+      "goalScale": "8.000",
+      "stepsNow": "3.900",
+      "toGoDefault": "2.600",
+      "distance": "5,2 km",
+      "water": "1,5 L"
+    },
+    "t0730": {
+      "title": "Söyleyecek bir şey olduğunda konuşur.",
+      "lede": "Sohbet penceresi yok, bildirim yağmuru yok. Dikkat çekmeye değer bir örüntü olduğunda verinin yanında kısa bir not belirir.",
+      "cardTitle": "Her zamanki adım ritmin",
+      "coach": "Adımlarının çoğunu genelde sabah atıyorsun.",
+      "rhythmAria": "Saatlik adımlar, en yüksek sabah 7 ile 9 arası"
+    },
+    "t1240": {
+      "title": "Öğle arası, sayıya kısa bir bakış.",
+      "lede": "Adımlar doğrudan Apple Sağlık'tan gelir. Velora sabah koyduğun hedefi tutar ve nerede olduğunu açıkça söyler.",
+      "of": "/",
+      "cardTitle": "Bugünkü adımlar",
+      "cardNote": "Öğle yürüyüşü yaklaşık 1.300 adım ekledi.",
+      "toGoBefore": "Hedefine doğru ilerliyorsun,",
+      "toGoAfter": "adım kaldı.",
+      "coach2": "Bugün en çok öğle yürüyüşün ekledi."
+    },
+    "t1810": {
+      "title": "Akşam koşusu, sade bir dille özetlendi.",
+      "lede": "Antrenmandan sonra Koç ona bir bakış açısı seçer. Rahat bir koşu dayanıklılık gözüyle okunur.",
+      "cardTitle": "Açık hava koşusu",
+      "distance": "Mesafe",
+      "time": "Süre",
+      "pace": "Tempo /km",
+      "bpm": "Ort. nabız",
+      "heartRate": "Nabız",
+      "zone": "Çoğunlukla rahat bölgende",
+      "persona": "Dayanıklılık",
+      "coach1": "Dengeli tempo, rahat nabız.",
+      "coach2": "Koşunun çoğu rahat bölgende geçti.",
+      "coach3": "İyi bir temel gün.",
+      "goalReached": "Adım hedefi tamam"
+    },
+    "t2130": {
+      "title": "Su ve akşam kadehi, ders vermeden not edildi.",
+      "lede": "Su ve içki notları günü her zamanki halinle yan yana koyar. Puan yok, azar yok.",
+      "cardTitle": "Bugünkü su",
+      "drink": "Bir kadeh şarap",
+      "logged": "Kaydedildi",
+      "coach1": "Her zamankinden iki bardak eksik.",
+      "coach2": "Bu akşam tek bir içki kaydedildi.",
+      "glassesAria": "Her zamanki 8 bardak sudan 6'sı"
+    },
+    "t2300": {
+      "title": "Bugün bu iPhone'da kaldı.",
+      "titleAccent": "Cihazda yazıldı.",
+      "notesToday": "Bugünkü Koç notu",
+      "sent": "Sunucularımıza giden",
+      "localTitle": "iPhone'unda kalır",
+      "localText": "Sağlık verilerin cihazında okunur ve sunucularımıza asla gönderilmez.",
+      "accountTitle": "Hesap yok",
+      "accountText": "Uygulamayı aç ve başla. Kaydolacak bir şey yok.",
+      "aiTitle": "Koç, cihazda",
+      "aiText": "Koç, destekleniyorsa iPhone'undaki Apple Intelligence ile yazar; değilse daha basit, hazır cümleler kullanır.",
+      "icloudTitle": "Kendi iCloud'un, Pro ile",
+      "icloudText": "iCloud yedekleme Pro'ya dahildir ve bize değil, kendi iCloud hesabına gider."
+    },
+    "growing": {
+      "when": "00:00 · yarın ve sonrası",
+      "title": "Koç büyüyor.",
+      "lede": "Sırada neler var:",
+      "nutrition": "Beslenme rehberliği",
+      "fasting": "Aralıklı oruç",
+      "programs": "Antrenman programları",
+      "swaps": "Egzersiz alternatifleri",
+      "analysis": "Program analizi"
+    },
+    "close": {
+      "price": "İndirmesi ücretsiz · Pro isteğe bağlı",
+      "qrCaption": "Bilgisayardan mı bakıyorsun? iPhone kameranla tarat.",
+      "titleHtml": "<em>Kendi</em> gününe başla.",
+      "qrAlt": "Velora'yı App Store'da açan QR kodu"
     }
   }
 }

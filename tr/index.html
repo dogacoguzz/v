@@ -1,58 +1,45 @@
 <!DOCTYPE html>
-<html lang="tr">
+<html lang="tr" data-locale="tr">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Velora · Antrenman, metrik ve trendler tek yerde</title>
-  <meta name="description" content="Gizliliği önemseyen iOS sağlık uygulaması. Antrenmanlarını kaydet, haftalık trendlerini izle, her metriği bir bakışta gör." />
+  <title>Velora · Gerçekten yaşadığın gün için bir koç</title>
+  <meta name="description" content="Velora Koç, iPhone'undaki Sağlık verilerini okur; adımların, antrenmanların ve suyun hakkında kısa, sade notlar yazar. Cihazda çalışır, hesap gerekmez." />
   <meta name="color-scheme" content="dark" />
-  <meta name="theme-color" content="#0c0f12" />
+  <meta name="theme-color" content="#101417" />
 
   <link rel="canonical" href="https://velorahealthcompanion.com/tr/" />
   <link rel="alternate" hreflang="en" href="https://velorahealthcompanion.com/" />
   <link rel="alternate" hreflang="tr" href="https://velorahealthcompanion.com/tr/" />
   <link rel="alternate" hreflang="x-default" href="https://velorahealthcompanion.com/" />
 
-  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32.png" />
-  <link rel="apple-touch-icon" href="/images/apple-touch-icon.png" />
-  <meta name="apple-itunes-app" content="app-id=6748447208" />
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32.png?v=3af68f18" />
+  <link rel="apple-touch-icon" href="/images/apple-touch-icon.png?v=09359130" />
+  <meta name="apple-itunes-app" content="app-id=6748447208, affiliate-data=pt=TODO_PT&amp;ct=tr-home-banner" />
 
-  <!-- Open Graph -->
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="Velora" />
   <meta property="og:url" content="https://velorahealthcompanion.com/tr/" />
-  <meta property="og:title" content="Velora · Antrenman, metrik ve trendler tek yerde" />
-  <meta property="og:description" content="Gizliliği önemseyen iOS sağlık uygulaması. Antrenmanlarını kaydet, haftalık trendlerini izle, her metriği bir bakışta gör." />
-  <meta property="og:image" content="https://velorahealthcompanion.com/images/og.jpg" />
-  <meta property="og:image:width" content="1200" />
-  <meta property="og:image:height" content="630" />
-  <meta property="og:image:alt" content="Velora: your week, made simple. iOS wellness app." />
+  <meta property="og:title" content="Velora · Gerçekten yaşadığın gün için bir koç" />
+  <meta property="og:description" content="Velora Koç, iPhone'undaki Sağlık verilerini okur; adımların, antrenmanların ve suyun hakkında kısa, sade notlar yazar. Cihazda çalışır, hesap gerekmez." />
+  <meta property="og:image" content="https://velorahealthcompanion.com/images/og.jpg?v=0543fd54" />
+  <meta property="og:image:alt" content="Velora: yaşadığın günün koçu. Koç kartı ortalamanın 6.500 adım olduğunu söylüyor ve 7.000 öneriyor. İndirmesi ücretsiz, Pro isteğe bağlı." />
   <meta property="og:locale" content="tr_TR" />
   <meta property="og:locale:alternate" content="en_US" />
-
-  <!-- Twitter -->
   <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content="Velora · Antrenman, metrik ve trendler tek yerde" />
-  <meta name="twitter:description" content="Gizliliği önemseyen iOS sağlık uygulaması. Antrenmanlarını kaydet, haftalık trendlerini izle, her metriği bir bakışta gör." />
-  <meta name="twitter:image" content="https://velorahealthcompanion.com/images/og.jpg" />
+  <meta name="twitter:title" content="Velora · Gerçekten yaşadığın gün için bir koç" />
+  <meta name="twitter:description" content="Velora Koç, iPhone'undaki Sağlık verilerini okur; adımların, antrenmanların ve suyun hakkında kısa, sade notlar yazar. Cihazda çalışır, hesap gerekmez." />
+  <meta name="twitter:image" content="https://velorahealthcompanion.com/images/og.jpg?v=0543fd54" />
 
-  <!-- Fonts (real Fraunces italics; Jakarta 400–700 variable range, unused 800 dropped) -->
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500..700;1,9..144,500..700&family=Plus+Jakarta+Sans:wght@400..700&display=swap" />
-
-  <!-- Stylesheets (HTTP/2 multiplex; load order matters: tokens first) -->
-  <link rel="stylesheet" href="/assets/css/tokens.css" />
-  <link rel="stylesheet" href="/assets/css/base.css" />
-  <link rel="stylesheet" href="/assets/css/layout.css" />
-  <link rel="stylesheet" href="/assets/css/components.css" />
-  <link rel="stylesheet" href="/assets/css/sections.css" />
-
-  <link rel="preload" as="image" href="/images/tr1.webp" />
-
-  <script type="module" src="/assets/js/app.js"></script>
-
-  <!-- Structured data -->
+  <link rel="preload" href="/assets/fonts/bricolage-grotesque-var.woff2?v=4073efed" as="font" type="font/woff2" crossorigin />
+  <link rel="preload" href="/assets/fonts/instrument-sans-var.woff2?v=a07bbe4a" as="font" type="font/woff2" crossorigin />
+  <link rel="stylesheet" href="/assets/css/tokens.css?v=7abe9e34" />
+  <link rel="stylesheet" href="/assets/css/base.css?v=41ae1bee" />
+  <link rel="stylesheet" href="/assets/css/layout.css?v=22f8bfd8" />
+  <link rel="stylesheet" href="/assets/css/components.css?v=527c0417" />
+  <link rel="stylesheet" href="/assets/css/day.css?v=7d2d4f68" />
+  <script type="module" src="/assets/js/boot.js?v=74a39524"></script>
+  <script type="module" src="/assets/js/day.js?v=7118ab1b"></script>
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
@@ -60,382 +47,326 @@
     "name": "Velora: Health Companion",
     "operatingSystem": "iOS",
     "applicationCategory": "HealthApplication",
-    "url": "https://velorahealthcompanion.com/",
-    "downloadUrl": "https://apps.apple.com/app/id6748447208",
-    "image": "https://velorahealthcompanion.com/images/og.jpg",
-    "description": "Gizliliği önemseyen iOS sağlık uygulaması. Antrenmanlarını kaydet, haftalık trendlerini izle, her metriği bir bakışta gör.",
-    "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" }
+    "inLanguage": "tr",
+    "url": "https://velorahealthcompanion.com/tr/",
+    "downloadUrl": "https://apps.apple.com/app/id6748447208?pt=TODO_PT&ct=tr-home-schema&mt=8",
+    "image": "https://velorahealthcompanion.com/images/og.jpg?v=0543fd54",
+    "description": "Velora Koç, iPhone'undaki Sağlık verilerini okur; adımların, antrenmanların ve suyun hakkında kısa, sade notlar yazar. Cihazda çalışır, hesap gerekmez.",
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "USD",
+      "description": "İndirmesi ücretsiz, Pro isteğe bağlı"
+    }
   }
   </script>
 </head>
 
-<body data-accent="activities">
+<body data-phase="morning">
 
-  <!-- Skip link (visible on keyboard focus) -->
-  <a class="skip-link" href="#top" data-i18n="nav.skipLink">İçeriğe atla</a>
+  <a class="skip-link" href="#main">İçeriğe atla</a>
 
-  <!-- ========== NAV ========== -->
   <header class="site-nav">
-    <div class="container site-nav__row">
-      <a href="#top" class="brand-mark" aria-label="Velora home">
-        <img class="brand-mark__logo" src="/images/logo-56.png" alt="" width="28" height="28" />
+    <div class="site-nav__row">
+      <a href="/tr/" class="brand-mark" aria-label="Velora ana sayfa">
+        <img class="brand-mark__logo" src="/images/logo-56.png?v=7e0e8178" alt="" width="28" height="28" />
         <span class="brand-mark__text">Velora</span>
       </a>
+      <nav class="site-nav__links" aria-label="Ana menü">
+        <a href="/tr/#coach">Koç</a>
+        <a href="/tr/rehber/">Rehberler</a>
+        <a href="/tr/privacy-policy/">Gizlilik</a>
+      </nav>
       <div class="site-nav__actions">
-        <a class="site-nav__cta" href="https://apps.apple.com/app/id6748447208"
-           target="_blank" rel="noopener noreferrer"
-           aria-hidden="true" tabindex="-1"
-           data-i18n-aria-label="nav.ctaAria" aria-label="Velora'yı App Store'dan indir">
-          <span class="site-nav__cta-icon" aria-hidden="true">
-            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12"/><path d="M7 10l5 5 5-5"/><path d="M5 21h14"/></svg>
-          </span>
-        </a>
-        <div class="lang-switch" role="group" data-i18n-aria-label="nav.langGroupAria" aria-label="Dil">
+        <div class="lang-switch" role="group" aria-label="Dil">
           <button type="button" data-locale="en" aria-current="false">EN</button>
           <button type="button" data-locale="tr" aria-current="true">TR</button>
         </div>
+        <a class="site-nav__cta" href="https://apps.apple.com/app/id6748447208?pt=TODO_PT&amp;ct=tr-home-nav&amp;mt=8" target="_blank" rel="noopener noreferrer">Uygulamayı indir</a>
       </div>
     </div>
   </header>
 
-  <main id="top">
+  <main id="main" class="day">
+    <div class="day-frame">
 
-    <!-- ========== HERO ========== -->
-    <section class="hero" data-accent="activities">
-      <div class="container">
-        <div class="hero__grid">
+      <div class="rail" aria-hidden="true">
+        <div class="rail__clockbox">
+          <div class="rail__clock tnum"><span data-clock-hh>06</span><span class="rail__colon">:</span><span data-clock-mm>40</span></div>
+          <div class="rail__phase"><span class="rail__sun"></span><span data-phase-label data-i18n="day.rail.morning">Sabah</span></div>
+        </div>
+        <div class="rail__track">
+          <div class="rail__fill"></div>
+          <span class="rail__tick" data-tick="t0640" style="--c: var(--coach)"><span>06:40</span></span>
+          <span class="rail__tick" data-tick="coach" style="--c: var(--data-steps)"><span>07:30</span></span>
+          <span class="rail__tick" data-tick="t1240" style="--c: var(--data-steps)"><span>12:40</span></span>
+          <span class="rail__tick" data-tick="t1810" style="--c: var(--data-run)"><span>18:10</span></span>
+          <span class="rail__tick" data-tick="t2130" style="--c: var(--data-water)"><span>21:30</span></span>
+          <span class="rail__tick" data-tick="t2300" style="--c: var(--data-night)"><span>23:00</span></span>
+        </div>
+      </div>
+
+      <div class="day-strings" hidden>
+        <span data-str="phase.morning" data-i18n="day.rail.morning">Sabah</span>
+        <span data-str="phase.day" data-i18n="day.rail.day">Öğle</span>
+        <span data-str="phase.evening" data-i18n="day.rail.evening">Akşam</span>
+        <span data-str="phase.night" data-i18n="day.rail.night">Gece</span>
+        <span data-str="goal.on" data-i18n="day.hero.statusSet">Günlük adım hedefin artık 7.000. 12:40'taki durum buna göre hesaplanacak.</span>
+        <span data-str="goal.off" data-i18n="day.hero.statusReset">Günlük adım hedefin yeniden 6.500.</span>
+      </div>
+
+      <div class="day-moments">
+
+        <section class="moment hero" id="t0640" data-time="06:40" aria-labelledby="h-0640">
+          <h1 class="hero__title" id="h-0640"><span class="hero__time tnum" data-stamp>06:40</span> <span class="hero__headline" data-i18n-html="day.hero.titleHtml"><em>Gerçekten yaşadığın</em> gün için bir koç.</span></h1>
+
+          <div class="hero__stack" data-goal-card data-goal="default">
+            <article class="coach-card coach-card--hero" data-pop style="--d: 0.15s">
+              <div class="coach-card__head">
+                <img src="/images/logo-56.png?v=7e0e8178" alt="" width="26" height="26" />
+                <strong data-i18n="day.coach.name">Velora Koç</strong>
+                <time datetime="06:40">06:40</time>
+              </div>
+              <p class="coach-card__line" data-i18n="day.hero.coachLine">Ortalaman 6.500 adım. 7.000'i dene.</p>
+              <div class="goalbar" data-goalbar style="--goal: 6500">
+                <div class="goalbar__track" aria-hidden="true"><div class="goalbar__avg"></div><div class="goalbar__knob"></div></div>
+                <div class="goalbar__labels">
+                  <span class="tnum">0</span>
+                  <span><span data-i18n="day.hero.dailyGoal">Günlük hedef</span> <b class="tnum" data-goal-value data-i18n="day.num.goalDefault">6.500</b></span>
+                  <span class="tnum" data-i18n="day.num.goalScale">8.000</span>
+                </div>
+              </div>
+              <div class="goal-actions">
+                <button class="set-goal" type="button" aria-pressed="false" data-set-goal data-goal-from="6500" data-goal-to="7000">
+                  <span class="set-goal__check" aria-hidden="true"></span>
+                  <span data-i18n="day.hero.setGoal">7.000'e ayarla</span>
+                </button>
+                <span class="goal-badge" data-i18n="day.hero.goalSet">Hedef ayarlandı</span>
+              </div>
+              <div class="burst" data-burst aria-hidden="true"></div>
+              <p class="visually-hidden" aria-live="polite" data-goal-status></p>
+            </article>
+            <p class="sticker" data-pop style="--d: 0.55s">
+              <span class="sticker__idle" data-i18n="day.hero.stickerIdle">Hadi, dokun.</span>
+              <span class="sticker__done" data-i18n="day.hero.stickerDone">Hedef güncellendi. Öğlen de bunu bilecek.</span>
+            </p>
+          </div>
+
           <div class="hero__copy">
-            <span class="eyebrow" data-i18n="hero.eyebrow">iOS · iPhone ve Apple Watch</span>
-            <h1 class="hero__h1" data-i18n-html="hero.h1">Haftan,<br /><em>sade bir akışta.</em></h1>
-            <p class="hero__sub" data-i18n="hero.sub">Antrenman, kalori ve trendler. Tek bir sakin ekranda.</p>
-            <div class="hero__cta-row">
-              <a class="store-badge" href="https://apps.apple.com/app/id6748447208" target="_blank" rel="noopener noreferrer" data-i18n-aria-label="nav.ctaAria" aria-label="Velora'yı App Store'dan indir">
-                <img src="/images/badge-appstore-tr.svg"
-                     data-src-en="/images/badge-appstore-en.svg"
-                     data-src-tr="/images/badge-appstore-tr.svg"
-                     alt="" height="52" />
+            <p class="lede" data-i18n="day.hero.lede">Velora Koç, iPhone'unda zaten olan Sağlık verilerini okur ve doğru anlarda kısa, sade notlar yazar. İşte onunla geçen bir gün.</p>
+            <div class="hero__actions">
+              <a class="store-badge" href="https://apps.apple.com/app/id6748447208?pt=TODO_PT&amp;ct=tr-home-hero&amp;mt=8" target="_blank" rel="noopener noreferrer" aria-label="Velora'yı App Store'dan indir" data-i18n-aria-label="nav.ctaAria">
+                <img src="/images/badge-appstore-tr.svg?v=b85100fb" data-src-en="/images/badge-appstore-en.svg" data-src-tr="/images/badge-appstore-tr.svg" alt="" width="156" height="52" />
               </a>
-              <a class="ghost-button" href="#showcase">
-                <span data-i18n="hero.ctaSecondary">Nasıl çalışıyor?</span>
-                <span class="ghost-button__arrow" aria-hidden="true">→</span>
-              </a>
-            </div>
-            <div class="chip-row">
-              <span class="chip"><span class="chip__dot"></span><span data-i18n="hero.chip1">Gizlilik öncelikli</span></span>
-              <span class="chip"><span class="chip__dot"></span><span data-i18n="hero.chip2">English · Türkçe</span></span>
-              <span class="chip"><span class="chip__dot"></span><span data-i18n="hero.chip3">Yerel iOS</span></span>
+              <a class="scroll-hint" href="#coach"><i aria-hidden="true"></i><span data-i18n="day.hero.scrollHint">Günü kaydır</span></a>
             </div>
           </div>
+        </section>
 
-          <!-- Constellation: floating metric fragments -->
-          <div class="hero__constellation" aria-hidden="true">
-            <div class="metric-card metric-card--calories" style="--accent: var(--accent-trends);">
-              <div class="metric-card__row">
-                <div class="metric-card__icon">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8.5 14.5A2.5 2.5 0 0011 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 11-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 002.5 2.5z"/></svg>
-                </div>
-                <div class="metric-card__label" data-i18n="hero.constellation.calories">Kalori</div>
-              </div>
-              <div class="metric-card__value"><span data-i18n="hero.constellation.caloriesValue">179</span><span class="metric-card__unit" data-i18n="hero.constellation.caloriesUnit"> / 450 kcal</span></div>
-              <div class="metric-card__bar"><span style="width:40%"></span></div>
+        <section class="moment" id="coach" data-time="07:30" aria-labelledby="h-0730" style="--c: var(--data-steps)">
+          <div class="moment__grid moment__grid--flip">
+            <div class="moment__copy">
+              <h2 id="h-0730"><span class="stamp tnum" data-stamp><b>07</b>:30</span> <span data-i18n="day.t0730.title">Söyleyecek bir şey olduğunda konuşur.</span></h2>
+              <p class="lede" data-i18n="day.t0730.lede">Sohbet penceresi yok, bildirim yağmuru yok. Dikkat çekmeye değer bir örüntü olduğunda verinin yanında kısa bir not belirir.</p>
             </div>
-
-            <div class="metric-card metric-card--steps" style="--accent: var(--accent-activities);">
-              <div class="metric-card__row">
-                <div class="metric-card__icon">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 21c-1 0-1.5-1-1.5-2 0-2 1.5-3 1.5-5 0-1.5-1-2-1-4 0-2 1.5-4 3-4 1.5 0 2 1 2 3s-1 4-1 6c0 4-1 6-3 6z"/><path d="M16 21c-1.5 0-2-1.5-2-4 0-2 .5-4 2-4s2 2 2 4c0 2.5-.5 4-2 4z"/><path d="M19 11c-1 0-1.5-1-1.5-2.5 0-1.5.5-3.5 2-3.5s1.5 2 1.5 3.5c0 1.5-.5 2.5-2 2.5z"/></svg>
+            <div class="moment__cards moment__cards--offset">
+              <div class="card" data-pop>
+                <div class="card__title"><span><span class="card__dot"></span><span data-i18n="day.t0730.cardTitle">Her zamanki adım ritmin</span></span><span class="tnum">06–22</span></div>
+                <div class="rhythm" role="img" aria-label="Saatlik adımlar, en yüksek sabah 7 ile 9 arası" data-i18n-aria-label="day.t0730.rhythmAria">
+                  <i style="--h: 14; --k: 0"></i><i class="is-peak" style="--h: 62; --k: 1"></i><i class="is-peak" style="--h: 96; --k: 2"></i><i class="is-peak" style="--h: 78; --k: 3"></i><i style="--h: 30; --k: 4"></i><i style="--h: 22; --k: 5"></i><i style="--h: 44; --k: 6"></i><i style="--h: 36; --k: 7"></i><i style="--h: 18; --k: 8"></i><i style="--h: 20; --k: 9"></i><i style="--h: 26; --k: 10"></i><i style="--h: 40; --k: 11"></i><i style="--h: 34; --k: 12"></i><i style="--h: 22; --k: 13"></i><i style="--h: 14; --k: 14"></i><i style="--h: 9; --k: 15"></i><i style="--h: 5; --k: 16"></i>
                 </div>
-                <div class="metric-card__label" data-i18n="hero.constellation.steps">Adım</div>
+                <div class="axis tnum" aria-hidden="true"><span>06</span><span>12</span><span>18</span><span>22</span></div>
               </div>
-              <div class="metric-card__value"><span data-i18n="hero.constellation.stepsValue">3.825</span><span class="metric-card__unit" data-i18n="hero.constellation.stepsUnit"> / 8 bin</span></div>
-              <div class="metric-card__bar"><span style="width:48%"></span></div>
-            </div>
-
-            <div class="metric-card metric-card--minutes" style="--accent: var(--accent-metrics);">
-              <div class="metric-card__row">
-                <div class="metric-card__icon">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="13" r="8"/><path d="M12 9v4l2.5 2.5"/><path d="M9 2h6"/></svg>
+              <article class="coach-card" data-pop style="--d: 0.35s; --tilt: 2deg">
+                <div class="coach-card__head">
+                  <img src="/images/logo-56.png?v=7e0e8178" alt="" width="26" height="26" />
+                  <strong data-i18n="day.coach.name">Velora Koç</strong>
+                  <time datetime="07:30">07:30</time>
                 </div>
-                <div class="metric-card__label" data-i18n="hero.constellation.minutes">Dakika</div>
-              </div>
-              <div class="metric-card__value"><span data-i18n="hero.constellation.minutesValue">25</span><span class="metric-card__unit" data-i18n="hero.constellation.minutesUnit"> / 30 dk</span></div>
-              <div class="metric-card__bar"><span style="width:83%"></span></div>
-            </div>
-
-            <div class="hero-ring" style="--accent: var(--accent-metrics);">
-              <svg viewBox="0 0 64 64" aria-hidden="true">
-                <circle cx="32" cy="32" r="26" fill="none" stroke="currentColor" stroke-opacity="0.12" stroke-width="6"/>
-                <circle cx="32" cy="32" r="26" fill="none" stroke="currentColor" stroke-width="6" stroke-linecap="round" stroke-dasharray="163.36" stroke-dashoffset="48" transform="rotate(-90 32 32)"/>
-              </svg>
-              <div class="hero-ring__inner">
-                <div class="hero-ring__day" data-i18n="hero.constellation.day">Per</div>
-                <div class="hero-ring__num">25</div>
-              </div>
+                <p class="coach-card__line" data-i18n="day.t0730.coach">Adımlarının çoğunu genelde sabah atıyorsun.</p>
+              </article>
             </div>
           </div>
-        </div>
-      </div>
-    </section>
+        </section>
 
-    <!-- ========== SHOWCASE (sticky-scroll) ========== -->
-    <section class="showcase" id="showcase" aria-labelledby="showcase-title">
-      <div class="container">
-        <h2 id="showcase-title" class="visually-hidden" data-i18n="showcase.title">Velora ekranları</h2>
-        <div class="showcase__inner">
-
-          <!-- Phone column (sticky on desktop) -->
-          <div class="showcase__phone-col" aria-hidden="true">
-            <div class="phone-frame">
-              <div class="phone-frame__screen">
-                <img class="phone-frame__img"
-                     data-showcase-phone
-                     src="/images/tr1.webp"
-                     alt="Velora ana ekranı: haftalık kalori, dakika, adım ve su tüketimi"
-                     width="680" height="1476" loading="lazy" decoding="async" />
+        <section class="moment" id="t1240" data-time="12:40" aria-labelledby="h-1240" style="--c: var(--data-steps)">
+          <div class="moment__grid">
+            <div class="moment__copy">
+              <h2 id="h-1240"><span class="stamp tnum" data-stamp><b>12</b>:40</span> <span data-i18n="day.t1240.title">Öğle arası, sayıya kısa bir bakış.</span></h2>
+              <p class="lede" data-i18n="day.t1240.lede">Adımlar doğrudan Apple Sağlık'tan gelir. Velora sabah koyduğun hedefi tutar ve nerede olduğunu açıkça söyler.</p>
+            </div>
+            <div class="moment__cards">
+              <div class="card lunch" data-pop data-lunch>
+                <div class="ring" data-ring style="--pct: 0.6">
+                  <svg viewBox="0 0 170 170" aria-hidden="true"><circle class="ring__bg" cx="85" cy="85" r="70" fill="none" stroke-width="18" /><circle class="ring__arc" cx="85" cy="85" r="70" fill="none" stroke-width="18" /></svg>
+                  <div class="ring__mid">
+                    <b class="tnum" data-steps-now data-steps="3900" data-steps-from="1240" data-i18n="day.num.stepsNow">3.900</b>
+                    <span><span data-i18n="day.t1240.of">/</span> <span class="tnum" data-goal-out data-i18n="day.num.goalDefault">6.500</span></span>
+                  </div>
+                </div>
+                <div>
+                  <div class="card__title card__title--tight"><span><span class="card__dot"></span><span data-i18n="day.t1240.cardTitle">Bugünkü adımlar</span></span></div>
+                  <p class="muted" data-i18n="day.t1240.cardNote">Öğle yürüyüşü yaklaşık 1.300 adım ekledi.</p>
+                </div>
               </div>
+              <article class="coach-card" data-pop style="--d: 0.3s; --tilt: -2deg">
+                <div class="coach-card__head">
+                  <img src="/images/logo-56.png?v=7e0e8178" alt="" width="26" height="26" />
+                  <strong data-i18n="day.coach.name">Velora Koç</strong>
+                  <time datetime="12:40">12:40</time>
+                </div>
+                <ol class="coach-card__list">
+                  <li><span data-i18n="day.t1240.toGoBefore">Hedefine doğru ilerliyorsun,</span> <span class="tnum" data-to-go data-i18n="day.num.toGoDefault">2.600</span> <span data-i18n="day.t1240.toGoAfter">adım kaldı.</span></li>
+                  <li data-i18n="day.t1240.coach2">Bugün en çok öğle yürüyüşün ekledi.</li>
+                </ol>
+              </article>
             </div>
           </div>
+        </section>
 
-          <!-- Text column (3 stages) -->
-          <div class="showcase__sections">
-
-            <article class="showcase__section"
-                     data-showcase-section
-                     data-accent="metrics"
-                     data-src-en="/images/en1.webp"
-                     data-src-tr="/images/tr1.webp"
-                     data-alt-en="Velora home dashboard with weekly stats"
-                     data-alt-tr="Haftalık istatistiklerle Velora ana ekranı">
-              <span class="eyebrow" data-i18n="showcase.metrics.eyebrow">Anasayfa</span>
-              <h2 data-i18n="showcase.metrics.h1">Bütün metrikler aynı yerde.</h2>
-              <p class="showcase__sub" data-i18n="showcase.metrics.sub">Kalori, adım, su ve antrenman. Açar açmaz hazır.</p>
-
-              <!-- Mobile-only inline phone -->
-              <div class="phone-frame showcase__mobile-phone">
-                <div class="phone-frame__screen">
-                  <img class="phone-frame__img"
-                       src="/images/tr1.webp"
-                       data-src-en="/images/en1.webp"
-                       data-src-tr="/images/tr1.webp"
-                       data-i18n-alt="showcase.metrics.imgAlt"
-                       alt="Velora ana ekranı: haftalık kalori, dakika, adım ve su tüketimi"
-                       width="680" height="1476" loading="lazy" decoding="async" />
-                </div>
-              </div>
-            </article>
-
-            <article class="showcase__section"
-                     data-showcase-section
-                     data-accent="trends"
-                     data-src-en="/images/en2.webp"
-                     data-src-tr="/images/tr2.webp"
-                     data-alt-en="Velora trends screen with weekly charts"
-                     data-alt-tr="Haftalık grafiklerle Velora trend ekranı">
-              <span class="eyebrow" data-i18n="showcase.trends.eyebrow">Trendler</span>
-              <h2 data-i18n="showcase.trends.h1">Trendlerini izle.</h2>
-              <p class="showcase__sub" data-i18n="showcase.trends.sub">İlerlemeni gör, limitlerini zorla.</p>
-
-              <div class="phone-frame showcase__mobile-phone">
-                <div class="phone-frame__screen">
-                  <img class="phone-frame__img"
-                       src="/images/tr2.webp"
-                       data-src-en="/images/en2.webp"
-                       data-src-tr="/images/tr2.webp"
-                       data-i18n-alt="showcase.trends.imgAlt"
-                       alt="Velora trendler ekranı: haftalık kalori grafiği, aktif günler ve mesafe grafiği"
-                       width="680" height="1476" loading="lazy" decoding="async" />
-                </div>
-              </div>
-            </article>
-
-            <article class="showcase__section"
-                     data-showcase-section
-                     data-accent="activities"
-                     data-src-en="/images/en3.webp"
-                     data-src-tr="/images/tr3.webp"
-                     data-alt-en="Velora activities list grouped by day"
-                     data-alt-tr="Günlere göre gruplanmış Velora aktivite listesi">
-              <span class="eyebrow" data-i18n="showcase.activities.eyebrow">Aktiviteler</span>
-              <h2 data-i18n="showcase.activities.h1">Aktivitelerini kolayca kaydet.</h2>
-              <p class="showcase__sub" data-i18n="showcase.activities.sub">Tüm aktiviteler tek ekranda.</p>
-
-              <div class="phone-frame showcase__mobile-phone">
-                <div class="phone-frame__screen">
-                  <img class="phone-frame__img"
-                       src="/images/tr3.webp"
-                       data-src-en="/images/en3.webp"
-                       data-src-tr="/images/tr3.webp"
-                       data-i18n-alt="showcase.activities.imgAlt"
-                       alt="Velora aktivite listesi: günlere göre gruplanmış antrenmanlar"
-                       width="680" height="1476" loading="lazy" decoding="async" />
-                </div>
-              </div>
-            </article>
-
+        <section class="moment moment--evening" id="t1810" data-time="18:10" aria-labelledby="h-1810" style="--c: var(--data-run)">
+          <div class="moment__copy moment__copy--wide">
+            <h2 id="h-1810"><span class="stamp tnum" data-stamp><b>18</b>:10</span> <span data-i18n="day.t1810.title">Akşam koşusu, sade bir dille özetlendi.</span></h2>
+            <p class="lede" data-i18n="day.t1810.lede">Antrenmandan sonra Koç ona bir bakış açısı seçer. Rahat bir koşu dayanıklılık gözüyle okunur.</p>
           </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- ========== PILLARS ========== -->
-    <section class="pillars" aria-labelledby="pillars-title">
-      <div class="container">
-        <div class="pillars__head">
-          <span class="eyebrow" data-i18n="pillars.eyebrow">Temeller</span>
-          <h2 id="pillars-title" data-i18n="pillars.title">Üç alışkanlık, sessiz bir yol arkadaşı.</h2>
-        </div>
-        <div class="pillars__grid">
-          <article class="pillar-card" data-accent="metrics">
-            <div class="pillar-card__icon">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 15l3.5-3.5"/><path d="M20.5 18a9 9 0 1 0-17 0"/></svg>
+          <div class="runwrap">
+            <div class="card runcard" data-pop>
+              <div class="card__title"><span><span class="card__dot"></span><span data-i18n="day.t1810.cardTitle">Açık hava koşusu</span></span><span class="tnum">17:34–18:06</span></div>
+              <div class="route">
+                <svg viewBox="0 0 400 190" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+                  <g class="route__streets"><path d="M-10 40 H410" /><path d="M-10 132 H410" /><path d="M70 -10 V200" /><path d="M250 -10 V200" /><path d="M330 -10 L400 60" /></g>
+                  <path class="route__path" pathLength="1000" d="M60 150 C 40 110, 60 70, 110 62 S 190 30, 240 44 S 330 70, 342 108 S 300 164, 240 158 S 150 140, 120 156 S 70 170, 60 150" />
+                  <circle class="route__start" cx="60" cy="150" r="9" stroke-width="4" />
+                </svg>
+              </div>
+              <dl class="stats">
+                <div><dt data-i18n="day.t1810.distance">Mesafe</dt><dd class="tnum" data-i18n="day.num.distance">5,2 km</dd></div>
+                <div><dt data-i18n="day.t1810.time">Süre</dt><dd class="tnum">31:40</dd></div>
+                <div><dt data-i18n="day.t1810.pace">Tempo /km</dt><dd class="tnum">6:05</dd></div>
+                <div><dt data-i18n="day.t1810.bpm">Ort. nabız</dt><dd class="tnum">138</dd></div>
+              </dl>
+              <div class="hr">
+                <svg viewBox="0 0 300 56" preserveAspectRatio="none" aria-hidden="true">
+                  <rect class="hr__band" x="0" y="18" width="300" height="22" rx="6" />
+                  <polyline points="0,46 14,38 28,31 42,28 60,27 80,29 100,26 120,28 140,27 160,25 180,28 200,26 220,27 240,24 260,26 280,29 300,34" />
+                </svg>
+                <p class="hr__labels"><span data-i18n="day.t1810.heartRate">Nabız</span><span data-i18n="day.t1810.zone">Çoğunlukla rahat bölgende</span></p>
+              </div>
             </div>
-            <h3 class="pillar-card__title" data-i18n="pillars.track.h">Takip</h3>
-            <p class="pillar-card__body" data-i18n="pillars.track.p">Kalori, adım ve dakika, bir bakışta.</p>
-            <ul class="pillar-card__features" role="list">
-              <li data-i18n="pillars.track.f1">Adım, mesafe ve yürüyüş süresi</li>
-              <li data-i18n="pillars.track.f2">Su takibi ve hatırlatıcılar</li>
-              <li data-i18n="pillars.track.f3">Kilo ve alkol kaydı</li>
-              <li data-i18n="pillars.track.f4">Takvim, adım ve su widget'ları</li>
-              <li data-i18n="pillars.track.f5">Metrik ve imperial birimler</li>
-            </ul>
-          </article>
-
-          <article class="pillar-card" data-accent="trends">
-            <div class="pillar-card__icon">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 17l6-6 4 4 8-8"/><path d="M14 7h7v7"/></svg>
+            <div class="runwrap__side">
+              <article class="coach-card" data-pop style="--d: 0.45s; --tilt: -3deg">
+                <div class="coach-card__head">
+                  <img src="/images/logo-56.png?v=7e0e8178" alt="" width="26" height="26" />
+                  <strong data-i18n="day.coach.name">Velora Koç</strong>
+                  <span class="persona" data-i18n="day.t1810.persona">Dayanıklılık</span>
+                  <time datetime="18:10">18:10</time>
+                </div>
+                <ol class="coach-card__list">
+                  <li data-i18n="day.t1810.coach1">Dengeli tempo, rahat nabız.</li>
+                  <li data-i18n="day.t1810.coach2">Koşunun çoğu rahat bölgende geçti.</li>
+                  <li data-i18n="day.t1810.coach3">İyi bir temel gün.</li>
+                </ol>
+                <p class="coach-card__foot" data-i18n="day.coach.onDevice">Bu iPhone'da yazıldı</p>
+              </article>
+              <p class="goalchip" data-pop style="--d: 0.8s; --tilt: -4deg"><span data-i18n="day.t1810.goalReached">Adım hedefi tamam</span> <time class="tnum" datetime="17:52">17:52</time></p>
             </div>
-            <h3 class="pillar-card__title" data-i18n="pillars.trend.h">Trend</h3>
-            <p class="pillar-card__body" data-i18n="pillars.trend.p">Veriyi yöne çeviren haftalık örüntüler.</p>
-            <ul class="pillar-card__features" role="list">
-              <li data-i18n="pillars.trend.f1">Haftalık ilerleme grafikleri</li>
-              <li data-i18n="pillars.trend.f2">Aylık antrenman filtreleri</li>
-              <li data-i18n="pillars.trend.f3">Uzun vadeli kilo grafikleri</li>
-              <li data-i18n="pillars.trend.f4">Yapay zeka destekli içgörüler</li>
-              <li data-i18n="pillars.trend.f5">Günlük ve haftalık fiziksel yük</li>
-              <li data-i18n="pillars.trend.f6">Paylaşılabilir ilerleme kartları</li>
-            </ul>
-          </article>
+          </div>
+        </section>
 
-          <article class="pillar-card" data-accent="activities">
-            <div class="pillar-card__icon">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 4v16"/><path d="M18 4v16"/><path d="M3 8h3"/><path d="M3 16h3"/><path d="M18 8h3"/><path d="M18 16h3"/><path d="M6 12h12"/></svg>
+        <section class="moment moment--evening" id="t2130" data-time="21:30" aria-labelledby="h-2130" style="--c: var(--data-water)">
+          <div class="moment__grid moment__grid--flip">
+            <div class="moment__copy">
+              <h2 id="h-2130"><span class="stamp tnum" data-stamp><b>21</b>:30</span> <span data-i18n="day.t2130.title">Su ve akşam kadehi, ders vermeden not edildi.</span></h2>
+              <p class="lede" data-i18n="day.t2130.lede">Su ve içki notları günü her zamanki halinle yan yana koyar. Puan yok, azar yok.</p>
             </div>
-            <h3 class="pillar-card__title" data-i18n="pillars.train.h">Antrenman</h3>
-            <p class="pillar-card__body" data-i18n="pillars.train.p">Yürüyüş, koşu ya da ağırlık. Hepsi tek dokunuşla.</p>
-            <ul class="pillar-card__features" role="list">
-              <li data-i18n="pillars.train.f1">Set, tekrar ve rota detayları</li>
-              <li data-i18n="pillars.train.f2">Nabız bölgeleri</li>
-              <li data-i18n="pillars.train.f3">Yükseklik profilli rota haritaları</li>
-              <li data-i18n="pillars.train.f4">Kalori yakımı ve verimlilik</li>
-              <li data-i18n="pillars.train.f5">Vücut bölgesi etiketleme</li>
-            </ul>
-          </article>
-        </div>
-      </div>
-    </section>
+            <div class="moment__cards">
+              <div class="card intake" data-pop>
+                <div class="card__title"><span><span class="card__dot"></span><span data-i18n="day.t2130.cardTitle">Bugünkü su</span></span><span class="tnum" data-i18n="day.num.water">1,5 L</span></div>
+                <div class="glasses" role="img" aria-label="Her zamanki 8 bardak sudan 6'sı" data-i18n-aria-label="day.t2130.glassesAria">
+                  <span class="glass glass--full" style="--k: 0"></span><span class="glass glass--full" style="--k: 1"></span><span class="glass glass--full" style="--k: 2"></span><span class="glass glass--full" style="--k: 3"></span><span class="glass glass--full" style="--k: 4"></span><span class="glass glass--full" style="--k: 5"></span><span class="glass glass--empty"></span><span class="glass glass--empty"></span>
+                </div>
+                <div class="drink">
+                  <svg viewBox="0 0 34 40" aria-hidden="true"><path class="drink__glass" d="M7 3h20c0 10-3 16-10 16S7 13 7 3Z" /><path class="drink__stem" d="M17 19v14M10 36h14" stroke-width="3" stroke-linecap="round" /></svg>
+                  <p><b data-i18n="day.t2130.drink">Bir kadeh şarap</b> <span><span data-i18n="day.t2130.logged">Kaydedildi</span> <time class="tnum" datetime="20:15">20:15</time></span></p>
+                </div>
+              </div>
+              <article class="coach-card" data-pop style="--d: 0.35s; --tilt: 3deg">
+                <div class="coach-card__head">
+                  <img src="/images/logo-56.png?v=7e0e8178" alt="" width="26" height="26" />
+                  <strong data-i18n="day.coach.name">Velora Koç</strong>
+                  <time datetime="21:30">21:30</time>
+                </div>
+                <ol class="coach-card__list">
+                  <li data-i18n="day.t2130.coach1">Her zamankinden iki bardak eksik.</li>
+                  <li data-i18n="day.t2130.coach2">Bu akşam tek bir içki kaydedildi.</li>
+                </ol>
+              </article>
+            </div>
+          </div>
+        </section>
 
-    <!-- ========== AI COACH ========== -->
-    <section class="coach" aria-labelledby="coach-title" data-accent="metrics">
-      <div class="container coach__inner">
-        <div class="coach__copy">
-          <span class="eyebrow" data-i18n="coach.eyebrow">Yapay Zeka Koçu</span>
-          <h2 id="coach-title" data-i18n="coach.h">Haftanı tanıyan bir koç.</h2>
-          <p class="coach__sub" data-i18n="coach.sub">Velora'nın yapay zeka koçu antrenmanlarını okur, ilerlemeni hatırlar ve verini net adımlara çevirir.</p>
-          <ul class="coach__points" role="list">
-            <li>
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5"/><path d="M12 7v5l3 2"/></svg>
-              <span data-i18n="coach.p1">Antrenman geçmişini hatırlar</span>
-            </li>
-            <li>
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 3v18h18"/><path d="M8 17V9"/><path d="M13 17V5"/><path d="M18 17v-3"/></svg>
-              <span data-i18n="coach.p2">Eforu, toparlanmayı ve alışkanlıkları analiz eder</span>
-            </li>
-            <li>
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
-              <span data-i18n="coach.p3">Bot gibi değil, koç gibi konuşur</span>
-            </li>
+        <section class="moment night" id="t2300" data-time="23:00" aria-labelledby="h-2300" style="--c: var(--data-night)">
+          <div class="night__sky" aria-hidden="true"></div>
+          <h2 id="h-2300"><span class="stamp tnum" data-stamp><b>23</b>:00</span> <span data-i18n="day.t2300.title">Bugün bu iPhone'da kaldı.</span> <span class="night__accent" data-i18n="day.t2300.titleAccent">Cihazda yazıldı.</span></h2>
+          <div class="ledger">
+            <p data-pop><b class="tnum">5</b> <span data-i18n="day.t2300.notesToday">Bugünkü Koç notu</span></p>
+            <p data-pop style="--d: 0.15s"><b class="tnum">0</b> <span data-i18n="day.t2300.sent">Sunucularımıza giden</span></p>
+          </div>
+          <ul class="nightnotes">
+            <li><strong data-i18n="day.t2300.localTitle">iPhone'unda kalır</strong> <span data-i18n="day.t2300.localText">Sağlık verilerin cihazında okunur ve sunucularımıza asla gönderilmez.</span></li>
+            <li><strong data-i18n="day.t2300.accountTitle">Hesap yok</strong> <span data-i18n="day.t2300.accountText">Uygulamayı aç ve başla. Kaydolacak bir şey yok.</span></li>
+            <li><strong data-i18n="day.t2300.aiTitle">Koç, cihazda</strong> <span data-i18n="day.t2300.aiText">Koç, destekleniyorsa iPhone'undaki Apple Intelligence ile yazar; değilse daha basit, hazır cümleler kullanır.</span></li>
+            <li><strong data-i18n="day.t2300.icloudTitle">Kendi iCloud'un, Pro ile</strong> <span data-i18n="day.t2300.icloudText">iCloud yedekleme Pro'ya dahildir ve bize değil, kendi iCloud hesabına gider.</span></li>
           </ul>
-          <div class="coach__cta">
-            <a class="ghost-button" href="https://apps.apple.com/app/id6748447208" target="_blank" rel="noopener noreferrer" data-i18n-aria-label="nav.ctaAria" aria-label="Velora'yı App Store'dan indir">
-              <span data-i18n="coach.cta">Velora'yı indir</span>
-              <span class="ghost-button__arrow" aria-hidden="true">→</span>
+        </section>
+
+        <section class="growing" aria-labelledby="h-grow">
+          <p class="growing__when tnum" data-i18n="day.growing.when">00:00 · yarın ve sonrası</p>
+          <h2 id="h-grow" data-i18n="day.growing.title">Koç büyüyor.</h2>
+          <p class="growing__lede" data-i18n="day.growing.lede">Sırada neler var:</p>
+          <ul class="growing__chips">
+            <li class="growing-chip" style="--chip: var(--data-steps); --tilt: -2deg" data-i18n="day.growing.nutrition">Beslenme rehberliği</li>
+            <li class="growing-chip" style="--chip: var(--data-night); --tilt: 1.5deg" data-i18n="day.growing.fasting">Aralıklı oruç</li>
+            <li class="growing-chip" style="--chip: var(--data-run); --tilt: -1deg" data-i18n="day.growing.programs">Antrenman programları</li>
+            <li class="growing-chip" style="--chip: var(--coach); --tilt: 2deg" data-i18n="day.growing.swaps">Egzersiz alternatifleri</li>
+            <li class="growing-chip" style="--chip: var(--data-drink); --tilt: -1.5deg" data-i18n="day.growing.analysis">Program analizi</li>
+          </ul>
+        </section>
+
+        <section class="close" aria-labelledby="h-close">
+          <div class="close__lead">
+            <h2 id="h-close" data-i18n-html="day.close.titleHtml"><em>Kendi</em> gününe başla.</h2>
+            <div class="replay tnum" aria-hidden="true">
+              <i style="--c: var(--coach)">06:40</i><i style="--c: var(--data-steps)">07:30</i><i style="--c: var(--data-steps)">12:40</i><i style="--c: var(--data-run)">18:10</i><i style="--c: var(--data-water)">21:30</i><i style="--c: var(--data-night)">23:00</i>
+            </div>
+          </div>
+          <div class="close__cta">
+            <a class="store-badge" href="https://apps.apple.com/app/id6748447208?pt=TODO_PT&amp;ct=tr-home-close&amp;mt=8" target="_blank" rel="noopener noreferrer" aria-label="Velora'yı App Store'dan indir" data-i18n-aria-label="nav.ctaAria">
+              <img src="/images/badge-appstore-tr.svg?v=b85100fb" data-src-en="/images/badge-appstore-en.svg" data-src-tr="/images/badge-appstore-tr.svg" alt="" width="156" height="52" />
             </a>
+            <p class="close__price" data-i18n="day.close.price">İndirmesi ücretsiz · Pro isteğe bağlı</p>
+            <figure class="close__qr">
+              <img src="/images/qr-tr.svg?v=23189d12" data-src-en="/images/qr-en.svg" data-src-tr="/images/qr-tr.svg" alt="Velora'yı App Store'da açan QR kodu" data-i18n-alt="day.close.qrAlt" width="135" height="135" loading="lazy" />
+              <figcaption data-i18n="day.close.qrCaption">Bilgisayardan mı bakıyorsun? iPhone kameranla tarat.</figcaption>
+            </figure>
           </div>
-        </div>
-        <div class="coach__demo">
-          <div class="coach-bubble coach-bubble--user" data-i18n="coach.q">Bu hafta nasıldı?</div>
-          <div class="coach-bubble coach-bubble--ai">
-            <span class="coach-bubble__label">
-              <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 3l1.9 5.1L19 10l-5.1 1.9L12 17l-1.9-5.1L5 10l5.1-1.9z"/><path d="M18.5 3.5l.8 2.2 2.2.8-2.2.8-.8 2.2-.8-2.2-2.2-.8 2.2-.8z"/></svg>
-              <span data-i18n="coach.label">Velora Koç</span>
-            </span>
-            <span class="coach-bubble__text" data-i18n="coach.a">Ortalamanın 213 kcal altındasın. Toparlanmak için iyi bir pencere!</span>
-          </div>
-        </div>
-      </div>
-    </section>
+        </section>
 
-    <!-- ========== PRIVACY ========== -->
-    <section class="privacy">
-      <div class="container">
-        <div class="privacy-strip">
-          <div class="privacy-strip__icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2l8 4v6c0 5-3.5 9-8 10-4.5-1-8-5-8-10V6l8-4z"/><path d="M9 12l2 2 4-4"/></svg>
-          </div>
-          <div class="privacy-strip__text">
-            <span class="privacy-strip__title" data-i18n="privacy.h">Sadece sana ait.</span>
-            <span class="privacy-strip__body" data-i18n="privacy.p">Sağlık verilerin yalnızca seni ilgilendirir.</span>
-            <ul class="privacy-strip__points" role="list">
-              <li>
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6L9 17l-5-5"/></svg>
-                <span data-i18n="privacy.p1">Cihazında kalır</span>
-              </li>
-              <li>
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6L9 17l-5-5"/></svg>
-                <span data-i18n="privacy.p4">Senkron kendi iCloud'unda</span>
-              </li>
-              <li>
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6L9 17l-5-5"/></svg>
-                <span data-i18n="privacy.p2">Hesap yok</span>
-              </li>
-              <li>
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6L9 17l-5-5"/></svg>
-                <span data-i18n="privacy.p3">Asla satılmaz.</span>
-              </li>
-            </ul>
-          </div>
-        </div>
       </div>
-    </section>
-
-    <!-- ========== CLOSING CTA ========== -->
-    <section class="closing" aria-labelledby="closing-title">
-      <div class="container closing__inner">
-        <span class="eyebrow" data-i18n="closing.eyebrow">Başla</span>
-        <h2 id="closing-title" data-i18n="closing.h">Bu haftayı sadeleştir.</h2>
-        <p class="closing__sub" data-i18n="closing.sub">App Store'da ücretsiz. Verilerin sende kalır.</p>
-        <a class="store-badge" href="https://apps.apple.com/app/id6748447208" target="_blank" rel="noopener noreferrer" data-i18n-aria-label="nav.ctaAria" aria-label="Velora'yı App Store'dan indir">
-          <img src="/images/badge-appstore-tr.svg"
-               data-src-en="/images/badge-appstore-en.svg"
-               data-src-tr="/images/badge-appstore-tr.svg"
-               alt="" height="52" />
-        </a>
-      </div>
-    </section>
+    </div>
   </main>
 
-  <!-- ========== FOOTER ========== -->
   <footer class="site-footer">
-    <div class="container site-footer__row">
+    <div class="site-footer__row">
       <span class="site-footer__brand">
-        <img src="/images/logo-56.png" alt="" width="18" height="18" />
-        <span data-i18n="footer.copy">© 2026 Velora</span>
+        <img src="/images/logo-56.png?v=7e0e8178" alt="" width="18" height="18" />
+        <span>© 2026 Velora</span>
       </span>
-      <span class="site-footer__disclaimer" data-i18n="footer.disclaimer">Velora bir sağlık eşlikçisidir, tıbbi cihaz değildir. Tıbbi tavsiye için bir hekime danışın.</span>
-      <nav class="site-footer__links" data-i18n-aria-label="footer.legalAria" aria-label="Yasal">
-        <a href="/tr/privacy-policy/" data-href-en="/privacy-policy/" data-href-tr="/tr/privacy-policy/" data-i18n="footer.privacy">Gizlilik Politikası</a>
-        <a href="/tr/terms-of-service/" data-href-en="/terms-of-service/" data-href-tr="/tr/terms-of-service/" data-i18n="footer.terms">Kullanım Koşulları</a>
-        <a href="/eula" data-i18n="footer.eula">EULA</a>
+      <p class="site-footer__disclaimer">Velora bir sağlık eşlikçisidir, tıbbi cihaz değildir. Tıbbi tavsiye için bir hekime danış.</p>
+      <nav class="site-footer__links" aria-label="Yasal">
+        <a href="/tr/privacy-policy/">Gizlilik Politikası</a>
+        <a href="/tr/terms-of-service/">Kullanım Koşulları</a>
+        <a href="/eula">EULA</a>
       </nav>
     </div>
   </footer>

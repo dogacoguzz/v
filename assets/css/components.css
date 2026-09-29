@@ -1,546 +1,125 @@
-/* components.css — buttons, cards, phone-frame, chips, lang-switch */
+/* components.css: buttons, language switch, store badge, chunky card */
 
-/* Compact in-nav App Store CTA — icon-only Apple glyph (fades in once user scrolls past hero) */
-.site-nav__cta {
-  display: inline-grid;
-  place-items: center;
-  width: 0;
-  height: 44px; /* Apple HIG minimum touch target */
+.button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  min-height: 48px;
+  padding: 0 22px;
+  border: 2px solid var(--coach);
   border-radius: var(--radius-pill);
-  background: var(--brand);
-  color: #08151a;
-  text-decoration: none;
-  overflow: hidden;
-  opacity: 0;
-  transform: translateX(8px);
-  visibility: hidden;
-  pointer-events: none;
-  box-shadow: 0 6px 20px rgba(0,0,0,0.3), 0 0 0 1px rgba(255,255,255,0.08) inset;
-  transition:
-    width var(--t-med),
-    opacity var(--t-med),
-    transform var(--t-med),
-    visibility 0s linear var(--t-med),
-    box-shadow var(--t-fast),
-    background var(--t-fast);
+  background: var(--coach);
+  color: var(--coach-ink);
+  font-weight: 700;
+  font-size: var(--fs-body);
+  line-height: 1;
+  box-shadow: 0 5px 0 var(--coach-deep);
+  transition: transform 0.5s var(--ease-spring), box-shadow var(--t-fast);
 }
 
-.site-nav[data-scrolled="true"] .site-nav__cta {
-  width: 44px;
-  opacity: 1;
-  transform: translateX(0);
-  visibility: visible;
-  pointer-events: auto;
-  transition:
-    width var(--t-med),
-    opacity var(--t-med),
-    transform var(--t-med),
-    visibility 0s linear 0s,
-    box-shadow var(--t-fast),
-    background var(--t-fast);
+.button:hover { transform: translateY(-2px); box-shadow: 0 7px 0 var(--coach-deep); }
+.button:active { transform: translateY(4px); box-shadow: 0 1px 0 var(--coach-deep); transition-duration: 0.08s; }
+
+.button--ghost {
+  background: transparent;
+  color: var(--text-main);
+  border-color: var(--line-strong);
+  box-shadow: 0 5px 0 var(--surface-edge);
 }
 
-.site-nav__cta:hover {
-  box-shadow: 0 8px 26px rgba(0,0,0,0.4), 0 0 0 1px rgba(255,255,255,0.12) inset, 0 0 24px var(--brand-dim);
-  background: color-mix(in oklab, var(--brand) 92%, white 8%);
+.button--ghost:hover { border-color: var(--coach); box-shadow: 0 7px 0 var(--surface-edge); }
+.button--ghost:active { box-shadow: 0 1px 0 var(--surface-edge); }
+
+.site-nav__cta {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  padding: 0 18px;
+  border-radius: var(--radius-pill);
+  background: var(--coach);
+  color: var(--coach-ink);
+  font-weight: 700;
+  font-size: var(--fs-small);
+  white-space: nowrap;
+  box-shadow: 0 4px 0 var(--coach-deep);
+  transition: transform 0.5s var(--ease-spring), box-shadow var(--t-fast);
 }
 
-.site-nav__cta:active {
-  transform: translateX(0) scale(0.96);
-}
+.site-nav__cta:hover { transform: translateY(-2px); box-shadow: 0 6px 0 var(--coach-deep); }
+.site-nav__cta:active { transform: translateY(3px); box-shadow: 0 1px 0 var(--coach-deep); transition-duration: 0.08s; }
 
-.site-nav__cta-icon {
-  display: grid;
-  place-items: center;
-  width: 20px;
-  height: 20px;
-}
-
-.site-nav__cta-icon svg {
-  display: block;
-}
-
-/* Lang switch */
 .lang-switch {
   display: inline-flex;
   align-items: center;
-  height: 44px; /* touch-target friendly */
-  background: var(--bg-card);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-pill);
+  height: 44px;
   padding: 4px;
   gap: 2px;
+  background: var(--surface-card);
+  border: 2px solid var(--line);
+  border-radius: var(--radius-pill);
 }
 
 .lang-switch button {
-  height: 36px;
-  padding: 0 14px;
+  height: 32px;
+  min-width: 44px;
+  padding: 0 12px;
   border-radius: var(--radius-pill);
-  font-size: var(--fs-small);
-  font-weight: 600;
-  color: var(--text-muted);
-  letter-spacing: 0.02em;
+  font-size: var(--fs-label);
+  font-weight: 700;
+  letter-spacing: 0.04em;
   line-height: 1;
-  transition: color var(--t-fast), background var(--t-fast);
+  color: var(--text-secondary);
+  transition: color var(--t-fast), background-color var(--t-fast);
 }
 
-.lang-switch button:hover { color: var(--text); }
+.lang-switch button:hover { color: var(--text-main); }
 
 .lang-switch button[aria-current="true"] {
-  background: var(--brand);
-  color: #08151a;
+  background: var(--coach);
+  color: var(--coach-ink);
 }
 
-/* Official App Store badge (Apple artwork — never restyle or add effects to the
-   image itself per Apple's marketing guidelines; hover motion on the link only) */
+/* Apple artwork: only the link moves, never the image. */
 .store-badge {
   display: inline-flex;
   align-items: center;
-  transition: transform var(--t-fast);
+  transition: transform 0.5s var(--ease-spring);
 }
 
-.store-badge:hover { transform: translateY(-1px); }
-.store-badge:active { transform: translateY(0); }
+.store-badge:hover { transform: translateY(-2px); }
+.store-badge:active { transform: translateY(0); transition-duration: 0.08s; }
 
 .store-badge img {
   display: block;
-  height: 52px; /* ≥40px minimum required by Apple */
+  height: 52px;
   width: auto;
 }
 
-/* Ghost CTA */
-.ghost-button {
-  display: inline-flex;
-  align-items: center;
-  gap: var(--space-2);
-  padding: 14px 20px;
-  border-radius: var(--radius-pill);
-  background: var(--bg-card);
-  color: var(--text);
-  font-weight: 600;
-  font-size: 1rem;
-  border: 1px solid var(--border);
-  transition: background var(--t-fast), border-color var(--t-fast);
-  min-height: 48px;
-}
-
-.ghost-button:hover {
-  background: var(--bg-card-hover);
-  border-color: var(--border-strong);
-}
-
-.ghost-button__arrow {
-  transition: transform var(--t-fast);
-}
-
-.ghost-button:hover .ghost-button__arrow {
-  transform: translateX(3px);
-}
-
-/* Chips */
-.chip-row {
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--space-3);
-  margin-top: var(--space-5);
-}
-
-.chip {
-  display: inline-flex;
-  align-items: center;
-  gap: var(--space-2);
-  padding: 6px 12px;
-  border-radius: var(--radius-pill);
-  background: var(--bg-card);
-  border: 1px solid var(--border);
-  font-size: var(--fs-small);
-  font-weight: 500;
-  color: var(--text-muted);
-}
-
-.chip__dot {
-  width: 6px; height: 6px;
-  border-radius: 50%;
-  background: var(--accent);
-  box-shadow: 0 0 8px var(--accent-glow);
-  transition: background var(--t-accent), box-shadow var(--t-accent);
-}
-
-/* Phone frame — no device bezel; the screenshot itself supplies the phone
-   chrome, so this is just a rounded, glowing mount for it. */
-.phone-frame {
-  position: relative;
-  width: 100%;
-  max-width: 340px;
-  aspect-ratio: 1 / 2.05;
-  margin-inline: auto;
-}
-
-.phone-frame::before {
-  /* soft accent glow behind the screenshot */
-  content: '';
-  position: absolute;
-  inset: -8px;
-  border-radius: 46px;
-  background: radial-gradient(50% 50% at 50% 50%, var(--accent-soft), transparent 70%);
-  filter: blur(28px);
-  z-index: -1;
-  opacity: 0.85;
-  transition: background var(--t-accent), opacity var(--t-accent);
-}
-
-.phone-frame__screen {
-  position: relative;
-  width: 100%;
-  height: 100%;
-  border-radius: 32px;
-  overflow: hidden;
-  background: #000;
-  box-shadow: var(--shadow-2);
-}
-
-.phone-frame__img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  /* opacity is driven by app.js decode-then-fade swap */
-  transition: opacity var(--t-med);
-}
-
-/* Pillar card */
-.pillar-card {
-  position: relative;
-  background: var(--bg-card);
-  border: 1px solid var(--border);
+.card {
+  padding: var(--space-5);
+  background: var(--surface-card);
+  border: 2px solid var(--line);
   border-radius: var(--radius-lg);
-  padding: var(--space-6);
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-4);
-  overflow: hidden;
-  transition: background var(--t-fast), border-color var(--t-fast), transform var(--t-fast);
+  box-shadow: var(--edge-shadow);
 }
 
-.pillar-card:hover {
-  background: var(--bg-card-hover);
-  border-color: var(--accent-soft);
-  transform: translateY(-2px);
-}
-
-.pillar-card[data-accent] .pillar-card__icon {
-  color: var(--accent);
-}
-
-.pillar-card__icon {
-  width: 44px;
-  height: 44px;
-  border-radius: 14px;
-  display: grid;
-  place-items: center;
-  background: var(--accent-dim);
-  color: var(--accent);
-  transition: background var(--t-accent), color var(--t-accent);
-}
-
-.pillar-card__icon svg { width: 22px; height: 22px; }
-
-.pillar-card__title {
-  font-family: var(--font-display);
-  font-size: var(--fs-3);
-  font-weight: 600;
-  letter-spacing: -0.01em;
-}
-
-.pillar-card__body {
-  color: var(--text-muted);
-  font-size: var(--fs-body);
-  line-height: 1.5;
-  max-width: 30ch;
-}
-
-/* Feature list inside pillar cards — dots pick up the card's accent */
-.pillar-card__features {
-  list-style: none;
-  margin: var(--space-2) 0 0;
-  padding: var(--space-4) 0 0;
-  border-top: 1px solid var(--border);
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-3);
-}
-
-.pillar-card__features li {
+.card__title {
   display: flex;
   align-items: center;
+  justify-content: space-between;
   gap: var(--space-3);
+  margin-bottom: var(--space-4);
   font-size: var(--fs-small);
-  font-weight: 500;
-  color: var(--text-muted);
-}
-
-.pillar-card__features li::before {
-  content: '';
-  width: 5px;
-  height: 5px;
-  border-radius: 50%;
-  background: var(--accent);
-  box-shadow: 0 0 6px var(--accent-glow);
-  flex-shrink: 0;
-}
-
-/* ---- Metric card (Velora-styled) ---- */
-.metric-card {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-2);
-  width: clamp(190px, 18vw, 230px);
-  padding: var(--space-4) var(--space-5);
-  background: linear-gradient(180deg, rgba(255,255,255,0.05), rgba(255,255,255,0.02));
-  border: 1px solid var(--border-strong);
-  border-radius: var(--radius-md);
-  box-shadow: var(--shadow-1);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-}
-
-.metric-card__row {
-  display: flex;
-  align-items: center;
-  gap: var(--space-2);
-}
-
-.metric-card__icon {
-  width: 28px;
-  height: 28px;
-  border-radius: 9px;
-  display: grid;
-  place-items: center;
-  background: color-mix(in oklab, var(--accent) 16%, transparent);
-  color: var(--accent);
-  flex-shrink: 0;
-}
-
-.metric-card__icon svg {
-  width: 16px;
-  height: 16px;
-}
-
-.metric-card__label {
-  font-size: 0.72rem;
   font-weight: 600;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  color: var(--text-soft);
+  color: var(--text-secondary);
 }
 
-.metric-card__value {
-  font-family: var(--font-display);
-  font-size: 1.7rem;
-  font-weight: 600;
-  letter-spacing: -0.02em;
-  line-height: 1;
-  color: var(--text);
-  font-variant-numeric: tabular-nums;
-}
-
-.metric-card__unit {
-  font-size: 0.85rem;
-  font-family: var(--font-sans);
-  font-weight: 500;
-  color: var(--text-soft);
-  letter-spacing: 0;
-  margin-left: 2px;
-}
-
-.metric-card__bar {
-  height: 6px;
-  border-radius: var(--radius-pill);
-  background: rgba(255,255,255,0.06);
-  overflow: hidden;
-  margin-top: var(--space-1);
-}
-
-.metric-card__bar > span {
-  display: block;
-  height: 100%;
-  background: linear-gradient(90deg, var(--accent), color-mix(in oklab, var(--accent) 70%, white));
-  border-radius: inherit;
-  box-shadow: 0 0 12px color-mix(in oklab, var(--accent) 50%, transparent);
-}
-
-/* ---- Hero ring (mini activity ring) ---- */
-.hero-ring {
-  width: 110px;
-  height: 110px;
-  border-radius: 50%;
-  background: linear-gradient(180deg, rgba(255,255,255,0.05), rgba(255,255,255,0.02));
-  border: 1px solid var(--border-strong);
-  box-shadow: var(--shadow-1), 0 0 28px color-mix(in oklab, var(--accent) 30%, transparent);
-  display: grid;
-  place-items: center;
-  position: relative;
-  color: var(--accent);
-}
-
-.hero-ring svg {
-  position: absolute;
-  inset: 6px;
-  width: calc(100% - 12px);
-  height: calc(100% - 12px);
-}
-
-.hero-ring__inner {
-  position: relative;
-  z-index: 1;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 2px;
-  text-align: center;
-  line-height: 1;
-}
-
-.hero-ring__day {
-  font-size: 0.7rem;
-  font-weight: 600;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  color: var(--text-soft);
-}
-
-.hero-ring__num {
-  font-family: var(--font-display);
-  font-size: 1.6rem;
-  font-weight: 700;
-  letter-spacing: -0.02em;
-  color: var(--text);
-}
-
-/* ---- Hero streak chip ---- */
-.hero-streak {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-  padding: var(--space-3) var(--space-4);
-  background: linear-gradient(180deg, rgba(255,255,255,0.05), rgba(255,255,255,0.02));
-  border: 1px solid var(--border-strong);
-  border-radius: var(--radius-md);
-  box-shadow: var(--shadow-1);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  min-width: 130px;
-}
-
-.hero-streak__label {
-  font-size: 0.7rem;
-  font-weight: 600;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  color: var(--text-soft);
-}
-
-.hero-streak__value {
-  font-family: var(--font-display);
-  font-size: 1.5rem;
-  font-weight: 700;
-  letter-spacing: -0.02em;
-  color: var(--accent);
-  font-variant-numeric: tabular-nums;
-}
-
-.hero-streak__unit {
-  font-size: 0.8rem;
-  font-family: var(--font-sans);
-  font-weight: 500;
-  color: var(--text-soft);
-  margin-left: 1px;
-}
-
-.hero-streak__dots {
-  display: flex;
-  gap: 4px;
-  margin-top: 2px;
-}
-
-.hero-streak__dots i {
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  background: rgba(255,255,255,0.1);
+.card__dot {
   display: inline-block;
-}
-
-.hero-streak__dots i.is-on {
-  background: var(--accent);
-  box-shadow: 0 0 8px color-mix(in oklab, var(--accent) 50%, transparent);
-}
-
-/* Privacy badge / strip */
-.privacy-strip {
-  display: flex;
-  align-items: center;
-  gap: var(--space-5);
-  padding: var(--space-5) var(--space-6);
-  background: var(--bg-card);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-lg);
-}
-
-.privacy-strip__icon {
-  width: 48px; height: 48px;
-  border-radius: 14px;
-  background: var(--brand-dim);
-  color: var(--brand);
-  display: grid; place-items: center;
-  flex-shrink: 0;
-}
-
-.privacy-strip__icon svg { width: 24px; height: 24px; }
-
-.privacy-strip__text {
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-}
-
-.privacy-strip__title {
-  font-family: var(--font-display);
-  font-weight: 600;
-  font-size: 1.2rem;
-  letter-spacing: -0.01em;
-}
-
-.privacy-strip__body {
-  color: var(--text-muted);
-  font-size: var(--fs-small);
-}
-
-.privacy-strip__points {
-  list-style: none;
-  margin: var(--space-3) 0 0;
-  padding: 0;
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--space-2) var(--space-5);
-}
-
-.privacy-strip__points li {
-  display: inline-flex;
-  align-items: center;
-  gap: var(--space-2);
-  font-size: var(--fs-small);
-  font-weight: 500;
-  color: var(--text-muted);
-}
-
-.privacy-strip__points svg {
-  width: 14px;
-  height: 14px;
-  color: var(--brand);
-  flex-shrink: 0;
-}
-
-@media (max-width: 640px) {
-  .privacy-strip { flex-direction: column; align-items: flex-start; gap: var(--space-3); padding: var(--space-5); }
+  width: 10px;
+  height: 10px;
+  margin-right: var(--space-2);
+  border-radius: 4px;
+  background: var(--coach);
 }

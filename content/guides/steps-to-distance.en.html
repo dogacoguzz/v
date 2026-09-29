@@ -1,0 +1,95 @@
+<!--guide
+{
+  "slug": { "en": "steps-to-distance", "tr": "adim-mesafe" },
+  "ctPage": "g-distance",
+  "order": 4,
+  "title": "Steps to distance calculator",
+  "description": "Turn a step count into kilometers or miles from your step length or your height. The calculator runs in your browser and sends nothing anywhere.",
+  "lastReviewed": "2026-09-29",
+  "tool": "steps-distance",
+  "coach": {
+    "title": "Your steps, read against your own average",
+    "line": "Your average is 6,500 steps. Try a bit more today.",
+    "body": "Velora reads your daily steps from Apple Health, and Velora Coach suggests step goals based on your own recent average rather than a fixed number."
+  },
+  "sources": [
+    { "title": "Mobbs RJ et al. Normative database of spatiotemporal gait metrics across age groups: an observational case-control study. Sensors, 2025", "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC11768510/" },
+    { "title": "Hoeger WWK et al. One-mile step count at walking and running speeds. ACSM's Health & Fitness Journal, 2008", "url": "https://scholarworks.boisestate.edu/kinesiology_facpubs/47/" }
+  ]
+}
+-->
+<p><strong>10,000 steps is about 6.5 to 8 kilometers (4 to 5 miles) for most adults.</strong> The exact distance is your step count multiplied by your step length, and step length depends mostly on your height and your pace.</p>
+
+<div class="guide-tool" data-steps-distance
+     data-msg-empty="Fill in each box to see the distance."
+     data-msg-zero="Use a number above zero."
+     data-msg-negative="Use a positive number."
+     data-msg-invalid="Use digits only, for example 10000."
+     data-msg-steps-range="Enter up to 200,000 steps."
+     data-msg-step-length-range="Step length is usually between 30 and 150 cm."
+     data-msg-step-length-range-imperial="Step length is usually between 12 and 59 inches."
+     data-msg-height-range="Enter a height between 100 and 230 cm."
+     data-msg-height-range-imperial="Enter a height between 3 ft 4 in and 7 ft 6 in."
+     data-msg-result="{distance} at {stepLength} per step">
+  <p class="guide-tool__formula">Distance = steps × step length. If you only know your height, step length ≈ 0.415 × height.</p>
+  <form class="guide-tool__form" hidden>
+    <p class="guide-tool__field">
+      <label for="sd-steps">Steps</label>
+      <input id="sd-steps" name="steps" type="text" inputmode="numeric" autocomplete="off" value="10000" />
+    </p>
+    <fieldset class="guide-tool__choice">
+      <legend>Calculate with</legend>
+      <label><input type="radio" name="mode" value="stepLength" checked /> Step length</label>
+      <label><input type="radio" name="mode" value="height" /> Height</label>
+    </fieldset>
+    <fieldset class="guide-tool__choice" data-units-toggle>
+      <legend>Units</legend>
+      <label><input type="radio" name="units" value="metric" checked /> Metric (cm, km)</label>
+      <label><input type="radio" name="units" value="imperial" /> Imperial (in, mi)</label>
+    </fieldset>
+    <div data-show-mode="stepLength">
+      <p class="guide-tool__field" data-show-units="metric">
+        <label for="sd-step-cm">Step length in cm</label>
+        <input id="sd-step-cm" name="stepLengthCm" type="text" inputmode="decimal" autocomplete="off" value="75" />
+      </p>
+      <p class="guide-tool__field" data-show-units="imperial" hidden>
+        <label for="sd-step-in">Step length in inches</label>
+        <input id="sd-step-in" name="stepLengthIn" type="text" inputmode="decimal" autocomplete="off" value="30" />
+      </p>
+    </div>
+    <div data-show-mode="height" hidden>
+      <p class="guide-tool__field" data-show-units="metric">
+        <label for="sd-height-cm">Height in cm</label>
+        <input id="sd-height-cm" name="heightCm" type="text" inputmode="decimal" autocomplete="off" value="175" />
+      </p>
+      <p class="guide-tool__field" data-show-units="imperial" hidden>
+        <label for="sd-height-ft">Height, feet</label>
+        <input id="sd-height-ft" name="heightFt" type="text" inputmode="numeric" autocomplete="off" value="5" />
+        <label for="sd-height-in">inches</label>
+        <input id="sd-height-in" name="heightIn" type="text" inputmode="decimal" autocomplete="off" value="9" />
+      </p>
+    </div>
+    <p class="guide-tool__result-row">
+      <output class="guide-tool__result" for="sd-steps sd-step-cm sd-step-in sd-height-cm sd-height-ft sd-height-in" aria-live="polite"></output>
+    </p>
+  </form>
+</div>
+
+<h2>How does the calculator estimate step length from height?</h2>
+<p>It uses a common rule of thumb: one step is about 0.415 times your height. For someone 180 cm tall, that is about 75 cm, so 10,000 steps come to roughly 7.5 km. A 2025 study that measured the walking of 313 healthy adults found average step lengths from 0.62 m in people 141 to 150 cm tall up to 0.91 m in people 191 to 200 cm tall. The rule of thumb lands close to those values for most heights, and taller people often step a little longer than it predicts.</p>
+
+<h2>What is the difference between a step and a stride?</h2>
+<p>A step goes from one foot to the other. A stride is two steps, from one foot back to the same foot. Phones and pedometers count steps, so this calculator asks for step length, the distance of a single step.</p>
+
+<h2>How do you measure your own step length?</h2>
+<ol>
+  <li>Mark a start line on a flat path.</li>
+  <li>Walk 10 steps at your normal pace and mark where your last step lands.</li>
+  <li>Measure the distance and divide it by 10.</li>
+</ol>
+
+<h2>Why does my phone show a different distance?</h2>
+<p>Phones and watches use their own models and, outdoors, often GPS. Your step length also changes with pace: research on step counts shows that the number of steps it takes to cover a mile changes between walking and running speeds. A calculator like this one gives a good estimate, not an exact measurement.</p>
+
+<h2>How does Velora help?</h2>
+<p>Velora reads your daily steps from Apple Health and shows them against your goal. Velora Coach suggests step goals from your own recent average, such as trying 7,000 when you average 6,500.</p>

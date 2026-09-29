@@ -37,4 +37,72 @@
     <xhtml:link rel="alternate" hreflang="tr" href="https://velorahealthcompanion.com/tr/terms-of-service/" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://velorahealthcompanion.com/terms-of-service/" />
   </url>
+  <url>
+    <loc>https://velorahealthcompanion.com/guides/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://velorahealthcompanion.com/guides/" />
+    <xhtml:link rel="alternate" hreflang="tr" href="https://velorahealthcompanion.com/tr/rehber/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://velorahealthcompanion.com/guides/" />
+  </url>
+  <url>
+    <loc>https://velorahealthcompanion.com/tr/rehber/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://velorahealthcompanion.com/guides/" />
+    <xhtml:link rel="alternate" hreflang="tr" href="https://velorahealthcompanion.com/tr/rehber/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://velorahealthcompanion.com/guides/" />
+  </url>
+  <url>
+    <loc>https://velorahealthcompanion.com/guides/daily-step-goal/</loc>
+    <lastmod>2026-09-29</lastmod>
+    <xhtml:link rel="alternate" hreflang="en" href="https://velorahealthcompanion.com/guides/daily-step-goal/" />
+    <xhtml:link rel="alternate" hreflang="tr" href="https://velorahealthcompanion.com/tr/rehber/gunluk-adim-hedefi/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://velorahealthcompanion.com/guides/daily-step-goal/" />
+  </url>
+  <url>
+    <loc>https://velorahealthcompanion.com/tr/rehber/gunluk-adim-hedefi/</loc>
+    <lastmod>2026-09-29</lastmod>
+    <xhtml:link rel="alternate" hreflang="en" href="https://velorahealthcompanion.com/guides/daily-step-goal/" />
+    <xhtml:link rel="alternate" hreflang="tr" href="https://velorahealthcompanion.com/tr/rehber/gunluk-adim-hedefi/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://velorahealthcompanion.com/guides/daily-step-goal/" />
+  </url>
+  <url>
+    <loc>https://velorahealthcompanion.com/guides/how-much-water/</loc>
+    <lastmod>2026-09-29</lastmod>
+    <xhtml:link rel="alternate" hreflang="en" href="https://velorahealthcompanion.com/guides/how-much-water/" />
+    <xhtml:link rel="alternate" hreflang="tr" href="https://velorahealthcompanion.com/tr/rehber/ne-kadar-su/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://velorahealthcompanion.com/guides/how-much-water/" />
+  </url>
+  <url>
+    <loc>https://velorahealthcompanion.com/tr/rehber/ne-kadar-su/</loc>
+    <lastmod>2026-09-29</lastmod>
+    <xhtml:link rel="alternate" hreflang="en" href="https://velorahealthcompanion.com/guides/how-much-water/" />
+    <xhtml:link rel="alternate" hreflang="tr" href="https://velorahealthcompanion.com/tr/rehber/ne-kadar-su/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://velorahealthcompanion.com/guides/how-much-water/" />
+  </url>
+  <url>
+    <loc>https://velorahealthcompanion.com/guides/alcohol-and-training/</loc>
+    <lastmod>2026-09-29</lastmod>
+    <xhtml:link rel="alternate" hreflang="en" href="https://velorahealthcompanion.com/guides/alcohol-and-training/" />
+    <xhtml:link rel="alternate" hreflang="tr" href="https://velorahealthcompanion.com/tr/rehber/alkol-ve-antrenman/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://velorahealthcompanion.com/guides/alcohol-and-training/" />
+  </url>
+  <url>
+    <loc>https://velorahealthcompanion.com/tr/rehber/alkol-ve-antrenman/</loc>
+    <lastmod>2026-09-29</lastmod>
+    <xhtml:link rel="alternate" hreflang="en" href="https://velorahealthcompanion.com/guides/alcohol-and-training/" />
+    <xhtml:link rel="alternate" hreflang="tr" href="https://velorahealthcompanion.com/tr/rehber/alkol-ve-antrenman/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://velorahealthcompanion.com/guides/alcohol-and-training/" />
+  </url>
+  <url>
+    <loc>https://velorahealthcompanion.com/guides/steps-to-distance/</loc>
+    <lastmod>2026-09-29</lastmod>
+    <xhtml:link rel="alternate" hreflang="en" href="https://velorahealthcompanion.com/guides/steps-to-distance/" />
+    <xhtml:link rel="alternate" hreflang="tr" href="https://velorahealthcompanion.com/tr/rehber/adim-mesafe/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://velorahealthcompanion.com/guides/steps-to-distance/" />
+  </url>
+  <url>
+    <loc>https://velorahealthcompanion.com/tr/rehber/adim-mesafe/</loc>
+    <lastmod>2026-09-29</lastmod>
+    <xhtml:link rel="alternate" hreflang="en" href="https://velorahealthcompanion.com/guides/steps-to-distance/" />
+    <xhtml:link rel="alternate" hreflang="tr" href="https://velorahealthcompanion.com/tr/rehber/adim-mesafe/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://velorahealthcompanion.com/guides/steps-to-distance/" />
+  </url>
 </urlset>

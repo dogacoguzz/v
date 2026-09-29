@@ -1,200 +1,199 @@
-# Velora — Marketing Site
+# Velora Marketing Site
 
-The static landing page for **Velora: Health Companion**, a privacy-first wellness app for iOS.
-Built as a multi-file static bundle (no build tooling). **Live at
-[velorahealthcompanion.com](https://velorahealthcompanion.com) on GitHub Pages** (via `CNAME`);
-`_redirects` is kept only for an optional future move to Cloudflare Pages.
+The static site for **Velora: Health Companion**, a privacy-first wellness app for iOS.
+The landing page tells the story of one day with the Coach; guides and the legal pages
+share the same chrome. **Live at [velorahealthcompanion.com](https://velorahealthcompanion.com)
+on GitHub Pages** (via `CNAME`), behind Cloudflare DNS and proxy.
 
-## Highlights
+The deployed site is a plain static bundle: the repo root is published as is. Node tooling
+in this repo is dev-only (build scripts and local tests) and never ships.
 
-- **Multi-accent design system** — purple (Metrics), orange (Trends), cyan (Activities), mirroring the app's three core surfaces. The active accent is driven by scroll position via `IntersectionObserver`. `--accent` is a registered custom property (`@property`), and the derived tokens (`--accent-dim/soft/glow/ink`) are re-declared inside every `[data-accent]` scope — custom properties resolve `var()` where they are *declared*, so a `:root`-only declaration would freeze them to the default cyan.
-- **Sticky-scroll showcase** — one phone is pinned while three text stages scroll past; the image decode-then-fades and the accent swaps as each stage activates.
-- **Bilingual (EN / TR)** — all copy is locale-aware via `data-i18n` attributes; per-locale screenshot variants swap automatically. Locale priority: `?lang=` URL param → saved choice → browser language. `?lang=tr` is the crawlable Turkish entry point (see `hreflang` alternates in the head and `sitemap.xml`).
-- **Brand-locked accents** — nav CTA, focus rings, and the closing-CTA glow stay cyan even as section accents change.
-- **Official App Store badges** — `images/badge-appstore-{en,tr}.svg` are Apple's own artwork (downloaded from Apple's marketing toolbox; per Apple's guidelines the badge must not be restyled, and the standalone Apple logo must not be used as an icon).
-- **No build step** — pure HTML / CSS / ES modules. CSS is split into 6 stylesheets that HTTP/2 multiplexes; locale strings are fetched on demand.
+## Quick start
 
-## File Structure
+```bash
+npm install            # dev tools only: Playwright, axe, Lighthouse (node_modules/ is gitignored)
+npm run build          # regenerate every generated page and sitemap.xml
+npm test               # node:test unit suites (tools/*.test.mjs)
+npm run test:e2e       # Playwright + axe against a local static server
+npm run lighthouse     # lab performance budget (LCP, CLS, TBT) on /, /tr/ and a guide
+npm run serve          # http://127.0.0.1:8080/ (PORT=... to change), mimics GitHub Pages
+```
+
+Everything runs locally; there is no CI. Node 22+ is required (Lighthouse).
+
+`npm run test:e2e` needs a Chromium that matches the installed Playwright. Either run
+`npx playwright install chromium` once, or point `PW_CHROMIUM_PATH` at an existing
+Chromium/Chrome binary. `npm run lighthouse` reads `CHROME_PATH` (or `PW_CHROMIUM_PATH`)
+the same way. Budgets live in `lighthouse/budget.json`.
+
+## File structure
 
 ```
 .
-├── index.html                    # EN page — DOM skeleton + meta/OG/JSON-LD + <link>/<script> tags
-├── tr/index.html                 # GENERATED Turkish page — do not edit by hand (see tools/)
-├── privacy-policy/index.html     # GENERATED legal page — do not edit by hand (see tools/build-legal.mjs)
-├── terms-of-service/index.html   # GENERATED legal page — do not edit by hand
-├── tr/privacy-policy/index.html  # GENERATED legal page — do not edit by hand
-├── tr/terms-of-service/index.html # GENERATED legal page — do not edit by hand
-├── eula/index.html               # Self-contained redirect to Apple's standard EULA (noindex)
-├── tools/build-tr.mjs            # Prerenders tr/index.html from index.html + strings.tr.json
-├── tools/build-legal.mjs         # Generates the four legal pages from content/legal/*.html
-├── tools/build-legal.test.mjs    # node:test suite for the generator's pure functions
-├── tools/lib/prerender.mjs       # Shared prerender helpers (i18n substitution, root-relative + locale-prefixed path rewrite)
-├── content/legal/                # Source of truth for the legal text (4 HTML body fragments)
-├── 404.html                      # Self-contained not-found page (GitHub Pages picks it up)
-├── sitemap.xml                   # /, /tr/ and the four legal pages with hreflang alternates
+├── index.html                 EN landing page: markup source for both locales, regenerated
+├── tr/index.html              TR landing page (generated)
+├── privacy-policy/, terms-of-service/, tr/...   Legal pages (generated from content/legal/)
+├── guides/, tr/rehber/        Guide index + guide pages (generated from content/guides/)
+├── eula/index.html            Redirect to Apple's standard EULA (noindex, hand written)
+├── 404.html                   Not-found page, bilingual, hand written (asset refs hashed by the build)
+├── sitemap.xml                Generated by tools/build-sitemap.mjs, hreflang alternates
+├── content/
+│   ├── legal/                 Source of truth for the legal text (body fragments)
+│   └── guides/                Guide sources: <en-slug>.<en|tr>.html pairs
 ├── assets/
-│   ├── css/
-│   │   ├── tokens.css            # CSS variables, @property --accent, multi-accent system
-│   │   ├── base.css              # Reset, body, ambient orbs, focus styles, .visually-hidden
-│   │   ├── layout.css            # Container, sticky nav, footer
-│   │   ├── components.css        # Buttons, chips, phone frame, pillar cards, lang switch
-│   │   ├── sections.css          # Hero, sticky showcase, AI coach, pillars, privacy, closing CTA
-│   │   └── legal.css             # Legal document pages (.legal scope) + print styles
-│   ├── js/
-│   │   ├── i18n.js               # applyLocale, ?lang= / localStorage / navigator resolution
-│   │   └── app.js                # Entry: bootstrap, lang switch, IntersectionObserver, crossfade
-│   └── data/
-│       ├── strings.en.json
-│       └── strings.tr.json
-├── images/
-│   ├── velora.png                # Master app icon (source asset — not referenced by pages)
-│   ├── favicon-32.png            # Derived favicon
-│   ├── apple-touch-icon.png      # Derived 180×180, flattened on #0c0f12
-│   ├── logo-56.png               # Derived nav/footer logo (28px @2x)
-│   ├── og.jpg                    # 1200×630 social share card
-│   ├── en{1..3}.jpg, tr{1..3}.jpg   # Master App Store screenshots (source assets)
-│   └── en{1..3}.webp, tr{1..3}.webp # Derived 680×1476 WebP actually served by the site
-├── app-ads.txt                   # App advertising config
-├── CNAME                         # GitHub Pages custom domain
-├── _redirects                    # Only used if deployed to Cloudflare Pages
-└── robots.txt                    # + Sitemap pointer
+│   ├── css/                   tokens, base, layout, components, day (landing), guide, legal
+│   ├── js/                    boot.js (all pages), day.js + day-core.js (landing), i18n.js, tools/
+│   ├── data/strings.{en,tr}.json   Copy for the landing page and the shared chrome
+│   └── fonts/                 Self-hosted, subsetted variable fonts (no third-party requests)
+├── images/                    Favicons, logo, OG card, App Store badges
+├── tools/                     Builders, shared page library, local server, tests
+├── tests/e2e/                 Playwright specs (landing, pages)
+├── lighthouse/budget.json     Lab performance budgets
+├── playwright.config.mjs
+├── app-ads.txt, robots.txt, CNAME
+└── _headers, _redirects       Dormant (GitHub Pages ignores them, see Cloudflare runbook)
 ```
 
-### Image pipeline
+Files marked generated are written by `npm run build`. Do not edit them by hand; edit the
+source (content fragments, strings, partials, builders) and rebuild.
 
-`velora.png` and the `*.jpg` screenshots are **source masters** — keep them. The pages only
-reference the derived files. To regenerate derivatives after replacing a master: resize
-screenshots to 680×1476 WebP (~q80, ≈35 KB each) and re-export the icon sizes
-(32 / 56 / 180 px — the 180 px apple-touch icon should be flattened onto `#0c0f12`).
-Any tool works (e.g. `cwebp`, Squoosh, or a headless-canvas script).
+## Build
 
-## Local Development
+`npm run build` (`tools/build.mjs`) runs the builders in order and stops at the first failure:
+asset hashes (`tools/build-assets.mjs`), legal pages, landing pages, guides, then
+`tools/build-sitemap.mjs`. Every asset URL in the generated HTML and in `404.html`, the
+relative imports in `assets/js/` and the `url()` references in `assets/css/` get a
+`?v=<hash>` query, so cache busting is automatic; there is no version constant to bump. The
+CSS and JS files are rewritten in place, and a file's hash covers its rewritten text, so a
+changed font or module changes the URL in every file and page that references it. Font
+preloads use the same URL as the `@font-face` source. Run the build twice; the second run
+must leave `git status` unchanged.
 
-The site has no build step. Serve the directory with any static server:
+The share card `images/og.jpg` is rendered from `tools/og/og-card.html` with `node tools/og/render.mjs` (Playwright Chromium; set `PW_CHROMIUM_PATH` to override the browser).
 
-```bash
-python3 -m http.server 8080
-# then open http://localhost:8080
-```
+The shared page library is `tools/lib/page.mjs` (head, nav and footer partials from
+`tools/partials/`, App Store links, asset hashing).
 
-ES modules require an actual HTTP server — `file://` will not work for `import`.
+## Fonts
 
-## Deployment
-
-**Host: GitHub Pages.** Push to `main` and the automatic "pages build and deployment"
-workflow publishes the repo root. The custom domain comes from `CNAME`; HTTPS is
-enforced in repo Settings → Pages.
-
-DNS layout (zone lives on Cloudflare nameservers):
-- apex `velorahealthcompanion.com` → A records to GitHub Pages IPs (DNS only)
-- `www` → Cloudflare-proxied 301 redirect to the apex
-
-Notes:
-- There must be **no Cloudflare Pages project connected to this repo** — a leftover
-  Git-connected project re-runs its own (failing) build on every push. If one exists,
-  delete it in Cloudflare → Workers & Pages. No `wrangler` anywhere in this setup.
-- GitHub Pages cannot set custom response headers; `_headers` and `_redirects` are
-  **dormant** files kept only for a potential future Cloudflare Pages migration.
-- Two pushes within ~2 minutes can collide in the Pages queue ("Deployment failed,
-  try again later"). Batch changes into one push, or just re-run the failed workflow.
+Bricolage Grotesque, Instrument Sans and JetBrains Mono are self-hosted as subsetted
+variable WOFF2 files in `assets/fonts/`. To re-subset or add a glyph range, follow
+`tools/fonts/README.md` (it documents `tools/fonts/subset.sh`). Never link to Google Fonts.
 
 ## Internationalization
 
-All user-facing strings live in `assets/data/strings.{en,tr}.json`. To add or update copy:
+Landing copy and the shared chrome live in `assets/data/strings.{en,tr}.json`. The EN text
+inside `<main>` of `index.html` is also overwritten from `strings.en.json` on every build
+(through the `data-i18n` keys), so edit the strings, not the text in `index.html`; edit
+`index.html` only for markup (elements, classes, attributes, new keys). Keep keys
+parallel between locales and keep Turkish in the informal register ("sen"), except the legal
+text. Pages are prerendered per locale (`<html data-locale>`), so crawlers read Turkish
+without executing JavaScript. The language switch navigates to the page's own `hreflang`
+alternate. After editing strings, run `npm run build`.
 
-1. Edit the JSON files — keep keys parallel between locales, and keep Turkish in the
-   informal register ("sen") except the legal disclaimer.
-2. In HTML, reference keys via attributes:
-   - `data-i18n="hero.sub"` — replaces `textContent`
-   - `data-i18n-html="hero.h1"` — replaces `innerHTML` (used for `<br>`/`<em>` lockups)
-   - `data-i18n-alt="showcase.metrics.imgAlt"` — replaces `alt`
-   - `data-i18n-aria-label="nav.langGroupAria"` — replaces `aria-label`
-3. For per-locale image swaps, add `data-src-en` and `data-src-tr` attributes to `<img>`; for per-locale link targets (e.g. footer legal links), add `data-href-en` and `data-href-tr` instead.
-4. Bump `STRINGS_VERSION` in `assets/js/i18n.js` so returning visitors fetch fresh strings.
-5. **Regenerate the static Turkish page and commit it:** `node tools/build-tr.mjs`.
-   Turkish lives at the prerendered `/tr/` so crawlers that don't execute JavaScript
-   (Bing, GPTBot, ClaudeBot, …) can read it; client-side i18n alone was Google-only.
-   `node tools/build-legal.mjs` regenerates the Turkish legal pages' chrome
-   the same way — see [Legal Pages](#legal-pages) below for the full workflow.
+## Authoring a guide
 
-Locale resolution order: `<html data-locale>` (fixed-locale generated pages) → `/tr/`
-path → `?lang=` param (legacy) → saved choice → browser language. The language switch
-navigates to the page's own `hreflang` alternate (same-origin pathname): on a legal
-page it opens the sibling document in the other locale, and on the home pages it keeps
-navigating between `/` and `/tr/`. Fixed-locale pages keep their own `<title>` and meta
-description regardless of the visitor's saved language. A tiny inline script in
-`<head>` of the EN page resolves the locale before paint and preloads the
-correct-locale showcase image — keep it in sync with `i18n.js`.
+1. Add `content/guides/<en-slug>.en.html` and `<en-slug>.tr.html`. Each opens with a
+   `<!--guide { ... } -->` JSON header: `slug` (`en` and `tr`), `ctPage` (campaign page id),
+   `order`, `title`, `description`, `lastReviewed` (YYYY-MM-DD), `coach` (`title`, `line`,
+   `body`), `sources`, and optionally `tool`. The full field list and rules are in the
+   comment at the top of `tools/build-guides.mjs`.
+2. The body is an HTML fragment limited to the allowlist in that file. No inline styles, no
+   scripts, no `<h1>` (the builder renders it from `title`), and no em dashes (U+2014).
+3. Both locales must agree on `slug`, `ctPage`, `order` and `tool`.
+4. `npm run build`, review the generated pages, then `npm test && npm run test:e2e`.
 
-## Legal Pages
+## Legal pages
 
-`/privacy-policy/`, `/terms-of-service/` (English) and `/tr/privacy-policy/`,
-`/tr/terms-of-service/` (Turkish) are generated pages, not hand-written. Their text
-lives in `content/legal/*.html` — that directory is the single source of truth for
-the legal copy; there is no external document this project syncs from.
+The text lives in `content/legal/<slug>.<locale>.html`, the single source of truth. The
+builder (`tools/build-legal.mjs`) fails loudly, writing nothing, on a disallowed element,
+unbalanced markup, embedded script or style, an unresolved placeholder or an em dash. To
+edit: change the fragment, run `npm run build`, review the diff, commit the fragment and the
+regenerated pages together. The article text of a generated page must stay identical to its
+fragment; only the surrounding chrome changes.
 
-Each `content/legal/<slug>.<locale>.html` file is a body **fragment**: no `<html>`,
-`<head>`, or `<body>`, just the inner markup of the legal document, plus a one-line
-comment at the top naming the source. Top-level elements are restricted to an
-allowlist: `h1`, `p` (optionally `class="last-updated"`), `h2`, `ul`,
-`table.data-table`, and `div.highlight` / `div.warning-box` / `div.danger-box` /
-`div.contact-info`. Do not wrap tables in `div.legal__table-scroll` yourself — the
-generator does that.
+`/eula` is a hand-written page that forwards to Apple's standard EULA and is `noindex`.
+Canonical URLs use the trailing slash form.
 
-Workflow to edit the legal text:
+## App Store links and campaign tokens
 
-1. Edit the relevant fragment under `content/legal/`.
-2. Regenerate the pages: `node tools/build-legal.mjs` (it takes no arguments).
-3. Review the diff.
-4. Commit the fragment and the regenerated pages together.
+Every App Store link is built by `storeUrl(locale, page, placement)` in
+`tools/lib/page.mjs`, which appends `pt` (provider token), `ct` (campaign) and `mt=8`.
+The campaign is `<locale>-<page>-<placement>`, at most 40 characters, so each page and
+placement is attributable in App Store Connect analytics.
 
-The generator (`tools/build-legal.mjs`) fails loudly — and writes nothing — on a
-disallowed top-level element, unbalanced markup, an embedded `<script>`/`<style>`, an
-unresolved `\(...)` placeholder, or an em dash (U+2014); user-facing legal copy must
-spell out "and"/use a comma or period instead. It also asserts the EULA URL is
-identical across all three copies in `eula/index.html` and prints it in the sanity
-table, though nothing compares it to an export anymore.
+Set the provider token once: replace the value of `APP_STORE_PROVIDER_TOKEN` in
+`tools/lib/page.mjs` (currently the placeholder `TODO_PT`) with the token from App Store
+Connect, then run `npm run build`.
 
-`/eula` is different: it's a hand-written `eula/index.html` that forwards to Apple's standard
-EULA (`https://www.apple.com/legal/internet-services/itunes/dev/stdeula/`) via meta
-refresh, a `location.replace` script, and a visible fallback link, and is `noindex`.
+## Deployment
 
-Canonical URLs use the trailing-slash form (`/privacy-policy/`); GitHub Pages redirects
-the slashless request to the directory index, the same as it already does for `/tr`.
-`/eula` is a directory index too, so any static server (GitHub Pages, `python3 -m http.server`) redirects it to `/eula/` and serves the page.
+**Host: GitHub Pages.** Push to `main`; the "pages build and deployment" workflow publishes
+the repo root. The custom domain comes from `CNAME`; keep that file. HTTPS is enforced in
+repo Settings, Pages. Batch changes into one push; two pushes within about two minutes can
+collide in the Pages queue (re-run the failed workflow if so).
 
-Run the generator's test suite with `node --test tools/build-legal.test.mjs` (Node
-20+; the file is named explicitly because `node --test <directory>` is not accepted on
-Node 21+). All tests run unconditionally — there is no external export to gate on.
+There must be no Cloudflare Pages project connected to this repo, and no `wrangler` here.
+`_headers` and `_redirects` are ignored by GitHub Pages; they are kept only for a possible
+future move to Cloudflare Pages. Anything they express must be configured in Cloudflare
+(below) to take effect today.
 
-## Adding a New Showcase Stage
+### Cloudflare runbook
 
-Each stage is a `<article data-showcase-section>` block in `index.html`:
+GitHub Pages cannot set response headers or long cache lifetimes, so Cloudflare does it.
+The zone is proxied (orange cloud) for the apex; `www` is a proxied 301 to the apex.
 
-```html
-<article class="showcase__section"
-         data-showcase-section
-         data-accent="metrics|trends|activities"
-         data-src-en="images/enN.webp"
-         data-src-tr="images/trN.webp"
-         data-alt-en="..."
-         data-alt-tr="...">
-  <span class="eyebrow" data-i18n="showcase.X.eyebrow"></span>
-  <h2 data-i18n="showcase.X.h1"></h2>
-  <p class="showcase__sub" data-i18n="showcase.X.sub"></p>
-  <!-- mobile-only inline phone copy here -->
-</article>
-```
+1. **SSL/TLS mode: Full (strict).** SSL/TLS, Overview.
+2. **Cache Rule for static assets.** Caching, Cache Rules, create a rule:
+   When the URI Path starts with `/assets/` or starts with `/images/`, then set
+   Cache eligibility to Eligible, Browser TTL to Override, 1 year (31536000 s), Edge TTL
+   to Override, 1 year. Asset URLs carry a content hash in the query string (`?v=...`), so
+   a changed file is a new URL and a long TTL is safe. Do not enable "ignore query string"
+   for this rule.
+3. **Response Header Transform Rule.** Rules, Transform Rules, Modify Response Header,
+   applied to all incoming requests. Set static headers:
+   - `Strict-Transport-Security`: `max-age=31536000; includeSubDomains`
+   - `X-Content-Type-Options`: `nosniff`
+   - `Referrer-Policy`: `strict-origin-when-cross-origin`
+   - `Permissions-Policy`: `camera=(), microphone=(), geolocation=()`
+   - `X-Frame-Options`: `DENY`
+4. **Do not cache the 404.** Make sure no Cache Rule matches unknown paths for a long
+   TTL, and leave "Cache 404 responses" off (default). The rule in step 2 only matches
+   `/assets/` and `/images/`, so a 404 there is never long-cached by it either.
+5. **Speed, Optimization:** turn **Rocket Loader off** and **Auto Minify off**. The pages
+   ship their own modules and CSS; Cloudflare rewriting scripts breaks the ES module
+   imports and their content hashes.
+6. **Keep `CNAME`** in the repo root; removing it drops the custom domain on GitHub Pages.
+7. **Verify after every deploy or rule change:**
 
-The `IntersectionObserver` in `app.js` will pick up the new section automatically. Add a
-matching `--accent-X` token in `tokens.css` if introducing a new accent role.
+   ```bash
+   tools/check-headers.sh                       # live site
+   tools/check-headers.sh https://example.com   # another base URL
+   ```
 
-## Browser Support
+   It asserts HSTS, `X-Content-Type-Options`, `Referrer-Policy`, `Permissions-Policy`,
+   `X-Frame-Options`, a roughly one-year `Cache-Control` on the hashed stylesheet, a real
+   404 status for unknown paths and no long cache on the 404 response. It exits non-zero
+   on any miss.
 
-`color-mix()`, `@property`, and ES modules. All evergreen browsers (Chrome, Firefox 128+,
-Safari 16.4+, Edge). Where `@property` is unavailable the accent still switches — it just
-doesn't interpolate. Reduced-motion is respected (CSS and JS scrolling/fades).
+## Local quality suite
+
+| Command | What it proves |
+|---|---|
+| `npm test` | Builders, page library, day-clock maths, sitemap, token contrast (WCAG AA for text and data colours) |
+| `npm run test:e2e` | Reduced motion shows every card and the final numbers; the clock still runs without scroll-driven animation; no third-party requests; no horizontal overflow at 390 px; axe finds no serious or critical issue on the landing at each moment, on `/tr/`, a legal page and a guide; the hero Coach card is in the first mobile viewport; keyboard focus is never hidden under the sticky time strip; every sitemap URL resolves |
+| `npm run lighthouse` | Mobile emulation on `/`, `/tr/` and a guide: LCP 2.5 s or less, CLS 0.1 or less, TBT within `lighthouse/budget.json` (lab proxy for INP) |
+
+Style guardrails: no `gradient`, `backdrop-filter` or `blur(` in `assets/css/`, and no
+`fonts.googleapis` anywhere.
+
+## Browser support
+
+Evergreen browsers (Chrome, Firefox, Safari 16.4+, Edge). Scroll-driven CSS animation is a
+progressive enhancement: where `animation-timeline` is missing, `day.js` drives the same
+progress from scroll events, and `prefers-reduced-motion` shows every card and final value
+without movement.
 
 ## License
 
-All rights reserved. © 2026 Velora.
+All rights reserved. (c) 2026 Velora.

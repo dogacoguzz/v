@@ -1,0 +1,19 @@
+{
+  "name": "velora-website",
+  "private": true,
+  "type": "module",
+  "description": "Dev-only tooling for the static velorahealthcompanion.com bundle. Nothing here ships to GitHub Pages.",
+  "scripts": {
+    "build": "node tools/build.mjs",
+    "test": "node --test tools/*.test.mjs",
+    "test:e2e": "playwright test",
+    "lighthouse": "node tools/lighthouse.mjs",
+    "serve": "node tools/serve.mjs"
+  },
+  "devDependencies": {
+    "@axe-core/playwright": "4.13.0",
+    "@playwright/test": "1.63.0",
+    "chrome-launcher": "1.2.1",
+    "lighthouse": "13.5.0"
+  }
+}

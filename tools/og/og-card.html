@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>Velora share card</title>
+<style>
+@font-face { font-family: 'Bricolage Grotesque'; src: url('../../assets/fonts/bricolage-grotesque-var.woff2') format('woff2'); font-weight: 500 800; }
+@font-face { font-family: 'Instrument Sans'; src: url('../../assets/fonts/instrument-sans-var.woff2') format('woff2'); font-weight: 400 700; }
+@font-face { font-family: 'JetBrains Mono'; src: url('../../assets/fonts/jetbrains-mono-var.woff2') format('woff2'); font-weight: 100 800; }
+* { box-sizing: border-box; margin: 0; }
+body { width: 1200px; height: 630px; overflow: hidden; background: #111517; color: #f2f4f5; font-family: 'Instrument Sans', sans-serif; position: relative; }
+.rail { position: absolute; left: 92px; top: 0; bottom: 0; width: 4px; background: #242b2f; }
+.brand { position: absolute; left: 130px; top: 56px; display: flex; align-items: center; gap: 14px; font: 700 30px/1 'Bricolage Grotesque', sans-serif; }
+.brand img { width: 44px; height: 44px; border-radius: 12px; }
+h1 { position: absolute; left: 130px; top: 170px; width: 560px; font: 800 78px/1.02 'Bricolage Grotesque', sans-serif; letter-spacing: -0.02em; }
+h1 span { color: #2ed1ea; }
+.foot { position: absolute; left: 130px; bottom: 56px; display: flex; gap: 12px; font: 500 22px/1 'Instrument Sans', sans-serif; color: #a9b1b6; }
+.foot i { font-style: normal; color: #c6f35e; }
+.card { position: absolute; right: 70px; top: 150px; width: 400px; padding: 26px 28px 30px; background: #0f2a30; border: 3px solid #1d4b54; border-radius: 30px; box-shadow: 0 10px 0 #081a1e; transform: rotate(2deg); }
+.head { display: flex; align-items: center; gap: 12px; margin-bottom: 18px; }
+.head img { width: 34px; height: 34px; border-radius: 10px; }
+.head strong { color: #2ed1ea; font-size: 20px; }
+.head time { margin-left: auto; font: 500 17px/1 'JetBrains Mono', monospace; color: #a9b1b6; }
+.line { font: 700 34px/1.2 'Bricolage Grotesque', sans-serif; }
+.line b { color: #c6f35e; font-weight: 800; }
+.bars { display: flex; align-items: flex-end; gap: 8px; height: 70px; margin-top: 26px; }
+.bars i { flex: 1; background: #2a3237; border-radius: 6px; }
+.bars i.on { background: #c6f35e; }
+.tag { position: absolute; right: 118px; top: 96px; padding: 9px 16px; border-radius: 999px; background: #c6f35e; color: #0b0f11; font: 600 20px/1 'Instrument Sans', sans-serif; transform: rotate(-4deg); box-shadow: 0 5px 0 #0a0d0e; }
+</style>
+</head>
+<body>
+<div class="rail"></div>
+<div class="brand"><img src="../../images/logo-56.png" alt="" />Velora</div>
+<h1>A coach for the day you <span>actually had.</span></h1>
+<div class="foot"><i>&#9679;</i> Free to download &middot; Pro optional</div>
+<div class="tag">Goal set</div>
+<div class="card">
+  <div class="head"><img src="../../images/logo-56.png" alt="" /><strong>Velora Coach</strong><time>06:40</time></div>
+  <p class="line">Your average is 6,500 steps. <b>Try 7,000.</b></p>
+  <div class="bars">
+    <i style="height:30%"></i><i style="height:45%"></i><i style="height:38%"></i><i style="height:60%"></i><i style="height:52%"></i><i class="on" style="height:78%"></i><i class="on" style="height:100%"></i>
+  </div>
+</div>
+</body>
+</html>

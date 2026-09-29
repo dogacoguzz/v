@@ -13,67 +13,56 @@
   <link rel="alternate" hreflang="tr" href="https://velorahealthcompanion.com/tr/terms-of-service/" />
   <link rel="alternate" hreflang="x-default" href="https://velorahealthcompanion.com/terms-of-service/" />
 
-  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32.png" />
-  <link rel="apple-touch-icon" href="/images/apple-touch-icon.png" />
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32.png?v=3af68f18" />
+  <link rel="apple-touch-icon" href="/images/apple-touch-icon.png?v=09359130" />
 
-  <!-- Open Graph -->
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="Velora" />
   <meta property="og:url" content="https://velorahealthcompanion.com/terms-of-service/" />
   <meta property="og:title" content="Terms of Service · Velora" />
   <meta property="og:description" content="The terms that apply when you use the Velora iOS app." />
   <meta property="og:locale" content="en_US" />
-
-  <!-- Twitter -->
+  <meta property="og:locale:alternate" content="tr_TR" />
   <meta name="twitter:card" content="summary" />
   <meta name="twitter:title" content="Terms of Service · Velora" />
   <meta name="twitter:description" content="The terms that apply when you use the Velora iOS app." />
 
-  <!-- Fonts -->
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500..700;1,9..144,500..700&family=Plus+Jakarta+Sans:wght@400..700&display=swap" />
-
-  <!-- Stylesheets (load order matters: tokens first, legal last) -->
-  <link rel="stylesheet" href="/assets/css/tokens.css" />
-  <link rel="stylesheet" href="/assets/css/base.css" />
-  <link rel="stylesheet" href="/assets/css/layout.css" />
-  <link rel="stylesheet" href="/assets/css/components.css" />
-  <link rel="stylesheet" href="/assets/css/sections.css" />
-  <link rel="stylesheet" href="/assets/css/legal.css" />
-
-  <script type="module" src="/assets/js/app.js"></script>
+  <link rel="preload" href="/assets/fonts/bricolage-grotesque-var.woff2?v=4073efed" as="font" type="font/woff2" crossorigin />
+  <link rel="preload" href="/assets/fonts/instrument-sans-var.woff2?v=a07bbe4a" as="font" type="font/woff2" crossorigin />
+  <link rel="stylesheet" href="/assets/css/tokens.css?v=7abe9e34" />
+  <link rel="stylesheet" href="/assets/css/base.css?v=41ae1bee" />
+  <link rel="stylesheet" href="/assets/css/layout.css?v=22f8bfd8" />
+  <link rel="stylesheet" href="/assets/css/components.css?v=527c0417" />
+  <link rel="stylesheet" href="/assets/css/legal.css?v=5cc2919a" />
+  <script type="module" src="/assets/js/boot.js?v=74a39524"></script>
 </head>
 
-<body data-accent="activities">
+<body data-page="legal">
 
-  <a class="skip-link" href="#top" data-i18n="nav.skipLink">Skip to content</a>
+  <a class="skip-link" href="#main">Skip to content</a>
 
-  <!-- ========== NAV ========== -->
   <header class="site-nav">
-    <div class="container site-nav__row">
+    <div class="site-nav__row">
       <a href="/" class="brand-mark" aria-label="Velora home">
-        <img class="brand-mark__logo" src="/images/logo-56.png" alt="" width="28" height="28" />
+        <img class="brand-mark__logo" src="/images/logo-56.png?v=7e0e8178" alt="" width="28" height="28" />
         <span class="brand-mark__text">Velora</span>
       </a>
+      <nav class="site-nav__links" aria-label="Primary">
+        <a href="/#coach">Coach</a>
+        <a href="/guides/">Guides</a>
+        <a href="/privacy-policy/">Privacy</a>
+      </nav>
       <div class="site-nav__actions">
-        <a class="site-nav__cta" href="https://apps.apple.com/app/id6748447208"
-           target="_blank" rel="noopener noreferrer"
-           aria-hidden="true" tabindex="-1"
-           data-i18n-aria-label="nav.ctaAria" aria-label="Download Velora on the App Store">
-          <span class="site-nav__cta-icon" aria-hidden="true">
-            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12"/><path d="M7 10l5 5 5-5"/><path d="M5 21h14"/></svg>
-          </span>
-        </a>
-        <div class="lang-switch" role="group" data-i18n-aria-label="nav.langGroupAria" aria-label="Language">
+        <div class="lang-switch" role="group" aria-label="Language">
           <button type="button" data-locale="en" aria-current="true">EN</button>
           <button type="button" data-locale="tr" aria-current="false">TR</button>
         </div>
+        <a class="site-nav__cta" href="https://apps.apple.com/app/id6748447208?pt=TODO_PT&amp;ct=en-legal-nav&amp;mt=8" target="_blank" rel="noopener noreferrer">Get the app</a>
       </div>
     </div>
   </header>
 
-  <main id="top">
+  <main id="main">
     <article class="legal">
       <h1>Velora Terms of Service</h1>
       <p class="last-updated">Effective Date: 14 September 2026</p>
@@ -212,18 +201,17 @@
     </article>
   </main>
 
-  <!-- ========== FOOTER ========== -->
   <footer class="site-footer">
-    <div class="container site-footer__row">
+    <div class="site-footer__row">
       <span class="site-footer__brand">
-        <img src="/images/logo-56.png" alt="" width="18" height="18" />
-        <span data-i18n="footer.copy">© 2026 Velora</span>
+        <img src="/images/logo-56.png?v=7e0e8178" alt="" width="18" height="18" />
+        <span>© 2026 Velora</span>
       </span>
-      <span class="site-footer__disclaimer" data-i18n="footer.disclaimer">Velora is a wellness companion, not a medical device. Consult a clinician for medical advice.</span>
-      <nav class="site-footer__links" data-i18n-aria-label="footer.legalAria" aria-label="Legal">
-        <a href="/privacy-policy/" data-href-en="/privacy-policy/" data-href-tr="/tr/privacy-policy/" data-i18n="footer.privacy">Privacy Policy</a>
-        <a href="/terms-of-service/" data-href-en="/terms-of-service/" data-href-tr="/tr/terms-of-service/" data-i18n="footer.terms">Terms of Service</a>
-        <a href="/eula" data-i18n="footer.eula">EULA</a>
+      <p class="site-footer__disclaimer">Velora is a wellness companion, not a medical device. Consult a clinician for medical advice.</p>
+      <nav class="site-footer__links" aria-label="Legal">
+        <a href="/privacy-policy/">Privacy Policy</a>
+        <a href="/terms-of-service/">Terms of Service</a>
+        <a href="/eula">EULA</a>
       </nav>
     </div>
   </footer>
