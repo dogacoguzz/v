@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 // serve.mjs: dependency-free static server for local checks, mimicking GitHub Pages:
-// directory index.html, 301 to the trailing slash for directories, 404.html on a miss.
+// directory index.html, 301 to the trailing slash for directories, 404.html on a miss, and
+// gzip for text types so Lighthouse measures production-sized transfers.
 //
 //   npm run serve            (PORT=8080 by default)
 
@@ -8,6 +9,7 @@ import { createServer as createHttpServer } from 'node:http';
 import { createReadStream, existsSync, statSync } from 'node:fs';
 import { dirname, extname, join, normalize, sep } from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
+import { createGzip } from 'node:zlib';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
 
@@ -31,18 +33,24 @@ export const CONTENT_TYPES = {
 };
 
 const isFile = (p) => existsSync(p) && statSync(p).isFile();
+const COMPRESSIBLE = /^(?:text\/|application\/(?:json|xml)|image\/svg\+xml)/;
 
 export function createServer({ root = ROOT } = {}) {
   const rootDir = normalize(root + sep);
   return createHttpServer((req, res) => {
     const send = (status, file, headers = {}) => {
+      const type = CONTENT_TYPES[extname(file).toLowerCase()] ?? 'application/octet-stream';
+      const gzip = COMPRESSIBLE.test(type) && /\bgzip\b/.test(req.headers['accept-encoding'] ?? '');
       res.writeHead(status, {
-        'Content-Type': CONTENT_TYPES[extname(file).toLowerCase()] ?? 'application/octet-stream',
+        'Content-Type': type,
         'Cache-Control': 'no-cache',
+        ...(COMPRESSIBLE.test(type) ? { Vary: 'Accept-Encoding' } : {}),
+        ...(gzip ? { 'Content-Encoding': 'gzip' } : {}),
         ...headers,
       });
       if (req.method === 'HEAD') return res.end();
-      createReadStream(file).pipe(res);
+      const body = createReadStream(file);
+      (gzip ? body.pipe(createGzip()) : body).pipe(res);
     };
     const notFound = () => {
       const page = join(rootDir, '404.html');

@@ -8,7 +8,9 @@
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
-import { LOCALE_PATHS, PARTIALS_DIR, SITE, composePage as composeSitePage, hashAssetRefs } from './lib/page.mjs';
+import {
+  LOCALE_PATHS, PARTIALS_DIR, SITE, composePage as composeSitePage, fontPreloads, hashAssetRefs,
+} from './lib/page.mjs';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
 const CONTENT_DIR = join(ROOT, 'content/legal');
@@ -98,7 +100,7 @@ export function normaliseDocument(source) {
 }
 
 const STYLESHEETS = ['tokens', 'base', 'layout', 'components', 'legal'].map((name) => `/assets/css/${name}.css`);
-const MODULES = ['/assets/js/app.js'];
+const MODULES = ['/assets/js/boot.js'];
 const CT_PAGE = 'legal';
 
 const reindent = (html, indent) => {
@@ -121,6 +123,7 @@ export function composePage({ locale, kind, body, strings, partialsDir = PARTIAL
       description: strings.legal[kind].description,
       canonicalPath: alternates[locale],
       alternates,
+      preloads: fontPreloads(rootDir),
       stylesheets: STYLESHEETS,
       modules: MODULES,
     },

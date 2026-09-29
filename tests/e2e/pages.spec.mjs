@@ -1,4 +1,5 @@
-// pages.spec.mjs: every page family (R6, R16, R19, R20): overflow, origins, axe, sitemap.
+// pages.spec.mjs: every page family (R6, R15, R16, R19, R20): overflow, origins, axe, language
+// switch, sitemap.
 
 import { test, expect } from '@playwright/test';
 import AxeBuilder from '@axe-core/playwright';
@@ -20,6 +21,13 @@ const OVERFLOW_PAGES = [
 ];
 const AXE_PAGES = ['/tr/', '/privacy-policy/', '/guides/daily-step-goal/'];
 const ORIGIN_PAGES = ['/', '/tr/', '/privacy-policy/', '/guides/', '/guides/daily-step-goal/', '/404-check'];
+
+// Pop-in cards start at opacity 0; axe must read them after their entry transitions finish.
+const settle = (page) => page.evaluate(() => Promise.all(
+  document.getAnimations()
+    .filter((a) => a.timeline === document.timeline && a.effect?.getComputedTiming().iterations !== Infinity)
+    .map((a) => a.finished.catch(() => {})),
+));
 
 for (const [path, status] of OVERFLOW_PAGES) {
   test(`no horizontal overflow at 390 px: ${path}`, async ({ browser }) => {
@@ -54,9 +62,30 @@ for (const path of AXE_PAGES) {
   test(`axe: no serious or critical violations: ${path}`, async ({ page }) => {
     await page.goto(path);
     await page.waitForLoadState('networkidle');
+    await settle(page);
     const { violations } = await new AxeBuilder({ page }).analyze();
     const blocking = violations.filter((v) => v.impact === 'serious' || v.impact === 'critical');
     expect(blocking.map((v) => `${v.id}: ${v.nodes.map((n) => n.target.join(' ')).join(' | ')}`)).toEqual([]);
+  });
+}
+
+const LANG_SWITCH = [
+  ['/privacy-policy/', 'tr', '/tr/privacy-policy/'],
+  ['/tr/terms-of-service/', 'en', '/terms-of-service/'],
+  ['/guides/daily-step-goal/', 'tr', '/tr/rehber/gunluk-adim-hedefi/'],
+  ['/tr/rehber/', 'en', '/guides/'],
+];
+
+for (const [from, locale, to] of LANG_SWITCH) {
+  test(`language switch on ${from} goes to its ${locale} counterpart ${to}`, async ({ page }) => {
+    await page.goto(from);
+    await expect(page.locator(`.lang-switch button[data-locale="${locale}"]`)).toHaveAttribute('aria-current', 'false');
+    await Promise.all([
+      page.waitForURL((url) => url.pathname === to),
+      page.locator(`.lang-switch button[data-locale="${locale}"]`).click(),
+    ]);
+    await expect(page.locator('html')).toHaveAttribute('data-locale', locale);
+    expect(await page.evaluate(() => localStorage.getItem('velora-lang'))).toBe(locale);
   });
 }
 

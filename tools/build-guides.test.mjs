@@ -177,8 +177,8 @@ test('EN and TR guides link to each other with hreflang, and the language switch
       assert.ok(page.includes(`<link rel="alternate" hreflang="en" href="${SITE}${en}" />`), own);
       assert.ok(page.includes(`<link rel="alternate" hreflang="tr" href="${SITE}${tr}" />`), own);
       assert.ok(page.includes(`<link rel="alternate" hreflang="x-default" href="${SITE}${en}" />`), own);
-      // app.js sends the language switch to the page's own hreflang alternate.
-      assert.match(page, /<script type="module" src="\/assets\/js\/app\.js\?v=[0-9a-f]{8}"><\/script>/);
+      // boot.js sends the language switch to the page's own hreflang alternate.
+      assert.match(page, /<script type="module" src="\/assets\/js\/boot\.js\?v=[0-9a-f]{8}"><\/script>/);
       assert.match(page, new RegExp(`<button type="button" data-locale="${locale}" aria-current="true">`));
     }
   }

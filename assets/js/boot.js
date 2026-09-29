@@ -1,7 +1,7 @@
 // boot.js: shared page boot for every page. Pages are prerendered per locale (data-locale),
 // so this only wires the language switch and marks the current nav link.
 
-import { persistLocale, resolveLocale } from './i18n.js';
+import { persistLocale, resolveLocale } from './i18n.js?v=56e0f9de';
 
 const root = document.documentElement;
 const locale = root.dataset.locale || resolveLocale();

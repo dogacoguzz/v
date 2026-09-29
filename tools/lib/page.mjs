@@ -297,6 +297,19 @@ export function hashAssetsInPlace(rootDir, files, { write = true } = {}) {
   return changed;
 }
 
+export const FONT_PRELOAD_FILES = ['bricolage-grotesque-var.woff2', 'instrument-sans-var.woff2'];
+
+// Hashing the returned hrefs gives the @font-face url() hash, so a font is fetched once (KTD3).
+export function fontPreloads(rootDir, files = FONT_PRELOAD_FILES) {
+  const css = readFileSync(join(rootDir, 'assets/css/tokens.css'), 'utf8');
+  return files.map((file) => {
+    const href = `/assets/fonts/${file}`;
+    const declared = new RegExp(`url\\(\\s*['"]?${href.replace(/\./g, '\\.')}(?:\\?v=[0-9a-f]{8})?['"]?\\s*\\)`);
+    if (!declared.test(css)) throw new Error(`assets/css/tokens.css: no @font-face url() for ${file}`);
+    return { href, as: 'font', type: 'font/woff2' };
+  });
+}
+
 // --- `/` pre-paint redirect to /tr/ (KTD2) ---
 
 // Precedence: ?lang= > saved choice > the first en/tr entry in the browser languages, as

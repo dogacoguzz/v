@@ -3,6 +3,8 @@ import assert from 'node:assert/strict';
 import { mkdtempSync, mkdirSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
+import { request } from 'node:http';
+import { gunzipSync } from 'node:zlib';
 import { createServer } from './serve.mjs';
 
 test('serve: content types, directory index, trailing-slash redirect, 404 page, traversal', async () => {
@@ -36,6 +38,43 @@ test('serve: content types, directory index, trailing-slash redirect, 404 page, 
 
     const traversal = await fetch(`${base}/..%2F..%2Fetc%2Fpasswd`);
     assert.equal(traversal.status, 404);
+  } finally {
+    server.close();
+    rmSync(root, { recursive: true, force: true });
+  }
+});
+
+// Raw request: fetch() would decode gzip transparently and hide the header under test.
+const get = (url, headers) => new Promise((resolve, reject) => {
+  request(url, { headers }, (res) => {
+    const chunks = [];
+    res.on('data', (c) => chunks.push(c));
+    res.on('end', () => resolve({ headers: res.headers, body: Buffer.concat(chunks) }));
+  }).on('error', reject).end();
+});
+
+test('serve: gzips text types when asked, never fonts or unasked requests', async () => {
+  const root = mkdtempSync(join(tmpdir(), 'velora-serve-'));
+  const css = 'body { color: red; }\n'.repeat(50);
+  writeFileSync(join(root, 'a.css'), css);
+  writeFileSync(join(root, 'a.woff2'), 'font');
+  const server = createServer({ root }).listen(0, '127.0.0.1');
+  await new Promise((r) => server.once('listening', r));
+  const base = `http://127.0.0.1:${server.address().port}`;
+  try {
+    const zipped = await get(`${base}/a.css?v=12345678`, { 'Accept-Encoding': 'gzip, br' });
+    assert.equal(zipped.headers['content-encoding'], 'gzip');
+    assert.equal(zipped.headers.vary, 'Accept-Encoding');
+    assert.equal(gunzipSync(zipped.body).toString(), css);
+    assert.ok(zipped.body.length < css.length);
+
+    const plain = await get(`${base}/a.css`, {});
+    assert.equal(plain.headers['content-encoding'], undefined);
+    assert.equal(plain.body.toString(), css);
+
+    const font = await get(`${base}/a.woff2`, { 'Accept-Encoding': 'gzip' });
+    assert.equal(font.headers['content-encoding'], undefined);
+    assert.equal(font.body.toString(), 'font');
   } finally {
     server.close();
     rmSync(root, { recursive: true, force: true });

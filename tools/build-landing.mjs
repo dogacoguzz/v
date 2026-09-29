@@ -12,7 +12,7 @@ import { mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 import {
-  LOCALES, LOCALE_PATHS, SITE, composePage, escapeAttr, hashAssetRefs, storeUrl, trRedirectScript,
+  LOCALES, LOCALE_PATHS, SITE, composePage, escapeAttr, fontPreloads, hashAssetRefs, storeUrl, trRedirectScript,
 } from './lib/page.mjs';
 import { applyI18nStrings } from './lib/prerender.mjs';
 import { encodeText, toSvg } from './lib/qr.mjs';
@@ -29,7 +29,6 @@ const ALTERNATES = { en: LOCALE_PATHS.en.home, tr: LOCALE_PATHS.tr.home };
 const OG_IMAGE = '/images/og.jpg';
 const THEME_COLOR = '#101417';
 const BODY_ATTRS = { 'data-phase': 'morning' };
-const FONT_PRELOADS = ['bricolage-grotesque-var.woff2', 'instrument-sans-var.woff2'];
 const STYLESHEETS = ['tokens', 'base', 'layout', 'components', 'day'].map((n) => `/assets/css/${n}.css`);
 const MODULES = ['/assets/js/boot.js', '/assets/js/day.js'];
 const JS_CLASS_SCRIPT = "<script>document.documentElement.classList.add('js');</script>";
@@ -119,22 +118,6 @@ export function jsonLd(locale, strings) {
   };
 }
 
-// Preloads must request the exact URL tokens.css uses, or the browser fetches each font twice.
-export function fontPreloads(rootDir = ROOT) {
-  const css = readFileSync(join(rootDir, 'assets/css/tokens.css'), 'utf8');
-  return FONT_PRELOADS.map((file) => {
-    const href = new RegExp(`url\\(\\s*['"]?(/assets/fonts/${file.replace(/\./g, '\\.')}(?:\\?v=[0-9a-f]{8})?)['"]?\\s*\\)`).exec(css)?.[1];
-    if (!href) throw new Error(`assets/css/tokens.css: no @font-face url() for ${file}`);
-    return { href, as: 'font', type: 'font/woff2' };
-  });
-}
-
-const restorePreloads = (html, preloads) => preloads.reduce(
-  (out, { href }) => out.replace(
-    new RegExp(`(<link rel="preload" href=")${href.replace(/\?.*$/, '').replace(/[.?]/g, '\\$&')}(?:\\?v=[0-9a-f]{8})?(")`),
-    `$1${href}$2`),
-  html);
-
 // --- Page ---
 
 export function qrSvg(locale) {
@@ -146,7 +129,6 @@ export function renderLanding({ locale, source, strings, stringsEn, rootDir = RO
   if (locale !== 'en') assertKeyParity(stringsEn, strings, locale);
   const main = extractMain(source);
   const body = localizeBody(main.body, locale, strings);
-  const preloads = fontPreloads(rootDir);
   const html = composePage({
     locale,
     page: PAGE,
@@ -161,7 +143,7 @@ export function renderLanding({ locale, source, strings, stringsEn, rootDir = RO
       ogImageAlt: strings.meta.ogImageAlt,
       themeColor: THEME_COLOR,
       bannerPage: PAGE,
-      preloads,
+      preloads: fontPreloads(rootDir),
       stylesheets: STYLESHEETS,
       modules: MODULES,
       extraHead: locale === 'en' ? [JS_CLASS_SCRIPT, trRedirectScript()] : [JS_CLASS_SCRIPT],
@@ -169,7 +151,7 @@ export function renderLanding({ locale, source, strings, stringsEn, rootDir = RO
     },
     body,
   });
-  return restorePreloads(hashAssetRefs(withMainAttrs(html, main.attrs), rootDir), preloads);
+  return hashAssetRefs(withMainAttrs(html, main.attrs), rootDir);
 }
 
 // --- Checks ---

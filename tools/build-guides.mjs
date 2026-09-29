@@ -28,7 +28,7 @@ import { dirname, join } from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 import { TOP_LEVEL_ALLOWLIST, assertClean } from './build-legal.mjs';
 import {
-  LOCALES, LOCALE_PATHS, SITE, composePage, escapeAttr, escapeText, hashAssetRefs, hashAssetsInPlace, storeUrl,
+  LOCALES, LOCALE_PATHS, SITE, composePage, escapeAttr, escapeText, fontPreloads, hashAssetRefs, storeUrl,
 } from './lib/page.mjs';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
@@ -238,6 +238,7 @@ function renderPage({ locale, ctPage, strings, title, description, alternates, b
       alternates,
       ogImage: '/images/og.jpg',
       bannerPage: ctPage,
+      preloads: fontPreloads(rootDir),
       stylesheets: STYLESHEETS,
       modules,
       jsonLd,
@@ -258,7 +259,7 @@ export function composeGuidePage({ locale, guide, strings, rootDir = ROOT }) {
     description: meta.description,
     alternates,
     body: guideBody({ locale, meta, body, strings }),
-    modules: ['/assets/js/app.js', ...(meta.tool ? [`/${TOOLS[meta.tool]}`] : [])],
+    modules: ['/assets/js/boot.js', ...(meta.tool ? [`/${TOOLS[meta.tool]}`] : [])],
     jsonLd: articleJsonLd({ locale, meta, url: `${SITE}${alternates[locale]}` }),
     rootDir,
   });
@@ -273,7 +274,7 @@ export function composeIndexPage({ locale, guides, strings, rootDir = ROOT }) {
     description: strings.guides.indexDescription,
     alternates: { en: indexPath('en'), tr: indexPath('tr') },
     body: indexBody({ locale, guides, strings }),
-    modules: ['/assets/js/app.js'],
+    modules: ['/assets/js/boot.js'],
     rootDir,
   });
 }
@@ -337,11 +338,6 @@ export function build({ outDir = ROOT, contentDir = CONTENT_DIR, rootDir = ROOT,
   }
   if (failed) throw new Error('sanity checks failed; nothing written');
 
-  // Tool modules import their helpers by hash; rewrite them only when building the site itself.
-  if (outDir === rootDir) {
-    const changed = hashAssetsInPlace(rootDir, Object.values(TOOLS));
-    for (const f of changed) log(`${f} import hashes updated.`);
-  }
   for (const p of pages) {
     const file = join(outDir, p.path);
     mkdirSync(dirname(file), { recursive: true });

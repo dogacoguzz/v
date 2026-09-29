@@ -1035,10 +1035,11 @@ html.js .intake .glass::after {
   margin: 8px 0 0;
 }
 
+/* At least 3 CSS px per QR module; the SVG's own quiet zone replaces padding (landing test). */
 .close__qr img {
-  width: 112px;
-  height: 112px;
-  padding: 8px;
+  flex: none;
+  width: 135px;
+  height: 135px;
   border-radius: 12px;
   background: var(--text-main);
 }

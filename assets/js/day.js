@@ -12,7 +12,7 @@ import {
   remainingSteps,
   scrollProgress,
   toMinutes,
-} from './day-core.js';
+} from './day-core.js?v=88ad38b5';
 
 const root = document.documentElement;
 const body = document.body;

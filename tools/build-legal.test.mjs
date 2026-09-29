@@ -22,7 +22,7 @@ import {
   stripInlineStyles,
   wrapTables,
 } from './build-legal.mjs';
-import { applyI18nStrings, keyParity, markLangSwitch, rewriteRootRelativePaths } from './lib/prerender.mjs';
+import { applyI18nStrings, keyParity, markLangSwitch } from './lib/prerender.mjs';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
 const DOCS = [
@@ -137,25 +137,6 @@ test('assertClean accepts every allowlisted top-level element', () => {
   assert.doesNotThrow(() => assertClean(ok));
 });
 
-test('rewriteRootRelativePaths maps assets, images and legal hrefs per prefix and leaves /eula', () => {
-  const src = '<link href="assets/css/a.css" /><img src="images/x.png" data-src-tr="images/y.png" />'
-    + '<section data-src-en="images/e.png"></section>'
-    + '<a href="privacy-policy/">P</a><a href="terms-of-service/">T</a><a href="/eula">E</a>';
-  const en = rewriteRootRelativePaths(src, { localePrefix: '' });
-  assert.ok(en.includes('href="/assets/css/a.css"'));
-  assert.ok(en.includes('src="/images/x.png"'));
-  assert.ok(en.includes('data-src-tr="/images/y.png"'));
-  assert.ok(en.includes('data-src-en="/images/e.png"'));
-  assert.ok(en.includes('href="/privacy-policy/"'));
-  assert.ok(en.includes('href="/terms-of-service/"'));
-  assert.ok(en.includes('href="/eula"'));
-  const tr = rewriteRootRelativePaths(src, { localePrefix: '/tr' });
-  assert.ok(tr.includes('href="/tr/privacy-policy/"'));
-  assert.ok(tr.includes('href="/tr/terms-of-service/"'));
-  assert.ok(tr.includes('href="/eula"'));
-  assert.equal(rewriteRootRelativePaths(tr, { localePrefix: '/tr' }), tr);
-});
-
 test('applyI18nStrings rewrites the real aria-label/alt and keeps the data-i18n-* keys', () => {
   const strings = { nav: { langGroupAria: 'Dil', skipLink: 'İçeriğe atla' }, img: { alt: 'Resim' }, hero: { h1: 'A<br /><em>B</em>' } };
   const src = '<a class="skip-link" href="#top" data-i18n="nav.skipLink">Skip to content</a>'
@@ -254,7 +235,7 @@ test('composePage builds the locale-specific head and chrome around the body', (
   assert.ok(page.includes('<link rel="alternate" hreflang="x-default" href="https://velorahealthcompanion.com/privacy-policy/" />'));
   const stylesheets = [...page.matchAll(/<link rel="stylesheet" href="([^"?]+)\?v=[0-9a-f]{8}" \/>/g)].map((m) => m[1]);
   assert.deepEqual(stylesheets, ['tokens', 'base', 'layout', 'components', 'legal'].map((n) => `/assets/css/${n}.css`));
-  assert.match(page, /<script type="module" src="\/assets\/js\/app\.js\?v=[0-9a-f]{8}"><\/script>/);
+  assert.match(page, /<script type="module" src="\/assets\/js\/boot\.js\?v=[0-9a-f]{8}"><\/script>/);
   assert.ok(page.includes('<meta property="og:locale" content="tr_TR" />'));
   assert.ok(page.includes('<a href="/tr/" class="brand-mark"'));
   assert.ok(page.includes('role="group" aria-label="Dil"'));

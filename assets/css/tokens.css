@@ -2,7 +2,7 @@
 
 @font-face {
   font-family: 'Bricolage Grotesque';
-  src: url('/assets/fonts/bricolage-grotesque-var.woff2') format('woff2');
+  src: url('/assets/fonts/bricolage-grotesque-var.woff2?v=4073efed') format('woff2');
   font-weight: 500 800;
   font-style: normal;
   font-display: swap;
@@ -10,7 +10,7 @@
 
 @font-face {
   font-family: 'Instrument Sans';
-  src: url('/assets/fonts/instrument-sans-var.woff2') format('woff2');
+  src: url('/assets/fonts/instrument-sans-var.woff2?v=a07bbe4a') format('woff2');
   font-weight: 400 700;
   font-style: normal;
   font-display: swap;
@@ -18,7 +18,7 @@
 
 @font-face {
   font-family: 'JetBrains Mono';
-  src: url('/assets/fonts/jetbrains-mono-var.woff2') format('woff2');
+  src: url('/assets/fonts/jetbrains-mono-var.woff2?v=ecb2bd0c') format('woff2');
   font-weight: 100 800;
   font-style: normal;
   font-display: swap;
@@ -139,20 +139,4 @@
   :root {
     --ease-spring: linear(0, 0.009, 0.035 2.1%, 0.141 4.4%, 0.723 12.9%, 0.938 16.7%, 1.017 19.4%, 1.067, 1.099 24%, 1.108 26%, 1.1 28.1%, 1.084 30.1%, 1.019 38.4%, 0.994 42.3%, 0.984 45.9%, 0.986 51.8%, 1.001 66.4%, 1.003 72%, 1);
   }
-}
-
-/* Names still read by legal.css and sections.css until U2/U4 migrate them. */
-:root {
-  --bg-elevated: var(--surface-card);
-  --bg-card: var(--surface-card);
-  --border: var(--line);
-  --border-strong: var(--line-strong);
-  --text: var(--text-main);
-  --text-muted: var(--text-secondary);
-  --text-soft: var(--text-tertiary);
-  --brand: var(--coach);
-  --accent-activities: var(--coach);
-  --accent-trends: var(--data-drink);
-  --fs-2: var(--fs-h2);
-  --fs-3: var(--fs-h3);
 }

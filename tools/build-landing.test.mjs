@@ -74,6 +74,19 @@ test('EN links stay on en-home- tokens and each locale shows its own badge and Q
   }
 });
 
+test('the QR renders at least 3 CSS px per module in markup and CSS', () => {
+  const rule = /\.close__qr img \{([^}]*)\}/.exec(read('assets/css/day.css'))?.[1] ?? '';
+  const cssWidth = Number(/\bwidth:\s*(\d+)px/.exec(rule)?.[1]);
+  assert.ok(!/\bpadding\b/.test(rule), 'padding would shrink the QR inside its border box');
+  for (const locale of ['en', 'tr']) {
+    const modules = Number(/viewBox="0 0 (\d+) \1"/.exec(read(QR_PATHS[locale]))?.[1]);
+    const tag = /<img src="\/images\/qr-[a-z]+\.svg[^>]*>/.exec(committed[locale])?.[0] ?? '';
+    const attrWidth = Number(/\swidth="(\d+)"/.exec(tag)?.[1]);
+    assert.ok(modules > 0 && attrWidth === cssWidth, `${locale}: img width ${attrWidth} vs CSS ${cssWidth}`);
+    assert.ok(cssWidth / modules >= 3, `${locale}: ${cssWidth}px over ${modules} modules`);
+  }
+});
+
 test('TR page head: lang, canonical, hreflang pair, no redirect script; EN keeps the redirect', () => {
   const tr = committed.tr;
   assert.ok(tr.includes('<html lang="tr" data-locale="tr">'));
