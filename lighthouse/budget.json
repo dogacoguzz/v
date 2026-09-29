@@ -1,0 +1,7 @@
+{
+  "note": "Lab budgets for `npm run lighthouse` (mobile emulation, simulated slow 4G). TBT is the lab proxy for INP.",
+  "lcpMs": 2500,
+  "cls": 0.1,
+  "tbtMs": 200,
+  "urls": ["/", "/tr/", "/guides/daily-step-goal/"]
+}

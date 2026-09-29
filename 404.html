@@ -6,54 +6,36 @@
   <title>404 · Velora</title>
   <meta name="robots" content="noindex" />
   <meta name="color-scheme" content="dark" />
-  <meta name="theme-color" content="#0c0f12" />
+  <meta name="theme-color" content="#111517" />
   <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32.png" />
+  <link rel="preload" href="/assets/fonts/bricolage-grotesque-var.woff2" as="font" type="font/woff2" crossorigin />
+  <link rel="preload" href="/assets/fonts/instrument-sans-var.woff2" as="font" type="font/woff2" crossorigin />
+  <link rel="stylesheet" href="/assets/css/tokens.css" />
+  <link rel="stylesheet" href="/assets/css/base.css" />
+  <link rel="stylesheet" href="/assets/css/layout.css" />
+  <link rel="stylesheet" href="/assets/css/components.css" />
   <style>
-    * { margin: 0; box-sizing: border-box; }
-    body {
-      min-height: 100dvh;
-      display: grid;
-      place-items: center;
-      background: #0c0f12;
-      color: #f4f6f8;
-      font-family: 'Plus Jakarta Sans', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
-      text-align: center;
-      padding: 2rem;
-      position: relative;
-      overflow: hidden;
-    }
-    body::before {
-      content: '';
-      position: fixed;
-      inset: -10vh -20vw auto auto;
-      width: 75vw; height: 75vh;
-      background: radial-gradient(50% 50% at 70% 30%, rgba(46, 209, 234, 0.28), transparent 70%);
-      filter: blur(60px);
-      pointer-events: none;
-    }
-    main { position: relative; display: grid; gap: 1.25rem; justify-items: center; }
-    img { width: 64px; height: 64px; border-radius: 16px; box-shadow: 0 0 0 1px rgba(255,255,255,0.14), 0 0 32px rgba(46, 209, 234, 0.3); }
-    h1 { font-size: clamp(2rem, 6vw, 3rem); letter-spacing: -0.02em; font-weight: 700; }
-    p { color: rgba(244, 246, 248, 0.65); max-width: 40ch; line-height: 1.55; }
-    a {
-      display: inline-flex;
-      align-items: center;
-      min-height: 48px;
-      padding: 12px 24px;
-      border-radius: 999px;
-      background: #2ED1EA;
-      color: #08151a;
-      font-weight: 700;
-      text-decoration: none;
-    }
+    .nf { min-height: 100dvh; display: grid; place-items: center; padding: var(--space-6) var(--container-pad); text-align: center; }
+    .nf__body { display: grid; gap: var(--space-4); justify-items: center; max-width: 34rem; }
+    .nf__code { margin: 0; font-family: var(--font-mono); font-size: var(--fs-label); color: var(--text-secondary); letter-spacing: 0.08em; }
+    .nf h1 { margin: 0; font-family: var(--font-display); font-size: var(--fs-h1); line-height: var(--lh-tight); letter-spacing: -0.02em; }
+    .nf p { margin: 0; color: var(--text-secondary); line-height: var(--lh-body); }
+    .nf__actions { display: flex; flex-wrap: wrap; gap: var(--space-3); justify-content: center; margin-top: var(--space-3); }
   </style>
 </head>
 <body>
-  <main>
-    <img src="/images/logo-56.png" alt="" width="64" height="64" />
-    <h1>Page not found</h1>
-    <p>This page doesn't exist, but your week is still waiting. · Aradığın sayfa yok ama haftan seni bekliyor.</p>
-    <a href="/">Velora home · Anasayfa</a>
+  <main class="nf" id="main">
+    <div class="nf__body">
+      <img src="/images/logo-56.png" alt="" width="56" height="56" />
+      <p class="nf__code">404</p>
+      <h1>Page not found</h1>
+      <p>This page doesn't exist, but your week is still waiting.</p>
+      <p lang="tr">Aradığın sayfa yok ama haftan seni bekliyor.</p>
+      <div class="nf__actions">
+        <a class="button" href="/">Velora home</a>
+        <a class="button button--ghost" href="/tr/" lang="tr" hreflang="tr">Anasayfa</a>
+      </div>
+    </div>
   </main>
 </body>
 </html>
