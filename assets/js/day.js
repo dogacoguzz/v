@@ -34,20 +34,30 @@ const state = {
 
 const tweens = new WeakMap();
 
+// A tween restarted mid-flight continues from the number on screen, not from `from`.
 function tween(el, from, to, ms) {
   if (!el) return;
-  cancelAnimationFrame(tweens.get(el));
+  const running = tweens.get(el);
+  if (running) {
+    cancelAnimationFrame(running.raf);
+    tweens.delete(el);
+    from = running.value;
+  }
   if (reduce.matches || from === to) {
     el.textContent = fmt(to);
     return;
   }
   const t0 = performance.now();
+  const current = { raf: 0, value: from };
   const step = (now) => {
     const k = Math.min(1, (now - t0) / ms);
-    el.textContent = fmt(Math.round(from + (to - from) * easeOutCubic(k)));
-    if (k < 1) tweens.set(el, requestAnimationFrame(step));
+    current.value = Math.round(from + (to - from) * easeOutCubic(k));
+    el.textContent = fmt(current.value);
+    if (k < 1) current.raf = requestAnimationFrame(step);
+    else tweens.delete(el);
   };
-  tweens.set(el, requestAnimationFrame(step));
+  current.raf = requestAnimationFrame(step);
+  tweens.set(el, current);
 }
 
 // ---------- Goal carry-over (AE1) ----------
@@ -196,7 +206,12 @@ function initClock() {
   measure();
 }
 
-initClock();
-initGoal();
-initPops();
-syncGoal();
+// day-ready turns on the hidden pop-in states, so it is set only once the pops are wired;
+// if day.js fails to load or initPops throws, every card stays visible.
+const run = (init) => {
+  try { init(); return true; } catch (error) { console.error(error); return false; }
+};
+
+root.classList.add('day-ready');
+if (!run(initPops)) root.classList.remove('day-ready');
+[initClock, initGoal, syncGoal].forEach(run);

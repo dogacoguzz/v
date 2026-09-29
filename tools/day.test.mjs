@@ -132,7 +132,7 @@ test('scroll progress and easing stay inside 0..1', () => {
 const html = readFileSync(join(ROOT, 'index.html'), 'utf8');
 const dayCss = readFileSync(join(ROOT, 'assets/css/day.css'), 'utf8');
 
-test('without the js class every moment and card is visible (hidden states are js-scoped)', () => {
+test('without the day-ready class every moment and card is visible (hidden states are day-ready-scoped)', () => {
   const sections = [...html.matchAll(/<section[^>]*data-time="(\d\d:\d\d)"/g)].map((m) => m[1]);
   assert.deepEqual(sections, ['06:40', '07:30', '12:40', '18:10', '21:30', '23:00']);
   assert.ok(/<html[^>]*data-locale="en"/.test(html));
@@ -140,9 +140,14 @@ test('without the js class every moment and card is visible (hidden states are j
     const [, selector, body] = rule;
     if (/^\s*(?:from|to|\d+%)\s*$/.test(selector)) continue;
     if (/opacity:\s*0(?![.\d])|visibility:\s*hidden|stroke-dashoffset:\s*1000|--on:\s*0\b/.test(body)) {
-      assert.ok(/html\.js/.test(selector), `hidden-until-animated rule not scoped to html.js: ${selector.trim()}`);
+      assert.ok(/html\.day-ready /.test(selector), `hidden-until-animated rule not scoped to html.day-ready: ${selector.trim()}`);
     }
   }
+});
+
+test('no inline script turns on the hidden states; day.css scopes none to html.js', () => {
+  assert.ok(!/html\.js\b/.test(dayCss), 'day.css still scopes a rule to html.js');
+  assert.ok(!html.includes("classList.add('js')"), 'index.html still adds the js class inline');
 });
 
 test('landing strings live in the DOM: every day key is marked up and no data-i18n node has child tags', () => {

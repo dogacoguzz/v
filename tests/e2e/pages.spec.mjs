@@ -89,6 +89,29 @@ for (const [from, locale, to] of LANG_SWITCH) {
   });
 }
 
+test('a TR browser with blocked storage can switch from /tr/ to the EN home and stay there', async ({ browser }) => {
+  const context = await browser.newContext({ locale: 'tr-TR' });
+  await context.addInitScript(() => {
+    const blocked = () => { throw new DOMException('storage blocked', 'SecurityError'); };
+    Storage.prototype.getItem = blocked;
+    Storage.prototype.setItem = blocked;
+  });
+  const page = await context.newPage();
+  await page.goto('/');
+  await page.waitForURL((url) => url.pathname === '/tr/');
+
+  await Promise.all([
+    page.waitForURL((url) => url.pathname === '/'),
+    page.locator('.lang-switch button[data-locale="en"]').click(),
+  ]);
+  await page.waitForLoadState('load');
+  await page.waitForTimeout(300);
+  expect(new URL(page.url()).pathname).toBe('/');
+  await expect(page.locator('html')).toHaveAttribute('data-locale', 'en');
+  await expect(page.locator('link[rel="canonical"]')).toHaveAttribute('href', 'https://velorahealthcompanion.com/');
+  await context.close();
+});
+
 test('404 page is noindex and links home in both languages', async ({ page }) => {
   const response = await page.goto('/no/such/page');
   expect(response.status()).toBe(404);

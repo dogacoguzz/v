@@ -12,13 +12,14 @@ import {
   composePage,
   externalOrigins,
   hashAssetRefs,
+  hashedAssetPath,
   renderPartial,
   shouldRedirectToTr,
   smartBannerMeta,
   storeUrl,
   trRedirectScript,
 } from './lib/page.mjs';
-import { keyParity } from './lib/prerender.mjs';
+import { keyDiff, keyParity } from './lib/prerender.mjs';
 import { runBuilders } from './build.mjs';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
@@ -41,6 +42,14 @@ const withFixture = (files, fn) => {
 };
 
 // --- storeUrl / Smart App Banner (KTD6) ---
+
+test('keyDiff names missing and extra keys; keyParity is true only when both are empty', () => {
+  assert.deepEqual(keyDiff({ a: { b: 1 }, c: 2 }, { a: { d: 1 }, c: 3 }), { missing: ['a.b'], extra: ['a.d'] });
+  assert.deepEqual(keyDiff({ a: 1 }, { a: 2 }), { missing: [], extra: [] });
+  assert.equal(keyParity({ a: 1 }, { a: 2 }), true);
+  assert.equal(keyParity({ a: 1 }, {}), false);
+  assert.equal(keyParity({}, { a: 1 }), false);
+});
 
 test('storeUrl carries pt, ct=<locale>-<page>-<placement> and mt=8', () => {
   const url = new URL(storeUrl('tr', 'home', 'hero'));
@@ -227,6 +236,21 @@ test('a changed i18n.js changes its hash in importing modules and in the page re
     assert.notEqual(app(), before);
     const appRef = (h) => /\/assets\/js\/app\.js\?v=([0-9a-f]{8})/.exec(h)[1];
     assert.notEqual(appRef(hashAssetRefs(pageHtml, dir)), appRef(htmlBefore), 'transitive: importer hash changes');
+  });
+});
+
+test('hashedAssetPath versions og:image by content: new og.jpg bytes give a new URL', () => {
+  withFixture({ 'images/og.jpg': 'jpeg-1' }, (dir) => {
+    const first = hashedAssetPath('/images/og.jpg', dir);
+    assert.match(first, /^\/images\/og\.jpg\?v=[0-9a-f]{8}$/);
+    assert.equal(hashedAssetPath('/images/og.jpg', dir), first, 'stable for unchanged bytes');
+    const head = composeHead({ locale: 'en', title: 'T', description: 'D', canonicalPath: '/', ogImage: first });
+    assert.ok(head.includes(`<meta property="og:image" content="${SITE}${first}" />`));
+    assert.ok(head.includes(`<meta name="twitter:image" content="${SITE}${first}" />`));
+    writeFileSync(join(dir, 'images/og.jpg'), 'jpeg-2');
+    assert.notEqual(hashedAssetPath('/images/og.jpg', dir), first);
+    assert.throws(() => hashedAssetPath('images/og.jpg', dir), /root-relative/);
+    assert.throws(() => hashedAssetPath('/images/none.jpg', dir), /not found/);
   });
 });
 

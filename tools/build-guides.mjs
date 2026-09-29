@@ -26,22 +26,22 @@
 import { existsSync, mkdirSync, readdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
-import { TOP_LEVEL_ALLOWLIST, assertClean } from './build-legal.mjs';
 import {
-  LOCALES, LOCALE_PATHS, SITE, composePage, escapeAttr, escapeText, fontPreloads, hashAssetRefs, storeUrl,
+  LOCALES, LOCALE_PATHS, SITE, composePage, escapeAttr, escapeText, fontPreloads, hashAssetRefs, hashedAssetPath,
+  storeUrl,
 } from './lib/page.mjs';
+import { EM_DASH, SEGMENT, count, indent, reindent, reportChecks } from './lib/util.mjs';
+import { BASE_ALLOWLIST, assertClean } from './lib/validate.mjs';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
 const CONTENT_DIR = join(ROOT, 'content/guides');
-const SEGMENT = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
-const EM_DASH = '—';
 
-const { h1: _legalTitle, ...LEGAL_WITHOUT_H1 } = TOP_LEVEL_ALLOWLIST;
+// The builder renders the h1 itself, so guide bodies get no h1.
 export const GUIDE_ALLOWLIST = {
-  ...LEGAL_WITHOUT_H1,
+  ...BASE_ALLOWLIST,
   h3: [''],
   ol: [''],
-  div: [...TOP_LEVEL_ALLOWLIST.div, 'guide-tool'],
+  div: [...BASE_ALLOWLIST.div, 'guide-tool'],
 };
 
 // Client-side tools a guide may embed; the module is loaded only on that guide's pages.
@@ -52,6 +52,7 @@ export const TOOLS = {
 const STYLESHEETS = ['tokens', 'base', 'layout', 'components', 'guide'].map((name) => `/assets/css/${name}.css`);
 const BADGE_SIZE = { en: { width: 120, height: 40 }, tr: { width: 151, height: 40 } };
 const INDEX_CT_PAGE = 'guides';
+const OG_IMAGE = '/images/og.jpg';
 
 export const guidePath = (locale, slug) => `${LOCALE_PATHS[locale].guides}${slug}/`;
 export const indexPath = (locale) => LOCALE_PATHS[locale].guides;
@@ -104,7 +105,7 @@ export function parseGuide(source, file = 'guide') {
 
   const body = source.slice(header[0].length).replace(/\s+$/, '');
   if (/\sstyle=/.test(body)) throw new Error(`${file}: inline style attributes are not allowed`);
-  try { assertClean(body, GUIDE_ALLOWLIST); } catch (e) { throw new Error(`${file}: ${e.message}`); }
+  try { assertClean(body, GUIDE_ALLOWLIST, { text: 'guide' }); } catch (e) { throw new Error(`${file}: ${e.message}`); }
   const tools = (body.match(/<div class="guide-tool"/g) || []).length;
   if (meta.tool && tools !== 1) throw new Error(`${file}: a tool guide needs exactly one div.guide-tool, found ${tools}`);
   if (!meta.tool && tools !== 0) throw new Error(`${file}: div.guide-tool needs a "tool" in the header`);
@@ -139,13 +140,6 @@ export function loadGuides(contentDir = CONTENT_DIR) {
   }
   return guides.sort((a, b) => a.en.meta.order - b.en.meta.order);
 }
-
-const reindent = (html) => {
-  const lines = html.replace(/^\s*\n|\s+$/g, '').split('\n');
-  const common = Math.min(...lines.filter((l) => l.trim()).map((l) => /^[ \t]*/.exec(l)[0].length));
-  return lines.map((l) => (l.trim() ? l.slice(common) : '')).join('\n');
-};
-const indent = (html, pad) => html.split('\n').map((l) => (l ? pad + l : l)).join('\n');
 
 export const formatDate = (iso, locale) =>
   new Intl.DateTimeFormat(locale, { year: 'numeric', month: 'long', day: 'numeric', timeZone: 'UTC' })
@@ -236,7 +230,7 @@ function renderPage({ locale, ctPage, strings, title, description, alternates, b
       description,
       canonicalPath: alternates[locale],
       alternates,
-      ogImage: '/images/og.jpg',
+      ogImage: hashedAssetPath(OG_IMAGE, rootDir),
       bannerPage: ctPage,
       preloads: fontPreloads(rootDir),
       stylesheets: STYLESHEETS,
@@ -278,8 +272,6 @@ export function composeIndexPage({ locale, guides, strings, rootDir = ROOT }) {
     rootDir,
   });
 }
-
-const count = (html, re) => (html.match(re) || []).length;
 
 export function pageChecks({ page, locale, canonicalPath, ctPage }) {
   return {
@@ -329,14 +321,7 @@ export function build({ outDir = ROOT, contentDir = CONTENT_DIR, rootDir = ROOT,
     pages.push({ path: fileFor(canonicalPath), page, checks: pageChecks({ page, locale, canonicalPath, ctPage: INDEX_CT_PAGE }) });
   }
 
-  let failed = false;
-  for (const p of pages) {
-    for (const [k, v] of Object.entries(p.checks)) {
-      log(`${v ? 'ok  ' : 'FAIL'} ${p.path}: ${k}`);
-      if (!v) failed = true;
-    }
-  }
-  if (failed) throw new Error('sanity checks failed; nothing written');
+  reportChecks(pages, log);
 
   for (const p of pages) {
     const file = join(outDir, p.path);

@@ -6,16 +6,25 @@ const get = (strings, path) =>
 
 const esc = (s) => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 
-// flattens a nested strings object into dotted key paths, for key-parity checks
-const flattenKeys = (obj, prefix = '') =>
+// Flattens a nested strings object into dotted key paths.
+export const flattenKeys = (obj, prefix = '') =>
   Object.entries(obj).flatMap(([k, v]) =>
     v && typeof v === 'object' ? flattenKeys(v, `${prefix}${k}.`) : [`${prefix}${k}`]
   );
 
+// Keys the candidate lacks and keys it has that the reference does not.
+export function keyDiff(reference, candidate) {
+  const ref = new Set(flattenKeys(reference));
+  const got = new Set(flattenKeys(candidate));
+  return {
+    missing: [...ref].filter((k) => !got.has(k)).sort(),
+    extra: [...got].filter((k) => !ref.has(k)).sort(),
+  };
+}
+
 export const keyParity = (a, b) => {
-  const ka = flattenKeys(a).sort();
-  const kb = flattenKeys(b).sort();
-  return ka.length === kb.length && ka.every((k, i) => k === kb[i]);
+  const { missing, extra } = keyDiff(a, b);
+  return missing.length === 0 && extra.length === 0;
 };
 
 // Bakes strings into data-i18n / data-i18n-html / data-i18n-alt / data-i18n-aria-label

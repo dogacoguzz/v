@@ -6,6 +6,7 @@ import { existsSync, readFileSync, writeFileSync } from 'node:fs';
 import { dirname, extname, isAbsolute, join, relative, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { markLangSwitch } from './prerender.mjs';
+import { SEGMENT, indent } from './util.mjs';
 
 const TOOLS_DIR = join(dirname(fileURLToPath(import.meta.url)), '..');
 export const PARTIALS_DIR = join(TOOLS_DIR, 'partials');
@@ -30,8 +31,6 @@ export const escapeText = (s) => String(s).replace(/&/g, '&amp;').replace(/</g, 
 const assertLocale = (locale) => {
   if (!LOCALES.includes(locale)) throw new Error(`unsupported locale "${locale}" (expected ${LOCALES.join(' or ')})`);
 };
-
-const SEGMENT = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
 
 function campaignToken(locale, page, placement) {
   assertLocale(locale);
@@ -169,8 +168,6 @@ export function chromeVars(locale, strings, page) {
   };
 }
 
-const indent = (html, pad) => html.split('\n').map((l) => (l ? pad + l : l)).join('\n');
-
 // Doctype + <html lang data-locale> + head + skip link + nav + <main id="main"> body + footer.
 export function composePage({ locale, page, strings, head, body, bodyAttrs = {}, partialsDir = PARTIALS_DIR }) {
   assertLocale(locale);
@@ -282,6 +279,13 @@ export function assetHash(path, rootDir) {
   return hashFile(abs, rootDir, { hashes: new Map(), visiting: new Set() });
 }
 
+// A root-relative asset path plus ?v=<hash>, for refs hashAssetRefs never rewrites (meta
+// content, JSON-LD). assetHash would read a leading "/" as the filesystem root.
+export function hashedAssetPath(path, rootDir) {
+  if (!path?.startsWith('/')) throw new Error(`hashedAssetPath: path must be root-relative, got "${path}"`);
+  return `${path}?v=${assetHash(join(rootDir, path.slice(1)), rootDir)}`;
+}
+
 // Rewrites CSS/JS files in place; order does not matter because hashes ignore existing ?v=.
 export function hashAssetsInPlace(rootDir, files, { write = true } = {}) {
   const changed = [];
@@ -312,8 +316,8 @@ export function fontPreloads(rootDir, files = FONT_PRELOAD_FILES) {
 
 // --- `/` pre-paint redirect to /tr/ (KTD2) ---
 
-// Precedence: ?lang= > saved choice > the first en/tr entry in the browser languages, as
-// i18n.js does. Serialized into the inline script via toString().
+// Precedence: ?lang= > saved choice > the first en/tr entry in the browser languages.
+// Serialized into the inline script via toString().
 export function shouldRedirectToTr({ search = '', saved = null, languages = [] } = {}) {
   var m = /[?&]lang=(en|tr)(?:&|#|$)/.exec(search || '');
   if (m) return m[1] === 'tr';

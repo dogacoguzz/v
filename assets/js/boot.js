@@ -1,10 +1,9 @@
 // boot.js: shared page boot for every page. Pages are prerendered per locale (data-locale),
 // so this only wires the language switch and marks the current nav link.
 
-import { persistLocale, resolveLocale } from './i18n.js?v=56e0f9de';
+import { pageLocale, persistLocale } from './i18n.js?v=9ac4c9b0';
 
-const root = document.documentElement;
-const locale = root.dataset.locale || resolveLocale();
+const locale = pageLocale();
 
 function alternatePath(target) {
   const link = document.querySelector(`link[rel="alternate"][hreflang="${target}"]`);
@@ -20,7 +19,11 @@ document.querySelectorAll('.lang-switch button[data-locale]').forEach((btn) => {
     const next = btn.dataset.locale;
     if (!next || next === locale) return;
     persistLocale(next);
-    window.location.assign(alternatePath(next) + window.location.hash);
+    // "/" redirects TR browsers to /tr/ unless ?lang= or a saved choice says otherwise, and
+    // storage can be blocked, so the EN home link carries the choice in the URL.
+    const path = alternatePath(next);
+    const query = path === '/' ? `?lang=${next}` : '';
+    window.location.assign(path + query + window.location.hash);
   });
 });
 

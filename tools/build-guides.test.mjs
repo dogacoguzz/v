@@ -15,10 +15,11 @@ import {
   outputPaths,
   parseGuide,
 } from './build-guides.mjs';
-import { assertClean } from './build-legal.mjs';
+import { TOP_LEVEL_ALLOWLIST } from './build-legal.mjs';
+import { assertClean } from './lib/validate.mjs';
 import { MESSAGE_KEYS } from '../assets/js/tools/steps-distance-core.js';
 import { keyParity } from './lib/prerender.mjs';
-import { assetHash } from './lib/page.mjs';
+import { assetHash, hashedAssetPath } from './lib/page.mjs';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
 const SITE = 'https://velorahealthcompanion.com';
@@ -87,8 +88,10 @@ test('a disallowed element in a guide fails', () => {
 test('guides allow h3, ol and one div.guide-tool; legal keeps its own allowlist', () => {
   const body = '<h2>A</h2><h3>B</h3><ol><li>x</li></ol><div class="guide-tool"><p>t</p></div>';
   assert.doesNotThrow(() => assertClean(body, GUIDE_ALLOWLIST));
-  assert.throws(() => assertClean('<h3>B</h3>'), /<h3>/);
-  assert.throws(() => assertClean('<ol><li>x</li></ol>'), /<ol>/);
+  assert.throws(() => assertClean('<h3>B</h3>', TOP_LEVEL_ALLOWLIST), /<h3>/);
+  assert.throws(() => assertClean('<ol><li>x</li></ol>', TOP_LEVEL_ALLOWLIST), /<ol>/);
+  assert.throws(() => assertClean('<h1>T</h1>', GUIDE_ALLOWLIST), /<h1>/);
+  assert.doesNotThrow(() => assertClean('<h1>T</h1>', TOP_LEVEL_ALLOWLIST));
   const two = '<div class="guide-tool"></div><div class="guide-tool"></div>';
   assert.throws(() => parseGuide(fragment('en', { tool: 'steps-distance' }, two), 'x.en.html'), /guide-tool/);
 });
@@ -224,6 +227,16 @@ test('pages load styles, scripts and images only from the site itself', () => {
     for (const [, url] of page.matchAll(/<link rel="(?:stylesheet|preload)" href="([^"]+)"/g)) assert.ok(url.startsWith('/'), `${p}: ${url}`);
     assert.ok(!page.includes('fonts.googleapis'));
     assert.ok(page.includes('/assets/css/guide.css?v='), p);
+  }
+});
+
+test('guide og:image and twitter:image carry the og.jpg content hash', () => {
+  const { paths, read } = built();
+  const og = `${SITE}${hashedAssetPath('/images/og.jpg', ROOT)}`;
+  for (const p of paths) {
+    const page = read(p);
+    assert.ok(page.includes(`<meta property="og:image" content="${og}" />`), p);
+    assert.ok(page.includes(`<meta name="twitter:image" content="${og}" />`), p);
   }
 });
 

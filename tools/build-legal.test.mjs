@@ -8,7 +8,6 @@ import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 import {
-  count,
   OUTPUT_PATHS,
   SOURCE_PATHS,
   assertClean,
@@ -23,6 +22,7 @@ import {
   wrapTables,
 } from './build-legal.mjs';
 import { applyI18nStrings, keyParity, markLangSwitch } from './lib/prerender.mjs';
+import { count } from './lib/util.mjs';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
 const DOCS = [

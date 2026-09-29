@@ -137,3 +137,64 @@ test.describe('landing axe (EN)', () => {
     });
   }
 });
+
+test.describe('landing without a working day.js', () => {
+  const expectEveryCardVisible = async (page) => {
+    const pops = page.locator('[data-pop]');
+    const count = await pops.count();
+    expect(count).toBeGreaterThan(8);
+    for (let i = 0; i < count; i++) await expect(pops.nth(i)).toHaveCSS('opacity', '1');
+    await expect(page.locator('html')).not.toHaveClass(/\bday-ready\b/);
+  };
+
+  for (const file of ['day.js', 'day-core.js']) {
+    test(`every card stays visible when ${file} fails to load`, async ({ page }) => {
+      const pattern = new RegExp(`/assets/js/${file.replace('.', '\\.')}(?:\\?|$)`);
+      let blocked = 0;
+      await page.route(pattern, (route) => { blocked += 1; return route.abort(); });
+      await page.goto('/');
+      await page.waitForLoadState('load');
+      expect(blocked).toBeGreaterThan(0);
+      await expectEveryCardVisible(page);
+    });
+  }
+
+  test('every card stays visible when the pop-in setup throws', async ({ page }) => {
+    await page.addInitScript(() => {
+      window.IntersectionObserver = function IntersectionObserver() { throw new Error('observer unavailable'); };
+    });
+    await page.goto('/');
+    await page.waitForLoadState('load');
+    await expectEveryCardVisible(page);
+  });
+});
+
+// The page clock drives requestAnimationFrame and performance.now, so frame timing is exact.
+test('a fast second goal click tweens from the shown number, never from the old target', async ({ page }) => {
+  await page.clock.install();
+  await page.goto('/');
+  const value = page.locator('[data-goal-value]');
+  const button = page.locator('[data-set-goal]');
+  const read = () => value.evaluate((el) => Number(el.textContent.replace(/\D/g, '')));
+  await expect(value).toHaveText(/6[.,]500/);
+
+  await button.click();
+  await page.clock.runFor(150);
+  // Read and click in one task, so no frame lands between them.
+  const shown = await button.evaluate((el) => {
+    const text = document.querySelector('[data-goal-value]').textContent;
+    el.click();
+    return Number(text.replace(/\D/g, ''));
+  });
+  expect(shown).toBeGreaterThan(6500);
+  expect(shown).toBeLessThan(7000);
+
+  const after = [];
+  for (let i = 0; i < 50; i++) {
+    await page.clock.runFor(16);
+    after.push(await read());
+  }
+  expect(Math.max(...after)).toBeLessThanOrEqual(shown);
+  expect(after[after.length - 1]).toBe(6500);
+  await expect(button).toHaveAttribute('aria-pressed', 'false');
+});

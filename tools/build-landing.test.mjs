@@ -4,10 +4,11 @@ import { dirname, join } from 'node:path';
 import test from 'node:test';
 import { fileURLToPath } from 'node:url';
 import {
-  APP_NAME, OUTPUT_PATHS, QR_PATHS, SOURCE_PATH, keyDiff, leftoverEnglish, qrSvg, renderLanding, storeLinks,
+  APP_NAME, OUTPUT_PATHS, QR_PATHS, SOURCE_PATH, leftoverEnglish, qrSvg, renderLanding, storeLinks,
 } from './build-landing.mjs';
 import { BUILDERS } from './build.mjs';
-import { storeUrl } from './lib/page.mjs';
+import { SITE, hashedAssetPath, storeUrl } from './lib/page.mjs';
+import { keyDiff } from './lib/prerender.mjs';
 import { encodeText, formatBits, reedSolomon } from './lib/qr.mjs';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
@@ -93,11 +94,23 @@ test('TR page head: lang, canonical, hreflang pair, no redirect script; EN keeps
   assert.ok(tr.includes('<link rel="canonical" href="https://velorahealthcompanion.com/tr/" />'));
   assert.ok(tr.includes('<link rel="alternate" hreflang="en" href="https://velorahealthcompanion.com/" />'));
   assert.ok(tr.includes('<link rel="alternate" hreflang="tr" href="https://velorahealthcompanion.com/tr/" />'));
-  assert.ok(tr.includes("<script>document.documentElement.classList.add('js');</script>"));
   assert.ok(!tr.includes('location.replace'), 'TR page must not carry the / redirect');
   assert.ok(!tr.includes('velora-lang'));
   assert.equal((committed.en.match(/location\.replace\('\/tr\/'/g) || []).length, 1);
-  assert.ok(committed.en.includes("<script>document.documentElement.classList.add('js');</script>"));
+  for (const locale of ['en', 'tr']) {
+    assert.ok(!committed[locale].includes("classList.add('js')"), `${locale}: pop-in states are gated by day.js, not an inline script`);
+  }
+});
+
+test('og:image, twitter:image and the JSON-LD image carry the og.jpg content hash', () => {
+  const og = `${SITE}${hashedAssetPath('/images/og.jpg', ROOT)}`;
+  for (const locale of ['en', 'tr']) {
+    const html = committed[locale];
+    assert.ok(html.includes(`<meta property="og:image" content="${og}" />`), `${locale} og:image`);
+    assert.ok(html.includes(`<meta name="twitter:image" content="${og}" />`), `${locale} twitter:image`);
+    const ld = JSON.parse(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/.exec(html)[1]);
+    assert.equal(ld.image, og, `${locale} JSON-LD image`);
+  }
 });
 
 // --- Strings ---

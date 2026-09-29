@@ -12,13 +12,14 @@ import { mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 import {
-  LOCALES, LOCALE_PATHS, SITE, composePage, escapeAttr, fontPreloads, hashAssetRefs, storeUrl, trRedirectScript,
+  LOCALES, LOCALE_PATHS, SITE, composePage, escapeAttr, fontPreloads, hashAssetRefs, hashedAssetPath, storeUrl,
+  trRedirectScript,
 } from './lib/page.mjs';
-import { applyI18nStrings } from './lib/prerender.mjs';
+import { applyI18nStrings, flattenKeys, keyDiff } from './lib/prerender.mjs';
 import { encodeText, toSvg } from './lib/qr.mjs';
+import { EM_DASH, reindent, reportChecks } from './lib/util.mjs';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
-const EM_DASH = '\u2014';
 
 export const PAGE = 'home';
 export const SOURCE_PATH = 'index.html';
@@ -31,22 +32,8 @@ const THEME_COLOR = '#101417';
 const BODY_ATTRS = { 'data-phase': 'morning' };
 const STYLESHEETS = ['tokens', 'base', 'layout', 'components', 'day'].map((n) => `/assets/css/${n}.css`);
 const MODULES = ['/assets/js/boot.js', '/assets/js/day.js'];
-const JS_CLASS_SCRIPT = "<script>document.documentElement.classList.add('js');</script>";
 
 // --- Strings ---
-
-const flattenKeys = (obj, prefix = '') =>
-  Object.entries(obj).flatMap(([k, v]) =>
-    (v && typeof v === 'object' ? flattenKeys(v, `${prefix}${k}.`) : [`${prefix}${k}`]));
-
-export function keyDiff(reference, candidate) {
-  const ref = new Set(flattenKeys(reference));
-  const got = new Set(flattenKeys(candidate));
-  return {
-    missing: [...ref].filter((k) => !got.has(k)).sort(),
-    extra: [...got].filter((k) => !ref.has(k)).sort(),
-  };
-}
 
 export function assertKeyParity(stringsEn, strings, locale) {
   const { missing, extra } = keyDiff(stringsEn, strings);
@@ -66,9 +53,7 @@ const MAIN_RE = /<main id="main"([^>]*)>\n?([\s\S]*?)\n?[ \t]*<\/main>/;
 export function extractMain(source) {
   const m = MAIN_RE.exec(source);
   if (!m) throw new Error(`${SOURCE_PATH}: <main id="main"> block not found`);
-  const lines = m[2].replace(/^\s*\n|\s+$/g, '').split('\n');
-  const common = Math.min(...lines.filter((l) => l.trim()).map((l) => /^[ \t]*/.exec(l)[0].length));
-  return { attrs: m[1], body: lines.map((l) => (l.trim() ? l.slice(common) : '')).join('\n') };
+  return { attrs: m[1], body: reindent(m[2]) };
 }
 
 function withMainAttrs(html, attrs) {
@@ -97,7 +82,7 @@ export function localizeBody(body, locale, strings) {
 
 // --- Head ---
 
-export function jsonLd(locale, strings) {
+export function jsonLd(locale, strings, ogImage) {
   return {
     '@context': 'https://schema.org',
     '@type': 'SoftwareApplication',
@@ -107,7 +92,7 @@ export function jsonLd(locale, strings) {
     inLanguage: locale,
     url: `${SITE}${ALTERNATES[locale]}`,
     downloadUrl: storeUrl(locale, PAGE, 'schema'),
-    image: `${SITE}${OG_IMAGE}`,
+    image: `${SITE}${ogImage}`,
     description: strings.meta.description,
     offers: {
       '@type': 'Offer',
@@ -129,6 +114,7 @@ export function renderLanding({ locale, source, strings, stringsEn, rootDir = RO
   if (locale !== 'en') assertKeyParity(stringsEn, strings, locale);
   const main = extractMain(source);
   const body = localizeBody(main.body, locale, strings);
+  const ogImage = hashedAssetPath(OG_IMAGE, rootDir);
   const html = composePage({
     locale,
     page: PAGE,
@@ -139,15 +125,15 @@ export function renderLanding({ locale, source, strings, stringsEn, rootDir = RO
       description: strings.meta.description,
       canonicalPath: ALTERNATES[locale],
       alternates: ALTERNATES,
-      ogImage: OG_IMAGE,
+      ogImage,
       ogImageAlt: strings.meta.ogImageAlt,
       themeColor: THEME_COLOR,
       bannerPage: PAGE,
       preloads: fontPreloads(rootDir),
       stylesheets: STYLESHEETS,
       modules: MODULES,
-      extraHead: locale === 'en' ? [JS_CLASS_SCRIPT, trRedirectScript()] : [JS_CLASS_SCRIPT],
-      jsonLd: jsonLd(locale, strings),
+      extraHead: locale === 'en' ? [trRedirectScript()] : [],
+      jsonLd: jsonLd(locale, strings, ogImage),
     },
     body,
   });
@@ -185,7 +171,8 @@ export function pageChecks(html, { locale, stringsEn, strings }) {
     'locale badge and QR': html.includes(`/images/badge-appstore-${locale}.svg?v=`) && html.includes(`/images/qr-${locale}.svg?v=`),
     'JSON-LD SoftwareApplication with a free offer': parsed?.['@type'] === 'SoftwareApplication' && parsed?.offers?.price === '0',
     'redirect script only on /': html.includes("location.replace('/tr/'") === (locale === 'en'),
-    'js class script': html.includes(JS_CLASS_SCRIPT),
+    'og image is content-hashed': /<meta property="og:image" content="[^"]+\?v=[0-9a-f]{8}" \/>/.test(html),
+    'no inline js class script': !html.includes("classList.add('js')"),
     'no em dash': !html.includes(EM_DASH),
     'no leftover EN strings': leftovers.length === 0 || `left: ${leftovers.join(', ')}`,
   };
@@ -211,14 +198,7 @@ export function build({ rootDir = ROOT, outDir = rootDir, log = console.log } = 
     return { locale, path: OUTPUT_PATHS[locale], html, checks: pageChecks(html, { locale, stringsEn: strings.en, strings: strings[locale] }) };
   });
 
-  let failed = false;
-  for (const p of pages) {
-    for (const [name, ok] of Object.entries(p.checks)) {
-      log(`${ok === true ? 'ok  ' : 'FAIL'} ${p.path}: ${name}${typeof ok === 'string' ? ` (${ok})` : ''}`);
-      if (ok !== true) failed = true;
-    }
-  }
-  if (failed) throw new Error('landing sanity checks failed; pages not written');
+  reportChecks(pages, log);
 
   for (const p of pages) {
     const file = join(outDir, p.path);

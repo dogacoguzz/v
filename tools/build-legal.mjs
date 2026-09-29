@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-// build-legal.mjs — generates the four legal pages from content/legal/*.html.
+// build-legal.mjs: generates the four legal pages from content/legal/*.html.
 //
 // Workflow: edit a fragment under content/legal/, then:
 //   node tools/build-legal.mjs
@@ -11,6 +11,8 @@ import { fileURLToPath, pathToFileURL } from 'node:url';
 import {
   LOCALE_PATHS, PARTIALS_DIR, SITE, composePage as composeSitePage, fontPreloads, hashAssetRefs,
 } from './lib/page.mjs';
+import { EM_DASH, count, indent, reindent, reportChecks } from './lib/util.mjs';
+import { BASE_ALLOWLIST, assertClean as assertAllowlisted } from './lib/validate.mjs';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
 const CONTENT_DIR = join(ROOT, 'content/legal');
@@ -29,20 +31,7 @@ export const OUTPUT_PATHS = DOCUMENTS.map(outputPath);
 export const sourcePath = ({ locale, kind }) => `content/legal/${SLUGS[kind]}.${locale}.html`;
 export const SOURCE_PATHS = DOCUMENTS.map(sourcePath);
 
-const VOID_TAGS = new Set(['area', 'base', 'br', 'col', 'embed', 'hr', 'img', 'input', 'link', 'meta', 'source', 'track', 'wbr']);
-export const TOP_LEVEL_ALLOWLIST = {
-  h1: [''],
-  h2: [''],
-  p: ['', 'last-updated'],
-  ul: [''],
-  table: ['data-table'],
-  div: ['legal__table-scroll', 'highlight', 'warning-box', 'danger-box', 'contact-info'],
-};
-
-const attrValue = (attrs, name) => {
-  const m = new RegExp(`(?:^|\\s)${name}="([^"]*)"`).exec(attrs);
-  return m ? m[1].trim() : '';
-};
+export const TOP_LEVEL_ALLOWLIST = { h1: [''], ...BASE_ALLOWLIST };
 
 export function stripInlineStyles(html) {
   return html.replace(/\s+style=(?:"[^"]*"|'[^']*')/g, '');
@@ -59,37 +48,9 @@ export function wrapTables(html) {
   );
 }
 
-// Top-level elements must match the allowlist; nested markup is the document's own business.
-// Guides pass their own allowlist; the legal set is the default.
-export function assertClean(html, allowlist = TOP_LEVEL_ALLOWLIST) {
-  const placeholder = /\\\([^)]*\)?/.exec(html);
-  if (placeholder) throw new Error(`assertClean: unresolved placeholder ${placeholder[0]}`);
-  const embedded = /<(script|style)\b/i.exec(html);
-  if (embedded) throw new Error(`assertClean: embedded <${embedded[1].toLowerCase()}> element is not allowed`);
-  if (html.includes('—')) {
-    throw new Error('assertClean: em dash (U+2014) is not allowed in user-facing legal text');
-  }
-
-  const stripped = html.replace(/<!--[\s\S]*?-->/g, '');
-  const tagRe = /<(\/?)([a-zA-Z][a-zA-Z0-9]*)\b([^>]*)>/g;
-  let depth = 0;
-  for (let m = tagRe.exec(stripped); m; m = tagRe.exec(stripped)) {
-    const [, closing, rawTag, attrs] = m;
-    const tag = rawTag.toLowerCase();
-    if (closing) { depth = Math.max(0, depth - 1); continue; }
-    const selfClosing = VOID_TAGS.has(tag) || /\/\s*$/.test(attrs);
-    if (depth === 0) {
-      const cls = attrValue(attrs, 'class');
-      const allowed = allowlist[tag];
-      if (!allowed || !allowed.includes(cls)) {
-        const label = cls ? `<${tag} class="${cls}">` : `<${tag}>`;
-        throw new Error(`assertClean: top-level ${label} is outside the allowlist`);
-      }
-    }
-    if (!selfClosing) depth += 1;
-  }
-  if (depth !== 0) throw new Error(`assertClean: unbalanced markup, ${depth} element(s) never closed`);
-}
+// Legal fragments use the legal allowlist unless a caller passes another one.
+export const assertClean = (html, allowlist = TOP_LEVEL_ALLOWLIST) =>
+  assertAllowlisted(html, allowlist, { text: 'user-facing legal' });
 
 // Strips the file's leading `Source of truth` comment before any check or output.
 export function normaliseDocument(source) {
@@ -102,12 +63,6 @@ export function normaliseDocument(source) {
 const STYLESHEETS = ['tokens', 'base', 'layout', 'components', 'legal'].map((name) => `/assets/css/${name}.css`);
 const MODULES = ['/assets/js/boot.js'];
 const CT_PAGE = 'legal';
-
-const reindent = (html, indent) => {
-  const lines = html.replace(/^\s*\n|\s+$/g, '').split('\n');
-  const common = Math.min(...lines.filter((l) => l.trim()).map((l) => /^[ \t]*/.exec(l)[0].length));
-  return lines.map((l) => (l.trim() ? indent + l.slice(common) : '')).join('\n');
-};
 
 // Chrome (skip link, nav, footer) comes from tools/partials via the shared page library.
 export function composePage({ locale, kind, body, strings, partialsDir = PARTIALS_DIR, rootDir = ROOT }) {
@@ -127,7 +82,7 @@ export function composePage({ locale, kind, body, strings, partialsDir = PARTIAL
       stylesheets: STYLESHEETS,
       modules: MODULES,
     },
-    body: `<article class="legal">\n${reindent(body, '  ')}\n</article>`,
+    body: `<article class="legal">\n${indent(reindent(body), '  ')}\n</article>`,
   });
   return hashAssetRefs(html, rootDir);
 }
@@ -147,15 +102,13 @@ export function readEulaUrl(eulaHtml = readFileSync(join(ROOT, 'eula/index.html'
   return urls[0];
 }
 
-export const count = (html, re) => (html.match(re) || []).length;
-
 export function pageChecks({ page, source, locale, kind }) {
   const slug = SLUGS[kind];
   const prefix = PREFIX[locale];
   const article = /<article class="legal">([\s\S]*?)<\/article>/.exec(page)?.[1] ?? '';
   let allowlist = true;
   // Em dashes are stripped here so the dedicated `no em dash` row below is the only one reporting them.
-  try { assertClean(article.replace(/—/g, '')); } catch (e) { allowlist = e.message; }
+  try { assertClean(article.replaceAll(EM_DASH, '')); } catch (e) { allowlist = e.message; }
   return {
     'exactly one h1': count(page, /<h1\b/g) === 1,
     'no unresolved placeholder': !page.includes('\\('),
@@ -163,7 +116,7 @@ export function pageChecks({ page, source, locale, kind }) {
     'no script/style in article': !/<(script|style)\b/i.test(article),
     'h2 count matches source': count(article, /<h2\b/g) === count(source, /<h2\b/g),
     'top-level allowlist': allowlist,
-    'no em dash': !article.includes('—'),
+    'no em dash': !article.includes(EM_DASH),
     'no bare legal href': !/href="(privacy-policy|terms-of-service)\//.test(page),
     'no bare asset path': !/(?:href|src)="(?:assets|images)\//.test(page),
     'brand href is locale home': page.includes(`<a href="${prefix}/" class="brand-mark"`),
@@ -171,12 +124,6 @@ export function pageChecks({ page, source, locale, kind }) {
     'canonical ends with slug': page.includes(`<link rel="canonical" href="${SITE}${prefix}/${slug}/" />`),
   };
 }
-
-const printChecks = (log, label, checks) => {
-  for (const [k, v] of Object.entries(checks)) {
-    log(`${v === true ? 'ok  ' : 'FAIL'} ${label}: ${k}${typeof v === 'string' ? ` — ${v}` : ''}`);
-  }
-};
 
 // Builds all four pages from content/legal/*.html and prints the sanity table before writing.
 export function build({ outDir = ROOT, contentDir = CONTENT_DIR, partialsDir = PARTIALS_DIR, log = console.log } = {}) {
@@ -196,12 +143,7 @@ export function build({ outDir = ROOT, contentDir = CONTENT_DIR, partialsDir = P
   });
 
   log(`eula_url is consistent in eula/index.html: ${eulaUrl}`);
-  let failed = false;
-  for (const p of pages) {
-    printChecks(log, p.path, p.checks);
-    if (Object.values(p.checks).some((v) => v !== true)) failed = true;
-  }
-  if (failed) throw new Error('sanity checks failed; nothing written');
+  reportChecks(pages, log);
 
   for (const p of pages) {
     const file = join(outDir, p.path);

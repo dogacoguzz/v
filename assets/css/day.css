@@ -304,13 +304,13 @@ body[data-phase="night"] .rail__sun { background: transparent; box-shadow: inset
 
 /* ---------- Pop-ins: only Coach cards and data landings move ---------- */
 
-html.js .day [data-pop] {
+html.day-ready .day [data-pop] {
   opacity: 0;
   transform: translateY(28px) scale(0.94) rotate(var(--tilt, 0deg));
   transition: opacity 0.35s ease var(--d, 0s), transform 0.9s var(--ease-spring) var(--d, 0s);
 }
 
-html.js .day [data-pop].in {
+html.day-ready .day [data-pop].in {
   opacity: 1;
   transform: var(--rest, none);
 }
@@ -577,7 +577,7 @@ html.js .day [data-pop].in {
 
 .rhythm i.is-peak { background: var(--data-steps); }
 
-html.js .in .rhythm i {
+html.day-ready .in .rhythm i {
   animation: day-grow 0.8s var(--ease-spring) both;
   animation-delay: calc(var(--k) * 35ms + 0.15s);
 }
@@ -621,7 +621,7 @@ html.js .in .rhythm i {
   transition: stroke-dashoffset 1.3s var(--ease-soft);
 }
 
-html.js .lunch:not(.in) .ring__arc { stroke-dashoffset: 440; }
+html.day-ready .lunch:not(.in) .ring__arc { stroke-dashoffset: 440; }
 
 .ring__mid {
   position: absolute;
@@ -682,8 +682,8 @@ html.js .lunch:not(.in) .ring__arc { stroke-dashoffset: 440; }
   stroke-dashoffset: 0;
 }
 
-html.js .runcard:not(.in) .route__path { stroke-dashoffset: 1000; }
-html.js .runcard .route__path { transition: stroke-dashoffset 2.2s var(--ease-soft) 0.3s; }
+html.day-ready .runcard:not(.in) .route__path { stroke-dashoffset: 1000; }
+html.day-ready .runcard .route__path { transition: stroke-dashoffset 2.2s var(--ease-soft) 0.3s; }
 
 .route__start {
   fill: var(--data-run);
@@ -793,9 +793,9 @@ html.js .runcard .route__path { transition: stroke-dashoffset 2.2s var(--ease-so
 .glass--full { --on: 1; border-color: var(--data-water); }
 .glass--empty { border-style: dashed; }
 
-html.js .intake:not(.in) .glass--full { --on: 0; }
+html.day-ready .intake:not(.in) .glass--full { --on: 0; }
 
-html.js .intake .glass::after {
+html.day-ready .intake .glass::after {
   transition: transform 0.7s var(--ease-spring);
   transition-delay: calc(var(--k, 0) * 110ms + 0.2s);
 }
@@ -1163,17 +1163,17 @@ html.js .intake .glass::after {
 /* ---------- Reduced motion: every card and final value shows, nothing travels ---------- */
 
 @media (prefers-reduced-motion: reduce) {
-  html.js .day [data-pop],
-  html.js .day [data-pop].in {
+  html.day-ready .day [data-pop],
+  html.day-ready .day [data-pop].in {
     opacity: 1;
     transform: var(--rest, none);
     transition: none;
   }
 
-  html.js .runcard:not(.in) .route__path { stroke-dashoffset: 0; }
-  html.js .intake:not(.in) .glass--full { --on: 1; }
-  html.js .lunch:not(.in) .ring__arc { stroke-dashoffset: calc(440 - 440 * var(--pct, 0)); }
-  html.js .in .rhythm i { animation: none; }
+  html.day-ready .runcard:not(.in) .route__path { stroke-dashoffset: 0; }
+  html.day-ready .intake:not(.in) .glass--full { --on: 1; }
+  html.day-ready .lunch:not(.in) .ring__arc { stroke-dashoffset: calc(440 - 440 * var(--pct, 0)); }
+  html.day-ready .in .rhythm i { animation: none; }
   .rail__colon { animation: none; }
   .rail__tick.is-hit { transform: none; }
   .burst { display: none; }
