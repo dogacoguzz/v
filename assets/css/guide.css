@@ -1,0 +1,4 @@
+/* guide.css: guide and guide-index page styles (placeholder until the guide styling lands). */
+
+/* The calculator toggles fields and its JS-only form with [hidden]; keep it winning over display rules. */
+.guide-tool [hidden] { display: none; }

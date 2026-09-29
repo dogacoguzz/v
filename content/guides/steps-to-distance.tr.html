@@ -1,0 +1,78 @@
+<!--guide
+{
+  "slug": { "en": "steps-to-distance", "tr": "adim-mesafe" },
+  "ctPage": "g-distance",
+  "order": 4,
+  "title": "Adımdan mesafe hesaplayıcı",
+  "description": "Adım sayını adım uzunluğundan ya da boyundan kilometreye çevir. Hesaplayıcı tarayıcında çalışır, hiçbir yere veri göndermez.",
+  "lastReviewed": "2026-09-29",
+  "tool": "steps-distance",
+  "coach": {
+    "title": "Adımların, kendi ortalamanla birlikte",
+    "line": "Ortalaman 6.500 adım. Bugün biraz daha fazlasını dene.",
+    "body": "Velora günlük adımlarını Sağlık uygulamasından okur. Velora Koç sabit bir sayı yerine kendi son ortalamana göre adım hedefi önerir."
+  },
+  "sources": [
+    { "title": "Mobbs RJ ve ark. Normative database of spatiotemporal gait metrics across age groups: an observational case-control study. Sensors, 2025", "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC11768510/" },
+    { "title": "Hoeger WWK ve ark. One-mile step count at walking and running speeds. ACSM's Health & Fitness Journal, 2008", "url": "https://scholarworks.boisestate.edu/kinesiology_facpubs/47/" }
+  ]
+}
+-->
+<p><strong>10.000 adım çoğu yetişkin için yaklaşık 6,5 ile 8 kilometre eder.</strong> Kesin mesafe, adım sayının adım uzunluğunla çarpımı. Adım uzunluğu da en çok boyuna ve yürüme temposuna bağlı.</p>
+
+<div class="guide-tool" data-steps-distance
+     data-msg-empty="Mesafeyi görmek için bütün kutuları doldur."
+     data-msg-zero="Sıfırdan büyük bir sayı yaz."
+     data-msg-negative="Pozitif bir sayı yaz."
+     data-msg-invalid="Sadece rakam kullan, mesela 10000."
+     data-msg-steps-range="En fazla 200.000 adım girebilirsin."
+     data-msg-step-length-range="Adım uzunluğu genelde 30 ile 150 cm arasındadır."
+     data-msg-height-range="100 ile 230 cm arasında bir boy gir."
+     data-msg-result="{distance} (adım başına {stepLength})">
+  <p class="guide-tool__formula">Mesafe = adım sayısı × adım uzunluğu. Sadece boyunu biliyorsan adım uzunluğu ≈ 0,415 × boy.</p>
+  <form class="guide-tool__form" hidden>
+    <p class="guide-tool__field">
+      <label for="sd-steps">Adım sayısı</label>
+      <input id="sd-steps" name="steps" type="text" inputmode="numeric" autocomplete="off" value="10000" />
+    </p>
+    <fieldset class="guide-tool__choice">
+      <legend>Neyle hesaplansın?</legend>
+      <label><input type="radio" name="mode" value="stepLength" checked /> Adım uzunluğu</label>
+      <label><input type="radio" name="mode" value="height" /> Boy</label>
+    </fieldset>
+    <div data-show-mode="stepLength">
+      <p class="guide-tool__field">
+        <label for="sd-step-cm">Adım uzunluğu (cm)</label>
+        <input id="sd-step-cm" name="stepLengthCm" type="text" inputmode="decimal" autocomplete="off" value="75" />
+      </p>
+    </div>
+    <div data-show-mode="height" hidden>
+      <p class="guide-tool__field">
+        <label for="sd-height-cm">Boy (cm)</label>
+        <input id="sd-height-cm" name="heightCm" type="text" inputmode="decimal" autocomplete="off" value="175" />
+      </p>
+    </div>
+    <p class="guide-tool__result-row">
+      <output class="guide-tool__result" for="sd-steps sd-step-cm sd-height-cm" aria-live="polite"></output>
+    </p>
+  </form>
+</div>
+
+<h2>Hesaplayıcı adım uzunluğunu boydan nasıl tahmin ediyor?</h2>
+<p>Yaygın bir pratik kural kullanıyor: bir adım, boyunun yaklaşık 0,415 katı. 180 cm boyundaki biri için bu yaklaşık 75 cm eder, yani 10.000 adım kabaca 7,5 km. 313 sağlıklı yetişkinin yürüyüşünü ölçen 2025 tarihli bir çalışmada ortalama adım uzunluğu 141 ile 150 cm boyundakilerde 0,62 m, 191 ile 200 cm boyundakilerde 0,91 m çıktı. Pratik kural çoğu boy için bu değerlere yakın düşüyor, uzun boylular ise genelde tahminden biraz daha uzun adım atıyor.</p>
+
+<h2>Adım ile çift adım arasındaki fark ne?</h2>
+<p>Bir adım bir ayaktan diğer ayağa kadar olan mesafe. Çift adım ise iki adım, yani bir ayaktan yine aynı ayağa kadar. Telefonlar ve adımsayarlar tek adımları sayar, bu yüzden hesaplayıcı da tek bir adımın uzunluğunu soruyor.</p>
+
+<h2>Kendi adım uzunluğunu nasıl ölçersin?</h2>
+<ol>
+  <li>Düz bir yolda bir başlangıç çizgisi belirle.</li>
+  <li>Normal temponla 10 adım at ve son adımının bittiği yeri işaretle.</li>
+  <li>Mesafeyi ölç ve 10'a böl.</li>
+</ol>
+
+<h2>Telefonum neden farklı bir mesafe gösteriyor?</h2>
+<p>Telefonlar ve saatler kendi modellerini, dışarıdayken de çoğu zaman GPS'i kullanır. Adım uzunluğun temponla da değişir: adım sayısı üzerine yapılan araştırmalar, bir mil yol için gereken adım sayısının yürürken ve koşarken farklı olduğunu gösteriyor. Bu tür bir hesaplayıcı iyi bir tahmin verir, kesin bir ölçüm değil.</p>
+
+<h2>Velora bunun neresinde?</h2>
+<p>Velora günlük adımlarını Sağlık uygulamasından okur ve hedefinle birlikte gösterir. Velora Koç kendi son ortalamana göre adım hedefi önerir: ortalaman 6.500 ise 7.000'i dene der.</p>

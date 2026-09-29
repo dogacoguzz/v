@@ -7,6 +7,7 @@
 import { spawnSync } from 'node:child_process';
 import { dirname, join } from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
+import { build as buildGuides } from './build-guides.mjs';
 import { build as buildLegal } from './build-legal.mjs';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
@@ -20,6 +21,7 @@ function runNodeScript(path) {
 export const BUILDERS = [
   { name: 'legal', run: ({ log }) => buildLegal({ log }) },
   { name: 'landing', run: () => runNodeScript('tools/build-tr.mjs') },
+  { name: 'guides', run: ({ log }) => buildGuides({ log }) },
 ];
 
 export async function runBuilders(builders = BUILDERS, { log = console.log } = {}) {

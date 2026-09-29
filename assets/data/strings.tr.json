@@ -132,5 +132,22 @@
       "title": "Kullanım Koşulları · Velora",
       "description": "Velora iOS uygulamasını kullanırken geçerli olan koşullar."
     }
+  },
+  "guides": {
+    "breadcrumb": "Rehberler",
+    "indexTitle": "Rehberler",
+    "indexMetaTitle": "Adım, su, alkol ve antrenman rehberi · Velora",
+    "indexDescription": "Günlük adım, su, alkol ve antrenman hakkında kaynaklı kısa cevaplar ve adımdan mesafe hesaplayıcı.",
+    "indexIntro": "Adım, su, alkol ve antrenmanla ilgili gündelik sorulara kısa cevaplar. Her rehber kaynaklarını ve en son ne zaman gözden geçirildiğini gösterir.",
+    "indexCoach": {
+      "title": "Bu sayıları kendi gününde gör",
+      "line": "Bugün 7.200 adım attın, ortalamanın üstündesin.",
+      "body": "Velora adımlarını ve antrenmanlarını Sağlık uygulamasından okur, suyunu ve içeceklerini takip eder. Velora Koç bunları kısa yorumlara ve hedef önerilerine çevirir."
+    },
+    "titleSuffix": " · Velora",
+    "sources": "Kaynaklar",
+    "lastReviewed": "Son gözden geçirme: {date}",
+    "note": "Genel bilgi amaçlıdır, tıbbi tavsiye değildir. Kendi sağlığınla ilgili soruların için bir doktora danış.",
+    "coachLabel": "Velora Koç"
   }
 }

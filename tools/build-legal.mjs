@@ -30,7 +30,7 @@ export const sourcePath = ({ locale, kind }) => `content/legal/${SLUGS[kind]}.${
 export const SOURCE_PATHS = DOCUMENTS.map(sourcePath);
 
 const VOID_TAGS = new Set(['area', 'base', 'br', 'col', 'embed', 'hr', 'img', 'input', 'link', 'meta', 'source', 'track', 'wbr']);
-const TOP_LEVEL_ALLOWLIST = {
+export const TOP_LEVEL_ALLOWLIST = {
   h1: [''],
   h2: [''],
   p: ['', 'last-updated'],
@@ -60,7 +60,8 @@ export function wrapTables(html) {
 }
 
 // Top-level elements must match the allowlist; nested markup is the document's own business.
-export function assertClean(html) {
+// Guides pass their own allowlist; the legal set is the default.
+export function assertClean(html, allowlist = TOP_LEVEL_ALLOWLIST) {
   const placeholder = /\\\([^)]*\)?/.exec(html);
   if (placeholder) throw new Error(`assertClean: unresolved placeholder ${placeholder[0]}`);
   const embedded = /<(script|style)\b/i.exec(html);
@@ -79,7 +80,7 @@ export function assertClean(html) {
     const selfClosing = VOID_TAGS.has(tag) || /\/\s*$/.test(attrs);
     if (depth === 0) {
       const cls = attrValue(attrs, 'class');
-      const allowed = TOP_LEVEL_ALLOWLIST[tag];
+      const allowed = allowlist[tag];
       if (!allowed || !allowed.includes(cls)) {
         const label = cls ? `<${tag} class="${cls}">` : `<${tag}>`;
         throw new Error(`assertClean: top-level ${label} is outside the allowlist`);

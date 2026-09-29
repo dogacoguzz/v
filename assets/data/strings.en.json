@@ -132,5 +132,22 @@
       "title": "Terms of Service · Velora",
       "description": "The terms that apply when you use the Velora iOS app."
     }
+  },
+  "guides": {
+    "breadcrumb": "Guides",
+    "indexTitle": "Guides",
+    "indexMetaTitle": "Guides on steps, water, alcohol and training · Velora",
+    "indexDescription": "Short, sourced answers about daily steps, water, alcohol and training, plus a steps to distance calculator.",
+    "indexIntro": "Short answers to everyday questions about steps, water, alcohol and training. Each guide lists its sources and the date it was last reviewed.",
+    "indexCoach": {
+      "title": "See these numbers for your own day",
+      "line": "You walked 7,200 steps today, above your average.",
+      "body": "Velora reads your steps and workouts from Apple Health and tracks your water and drinks. Velora Coach turns them into short insights and goal suggestions."
+    },
+    "titleSuffix": " · Velora",
+    "sources": "Sources",
+    "lastReviewed": "Last reviewed {date}",
+    "note": "General information, not medical advice. For questions about your own health, talk to a doctor.",
+    "coachLabel": "Velora Coach"
   }
 }
