@@ -1,4 +1,367 @@
-/* guide.css: guide and guide-index page styles (placeholder until the guide styling lands). */
+/* guide.css: guide pages, the steps calculator and the guide index. Flat colours, edge shadows. */
 
 /* The calculator toggles fields and its JS-only form with [hidden]; keep it winning over display rules. */
 .guide-tool [hidden] { display: none; }
+
+body[data-page="guide"] main {
+  padding: var(--space-6) var(--container-pad) var(--space-8);
+}
+
+.guide,
+.guides-index {
+  max-width: 44rem;
+  margin: 0 auto;
+}
+
+.guides-index { max-width: 48rem; }
+
+.guide__header {
+  padding-bottom: var(--space-5);
+  margin-bottom: var(--space-5);
+  border-bottom: 2px solid var(--line);
+}
+
+.guide__header h1 {
+  font-size: clamp(2rem, 4vw + 0.75rem, 3.25rem);
+  text-wrap: balance;
+}
+
+.guide__crumb {
+  margin-bottom: var(--space-3);
+  font-family: var(--font-sans);
+  font-size: var(--fs-small);
+  font-weight: 600;
+}
+
+.guide__crumb a {
+  color: var(--coach);
+  padding: var(--space-1) 0;
+}
+
+.guide__crumb a::before { content: "\2190\00a0"; }
+.guide__crumb a:hover { text-decoration: underline; text-underline-offset: 4px; }
+
+.guide__intro {
+  max-width: 68ch;
+  margin-top: var(--space-4);
+  font-size: var(--fs-lead);
+  color: var(--text-secondary);
+}
+
+.guide__body {
+  max-width: 70ch;
+  color: var(--text-secondary);
+  overflow-wrap: break-word;
+}
+
+.guide__body > * + * { margin-top: var(--space-4); }
+
+.guide__body > p:first-child {
+  font-size: var(--fs-lead);
+  color: var(--text-main);
+}
+
+.guide__body strong { color: var(--text-main); font-weight: 600; }
+
+.guide__body h2 {
+  margin-top: var(--space-7);
+  font-size: var(--fs-h3);
+  line-height: var(--lh-snug);
+  color: var(--text-main);
+  text-wrap: balance;
+}
+
+.guide__body h2 + * { margin-top: var(--space-3); }
+
+.guide__body ol,
+.guide__body ul {
+  padding-left: 1.4rem;
+}
+
+.guide__body li + li { margin-top: var(--space-2); }
+.guide__body li::marker { color: var(--coach); font-weight: 600; }
+
+.guide__body a,
+.guide-sources a {
+  color: var(--coach);
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 3px;
+}
+
+.guide__body a:hover,
+.guide-sources a:hover { color: var(--text-main); }
+
+/* Calculator */
+
+.guide-tool {
+  max-width: 100%;
+  padding: var(--space-5);
+  background: var(--surface-card);
+  border: 2px solid var(--line-strong);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--edge-shadow);
+  color: var(--text-main);
+}
+
+.guide-tool > * + * { margin-top: var(--space-4); }
+
+.guide-tool__formula {
+  font-family: var(--font-sans);
+  font-size: var(--fs-small);
+  color: var(--text-secondary);
+}
+
+.guide-tool__form > * + * { margin-top: var(--space-4); }
+
+.guide-tool__field {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2) var(--space-3);
+}
+
+.guide-tool label {
+  font-size: var(--fs-small);
+  font-weight: 500;
+  color: var(--text-main);
+}
+
+.guide-tool__field label { flex: 1 0 100%; }
+
+.guide-tool input[type="text"] {
+  flex: 1 1 8rem;
+  min-width: 0;
+  max-width: 100%;
+  min-height: 48px;
+  padding: var(--space-2) var(--space-4);
+  font-family: var(--font-sans);
+  font-size: 1.125rem;
+  font-variant-numeric: tabular-nums;
+  color: var(--text-main);
+  background: var(--surface);
+  border: 2px solid var(--line-strong);
+  border-radius: var(--radius-sm);
+  transition: border-color var(--t-fast);
+}
+
+.guide-tool input[type="text"]:hover { border-color: var(--text-tertiary); }
+
+.guide-tool input[type="text"]:focus-visible {
+  border-color: var(--coach);
+  outline: 3px solid var(--coach);
+  outline-offset: 2px;
+}
+
+.guide-tool input[aria-invalid="true"] {
+  border-color: var(--data-run);
+  background: var(--surface-card-2);
+}
+
+.guide-tool__choice {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  margin-inline: 0;
+  padding: 0;
+  border: 0;
+  min-width: 0;
+}
+
+.guide-tool__choice legend {
+  flex: 1 0 100%;
+  padding: 0;
+  margin-bottom: var(--space-2);
+  font-family: var(--font-sans);
+  font-size: var(--fs-small);
+  font-weight: 600;
+  color: var(--text-tertiary);
+}
+
+/* Radios become chunky segment chips; the native input stays focusable. */
+.guide-tool__choice label {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  padding: var(--space-2) var(--space-4);
+  background: var(--surface-card-2);
+  border: 2px solid var(--line-strong);
+  border-radius: var(--radius-pill);
+  cursor: pointer;
+  transition: background-color var(--t-fast), border-color var(--t-fast), color var(--t-fast);
+}
+
+.guide-tool__choice label:hover { border-color: var(--text-tertiary); }
+
+.guide-tool__choice input[type="radio"] {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.guide-tool__choice label:has(input:checked) {
+  background: var(--coach);
+  border-color: var(--coach);
+  color: var(--coach-ink);
+  font-weight: 600;
+}
+
+.guide-tool__choice label:has(input:focus-visible) {
+  outline: 3px solid var(--coach);
+  outline-offset: 3px;
+}
+
+.guide-tool__result-row {
+  margin: 0;
+}
+
+.guide-tool__result {
+  display: block;
+  padding: var(--space-4);
+  border-radius: var(--radius-md);
+  font-family: var(--font-display);
+  font-size: clamp(1.25rem, 1vw + 1rem, 1.6rem);
+  font-weight: 700;
+  line-height: var(--lh-snug);
+  letter-spacing: -0.01em;
+  font-variant-numeric: tabular-nums;
+  overflow-wrap: anywhere;
+}
+
+.guide-tool__result[data-state="result"] {
+  background: var(--data-steps);
+  color: var(--data-ink);
+  box-shadow: 0 5px 0 var(--surface-edge);
+}
+
+.guide-tool__result[data-state="message"] {
+  background: var(--surface-card-2);
+  border: 2px dashed var(--data-run);
+  color: var(--text-main);
+  font-family: var(--font-sans);
+  font-size: var(--fs-body);
+  font-weight: 500;
+  letter-spacing: 0;
+}
+
+.guide-tool__result:empty { display: none; }
+
+/* Sources */
+
+.guide-sources {
+  max-width: 70ch;
+  margin-top: var(--space-7);
+  padding-top: var(--space-5);
+  border-top: 2px solid var(--line);
+  font-size: var(--fs-small);
+  color: var(--text-secondary);
+  overflow-wrap: anywhere;
+}
+
+.guide-sources h2 { font-size: var(--fs-h3); }
+.guide-sources ol { margin: var(--space-3) 0 0; padding-left: 1.4rem; }
+.guide-sources li + li { margin-top: var(--space-2); }
+.guide-sources__reviewed { margin-top: var(--space-4); font-family: var(--font-sans); font-size: var(--fs-label); color: var(--text-tertiary); }
+.guide-sources__note { margin-top: var(--space-2); color: var(--text-tertiary); }
+
+/* Coach call to action */
+
+.guide-cta {
+  margin-top: var(--space-7);
+  padding: var(--space-5);
+  background: var(--coach-surface);
+  border: 2px solid var(--coach-line);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--edge-shadow-coach);
+}
+
+.guide-cta > * + * { margin-top: var(--space-3); }
+
+.guide-cta__label {
+  font-family: var(--font-sans);
+  font-size: var(--fs-small);
+  font-weight: 600;
+  color: var(--coach);
+}
+
+.guide-cta h2 { font-size: var(--fs-h3); text-wrap: balance; }
+
+.guide-cta__line {
+  display: inline-block;
+  padding: var(--space-2) var(--space-4);
+  background: var(--coach);
+  color: var(--coach-ink);
+  border-radius: var(--radius-md) var(--radius-md) var(--radius-md) var(--space-1);
+  font-weight: 600;
+}
+
+.guide-cta__body { color: var(--coach-text-soft); max-width: 60ch; }
+
+.guide-cta .store-badge { margin-top: var(--space-4); }
+
+/* Index */
+
+.guide-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: var(--space-5);
+}
+
+.guide-list__item {
+  position: relative;
+  padding: var(--space-5);
+  background: var(--surface-card);
+  border: 2px solid var(--line-strong);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--edge-shadow);
+  transition: transform var(--t-fast), box-shadow var(--t-fast);
+}
+
+.guide-list__item:hover { transform: translateY(-2px); box-shadow: 0 9px 0 var(--surface-edge); }
+.guide-list__item:active { transform: translateY(4px); box-shadow: var(--edge-shadow-pressed); }
+
+.guide-list__title { font-size: var(--fs-h3); text-wrap: balance; }
+
+/* The whole card is the hit area. */
+.guide-list__link::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+}
+
+.guide-list__link:hover { color: var(--coach); }
+
+.guide-list__link:focus-visible { outline: none; }
+.guide-list__link:focus-visible::after {
+  outline: 3px solid var(--coach);
+  outline-offset: 3px;
+}
+
+.guide-list__desc {
+  margin-top: var(--space-2);
+  max-width: 62ch;
+  color: var(--text-secondary);
+}
+
+.guides-index .guide-cta { margin-top: var(--space-7); }
+
+@media (max-width: 480px) {
+  body[data-page="guide"] main { padding-top: var(--space-5); }
+  .guide-tool, .guide-cta, .guide-list__item { padding: var(--space-4); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .guide-list__item,
+  .guide-tool input[type="text"],
+  .guide-tool__choice label { transition: none; }
+  .guide-list__item:hover,
+  .guide-list__item:active { transform: none; }
+}
