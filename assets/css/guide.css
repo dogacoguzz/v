@@ -217,7 +217,7 @@ body[data-page="guide"] main {
 }
 
 .guide-tool__result-row {
-  margin: 0;
+  margin-bottom: 0;
 }
 
 .guide-tool__result {
