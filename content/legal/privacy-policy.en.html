@@ -1,6 +1,6 @@
 <!-- Source of truth for /privacy-policy/ (en). Edit here, then run: node tools/build-legal.mjs -->
 <h1>Velora Privacy Policy</h1>
-<p class="last-updated">Effective Date: 14 September 2026</p>
+<p class="last-updated">Effective Date: 30 September 2026</p>
 
 <h2>1. Introduction</h2>
 <p>This Privacy Policy explains how Velora (the "Application"), developed and operated by Doğaç Oğuz ("Data Controller", "we", "us"), collects, uses, stores, and protects information. Velora is offered as a Freemium service and is provided "AS IS." By using the Application you agree to the practices described herein.</p>
@@ -31,6 +31,12 @@
         <td>On-device via Apple Health</td>
     </tr>
     <tr>
+        <td>Derived Health Cache</td>
+        <td>Workout summaries, daily step totals, personal records, planned and delivered notification texts (the in-app Notification Center) and cached coach texts computed from your Apple Health data</td>
+        <td>Show your history instantly and plan local notifications</td>
+        <td>On-device app storage only; deleted with the app</td>
+    </tr>
+    <tr>
         <td>Location Data</td>
         <td>Approximate location (reduced accuracy) for sunrise/sunset times</td>
         <td>Automatic light/dark theme switching</td>
@@ -44,7 +50,7 @@
     </tr>
     <tr>
         <td>Device &amp; Usage Data</td>
-        <td>Anonymized IP address, OS version, device model, session duration, screens visited</td>
+        <td>Masked IP address (used by Google only to derive a coarse region), OS version, device model, app version, Firebase's per-install app instance identifier and Crashlytics installation identifier, a random per-launch session identifier, app launch, foreground and background times, screens visited and feature usage events (for example a setting toggled, a paywall shown, an error code). These events never carry health values, goals or workout details.</td>
         <td>Analytics and performance monitoring</td>
         <td>On-device; aggregated reports via Firebase Analytics</td>
     </tr>
@@ -56,9 +62,9 @@
     </tr>
     <tr>
         <td>Subscription Status</td>
-        <td>Apple-provided purchase and entitlement status for Velora Pro, plus an anonymous per-install token used only to link the purchase to this installation</td>
+        <td>Apple-provided purchase and entitlement status for Velora Pro, an anonymous per-install token used only to link the purchase to this installation, and, for analytics, the plan identifier, whether a free trial started and whether the plan came through Family Sharing</td>
         <td>Unlock Velora Pro features</td>
-        <td>Processed by Apple (App Store); cached on-device. We never receive your payment details</td>
+        <td>Processed by Apple (App Store) and cached on-device; the plan identifier, trial flag and Family Sharing flag are logged to Firebase Analytics as usage events. We never receive your payment details, price or transaction identifiers</td>
     </tr>
     <tr>
         <td>iCloud Backup (Velora Pro, optional)</td>
@@ -68,14 +74,14 @@
     </tr>
     <tr>
         <td>Preferences</td>
-        <td>Theme, language, step goal, water goal, notification settings, iCloud backup switch</td>
+        <td>Theme and appearance mode, language, measurement system, step goal and water goal with their change history, target weight, weekly active-day goal, notification settings (per-topic switches, reminder count, alcohol-milestone style), iCloud backup switch</td>
         <td>Remember your choices</td>
-        <td>On-device (UserDefaults)</td>
+        <td>On-device (app storage)</td>
     </tr>
 </table>
 
 <h2>3. On-Device AI Processing</h2>
-<p>Velora uses Apple Intelligence (on-device Foundation Models) to generate workout insights in real time. This processing happens entirely on your device: <strong>no health data is transmitted to any external server</strong> for AI processing. AI-generated insights are informational only and may be inaccurate, incomplete, or unexpected. We do not guarantee the accuracy of any AI-generated content.</p>
+<p>Velora uses Apple Intelligence (on-device Foundation Models) to write short texts in real time: workout insights, step coaching, goal coaching on the Profile and Home screens, and the Home greeting. The model receives figures from your Health data, such as a workout's duration, distance, average heart rate and effort, a comparison with your previous session, recent sleep, resting heart rate and heart rate variability, recent step totals, your current and suggested goals, and the distance to your target weight; the greeting receives no health data. Processing happens entirely on your device: <strong>no health data is transmitted to any external server</strong> for AI processing, and generated texts are cached only on your device. Goal recommendations themselves are computed by fixed rules from your step, water and workout history, age, biological sex and weight, also on your device. AI-generated insights are informational only and may be inaccurate, incomplete, or unexpected. We do not guarantee the accuracy of any AI-generated content.</p>
 
 <h2>4. Apple Health Integration</h2>
 <p>When you connect Velora with Apple Health:</p>
@@ -91,7 +97,7 @@
 <h2>5. Third-Party Services</h2>
 <p>Velora integrates the following services, each governed by their own privacy policies:</p>
 <ul>
-    <li><strong>Firebase Analytics</strong> (Google): anonymous usage analytics</li>
+    <li><strong>Firebase Analytics</strong> (Google): anonymous usage analytics, including subscription plan events without payment details</li>
     <li><strong>Firebase Crashlytics</strong> (Google): crash reporting</li>
     <li><strong>Firebase Remote Config</strong> (Google): feature flags only</li>
     <li><strong>Apple</strong>: App Store / StoreKit for subscription purchases and CloudKit for the optional iCloud backup, governed by Apple's privacy policy</li>
@@ -100,8 +106,8 @@
 
 <h2>6. Background Processing &amp; Notifications</h2>
 <ul>
-    <li>The app may run periodic background tasks to monitor workout completions and sync step counts to widgets</li>
-    <li>Local notifications may be sent for workout summaries, milestones, streaks, and water reminders. The app sends no push notifications, and you control local notifications via notification settings</li>
+    <li>Periodic background tasks plan local notifications up to two weeks ahead and sync workouts and step counts to the app's history and widgets</li>
+    <li>Local notifications may be sent for workout summaries, step goals (goal met, nearly there, time to move), personal bests, weekly, monthly and yearly recaps, hydration reminders and streaks, missed-hydration notices, alcohol-free milestones (discreet wording by default) and a notice when Health access is paused. You control each topic in the app's Notification settings, and iOS asks for notification permission on the onboarding plan screen or when you turn a topic on. Notification texts may include health figures and appear on the lock screen according to your iOS settings. The app sends no push notifications</li>
     <li>No background data is sent to external servers</li>
 </ul>
 
@@ -110,7 +116,7 @@
 
 <h2>8. Data Storage &amp; Security</h2>
 <ul>
-    <li><strong>Local-first:</strong> Health data, profile photo, and preferences remain on your device</li>
+    <li><strong>Local-first:</strong> Health data, the derived health cache, profile photo, and preferences remain on your device</li>
     <li><strong>Encryption:</strong> Data is encrypted in transit (TLS) and at rest (iOS Data Protection)</li>
     <li><strong>iCloud backup (Velora Pro, optional):</strong> Stored in your private iCloud database using Apple's encryption; we cannot read it. You can turn it off at any time in Settings</li>
     <li><strong>No custom backend:</strong> Velora does not operate its own servers. All server-side processing is handled by Google/Firebase infrastructure and, for purchases and the optional iCloud backup, by Apple</li>

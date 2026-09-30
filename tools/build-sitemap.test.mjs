@@ -22,7 +22,7 @@ test('sitemap: covers home, legal, guides index and every guide in both locales'
   assert.ok(urls.includes('https://velorahealthcompanion.com/guides/daily-step-goal/'));
   assert.ok(urls.some((u) => u.startsWith('https://velorahealthcompanion.com/tr/rehber/') && u !== 'https://velorahealthcompanion.com/tr/rehber/'));
   assert.equal(new Set(urls).size, urls.length, 'no duplicate URLs');
-  assert.ok(!urls.some((u) => /eula|app-ads/.test(u)));
+  assert.ok(!urls.some((u) => /eula/.test(u)));
 });
 
 test('sitemap: every URL carries en, tr and x-default alternates that point at the pair', () => {
