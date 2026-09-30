@@ -13,8 +13,8 @@ export const PARTIALS_DIR = join(TOOLS_DIR, 'partials');
 export const SITE = 'https://velorahealthcompanion.com';
 export const LOCALES = ['en', 'tr'];
 export const APP_STORE_ID = '6748447208';
-// TODO(founder): replace with the App Store Connect provider token (pt) before launch.
-export const APP_STORE_PROVIDER_TOKEN = 'TODO_PT';
+// App Store Connect provider token (pt) for campaign links.
+export const APP_STORE_PROVIDER_TOKEN = '127971636';
 export const MAX_CAMPAIGN_LENGTH = 40;
 export const SKIP_TARGET_ID = 'main';
 
