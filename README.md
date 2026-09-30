@@ -123,8 +123,8 @@ The campaign is `<locale>-<page>-<placement>`, at most 40 characters, so each pa
 placement is attributable in App Store Connect analytics.
 
 Set the provider token once: replace the value of `APP_STORE_PROVIDER_TOKEN` in
-`tools/lib/page.mjs` (currently the placeholder `TODO_PT`) with the token from App Store
-Connect, then run `npm run build`.
+`tools/lib/page.mjs` (currently `127971636`) with the token from App Store
+Connect (Analytics > Campaigns), then run `npm run build`.
 
 ## Deployment
 
