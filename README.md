@@ -50,7 +50,7 @@ the same way. Budgets live in `lighthouse/budget.json`.
 ├── tests/e2e/                 Playwright specs (landing, pages)
 ├── lighthouse/budget.json     Lab performance budgets
 ├── playwright.config.mjs
-├── app-ads.txt, robots.txt, CNAME
+├── robots.txt, CNAME
 └── _headers, _redirects       Dormant (GitHub Pages ignores them, see Cloudflare runbook)
 ```
 

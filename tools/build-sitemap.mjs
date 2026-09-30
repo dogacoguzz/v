@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 // build-sitemap.mjs: writes sitemap.xml from the built pages, with hreflang alternates per URL.
-// /eula and /app-ads.txt stay out of it. Run after the other builders (npm run build).
+// /eula stays out of it. Run after the other builders (npm run build).
 //
 //   node tools/build-sitemap.mjs
 

@@ -1,6 +1,6 @@
 
       <h1>Velora Gizlilik Politikası</h1>
-      <p class="last-updated">Yürürlük Tarihi: 14 Eylül 2026</p>
+      <p class="last-updated">Yürürlük Tarihi: 30 Eylül 2026</p>
 
       <h2>1. Giriş</h2>
       <p>Bu Gizlilik Politikası, Doğaç Oğuz ("Veri Sorumlusu", "biz") tarafından geliştirilen ve işletilen Velora ("Uygulama") uygulamasının bilgileri nasıl topladığını, kullandığını, sakladığını ve koruduğunu açıklar. Velora Freemium bir hizmet olarak sunulmakta ve "OLDUĞU GİBİ" sağlanmaktadır. Uygulamayı kullanarak burada açıklanan uygulamaları kabul etmiş olursunuz.</p>
@@ -32,6 +32,12 @@
                 <td>Apple Sağlık aracılığıyla cihazda</td>
             </tr>
             <tr>
+                <td>Türetilmiş Sağlık Önbelleği</td>
+                <td>Apple Sağlık verilerinizden hesaplanan antrenman özetleri, günlük adım toplamları, kişisel rekorlar, planlanmış ve gönderilmiş bildirim metinleri (uygulama içi Bildirim Merkezi) ve önbelleğe alınmış koç metinleri</td>
+                <td>Geçmişinizi anında gösterme ve yerel bildirimleri planlama</td>
+                <td>Yalnızca cihazdaki uygulama depolama alanı; uygulamayla birlikte silinir</td>
+            </tr>
+            <tr>
                 <td>Konum Verisi</td>
                 <td>Gün doğumu/batımı zamanları için yaklaşık konum (düşük doğruluk)</td>
                 <td>Otomatik açık/koyu tema geçişi</td>
@@ -45,7 +51,7 @@
             </tr>
             <tr>
                 <td>Cihaz ve Kullanım Verileri</td>
-                <td>Anonimleştirilmiş IP adresi, işletim sistemi sürümü, cihaz modeli, oturum süresi, ziyaret edilen ekranlar</td>
+                <td>Maskelenmiş IP adresi (Google tarafından yalnızca yaklaşık bir bölge belirlemek için kullanılır), işletim sistemi sürümü, cihaz modeli, uygulama sürümü, Firebase'in kurulum başına uygulama örneği tanımlayıcısı ve Crashlytics kurulum tanımlayıcısı, her açılışta rastgele oluşturulan bir oturum tanımlayıcısı, uygulamanın açılış, ön plana geçiş ve arka plana geçiş zamanları, ziyaret edilen ekranlar ve özellik kullanım olayları (örneğin değiştirilen bir ayar, gösterilen bir abonelik ekranı, bir hata kodu). Bu olaylar hiçbir zaman sağlık değerleri, hedefler veya antrenman ayrıntıları içermez.</td>
                 <td>Analitik ve performans izleme</td>
                 <td>Cihazda; Firebase Analytics aracılığıyla toplu raporlar</td>
             </tr>
@@ -57,9 +63,9 @@
             </tr>
             <tr>
                 <td>Abonelik Durumu</td>
-                <td>Velora Pro için Apple tarafından sağlanan satın alma ve yetki durumu ile satın almayı yalnızca bu kuruluma bağlamak için kullanılan anonim, kurulum başına bir belirteç</td>
+                <td>Velora Pro için Apple tarafından sağlanan satın alma ve yetki durumu, satın almayı yalnızca bu kuruluma bağlamak için kullanılan anonim, kurulum başına bir belirteç ve analitik amacıyla plan tanımlayıcısı, ücretsiz denemenin başlayıp başlamadığı ve planın Aile Paylaşımı yoluyla gelip gelmediği bilgisi</td>
                 <td>Velora Pro özelliklerinin kilidini açma</td>
-                <td>Apple (App Store) tarafından işlenir; cihazda önbelleğe alınır. Ödeme bilgilerinizi asla almayız</td>
+                <td>Apple (App Store) tarafından işlenir ve cihazda önbelleğe alınır; plan tanımlayıcısı, deneme bilgisi ve Aile Paylaşımı bilgisi kullanım olayları olarak Firebase Analytics'e kaydedilir. Ödeme bilgilerinizi, fiyatı veya işlem tanımlayıcılarını asla almayız</td>
             </tr>
             <tr>
                 <td>iCloud Yedekleme (Velora Pro, isteğe bağlı)</td>
@@ -69,15 +75,15 @@
             </tr>
             <tr>
                 <td>Tercihler</td>
-                <td>Tema, dil, adım hedefi, su hedefi, bildirim ayarları, iCloud yedekleme anahtarı</td>
+                <td>Tema ve görünüm modu, dil, ölçü sistemi, değişiklik geçmişleriyle birlikte adım hedefi ve su hedefi, hedef kilo, haftalık aktif gün hedefi, bildirim ayarları (konu bazında anahtarlar, hatırlatıcı sayısı, alkolsüz kilometre taşı üslubu), iCloud yedekleme anahtarı</td>
                 <td>Tercihlerinizi hatırlama</td>
-                <td>Cihazda (UserDefaults)</td>
+                <td>Cihazda (uygulama depolama alanı)</td>
             </tr>
         </table>
       </div>
 
       <h2>3. Cihaz Üzerinde Yapay Zeka İşleme</h2>
-      <p>Velora, antrenman içgörülerini gerçek zamanlı olarak oluşturmak için Apple Intelligence (cihaz üzerinde Foundation Models) kullanmaktadır. Bu işlem tamamen cihazınızda gerçekleşir: <strong>yapay zeka işleme için hiçbir sağlık verisi harici bir sunucuya iletilmez</strong>. Yapay zeka tarafından üretilen içgörüler yalnızca bilgilendirme amaçlıdır ve hatalı, eksik veya beklenmedik olabilir. Yapay zeka tarafından üretilen içeriklerin doğruluğunu garanti etmiyoruz.</p>
+      <p>Velora, kısa metinleri gerçek zamanlı olarak yazmak için Apple Intelligence (cihaz üzerinde Foundation Models) kullanmaktadır: antrenman içgörüleri, adım koçluğu, Profil ve Ana Sayfa ekranlarında hedef koçluğu ve Ana Sayfa selamlaması. Model, sağlık verilerinizden değerler alır; örneğin bir antrenmanın süresi, mesafesi, ortalama kalp atış hızı ve eforu, önceki antrenmanınızla karşılaştırması, son uyku verileri, dinlenme kalp atış hızı ve kalp atış hızı değişkenliği, son adım toplamları, mevcut ve önerilen hedefleriniz ve hedef kilonuza kalan fark; selamlama hiçbir sağlık verisi almaz. İşlem tamamen cihazınızda gerçekleşir: <strong>yapay zeka işleme için hiçbir sağlık verisi harici bir sunucuya iletilmez</strong> ve üretilen metinler yalnızca cihazınızda önbelleğe alınır. Hedef önerilerinin kendisi ise adım, su ve antrenman geçmişiniz, yaşınız, biyolojik cinsiyetiniz ve kilonuzdan sabit kurallarla, yine cihazınızda hesaplanır. Yapay zeka tarafından üretilen içgörüler yalnızca bilgilendirme amaçlıdır ve hatalı, eksik veya beklenmedik olabilir. Yapay zeka tarafından üretilen içeriklerin doğruluğunu garanti etmiyoruz.</p>
 
       <h2>4. Apple Sağlık Entegrasyonu</h2>
       <p>Velora uygulamasını Apple Sağlık ile bağladığınızda:</p>
@@ -93,7 +99,7 @@
       <h2>5. Üçüncü Taraf Hizmetleri</h2>
       <p>Velora, her biri kendi gizlilik politikalarına tabi olan aşağıdaki hizmetleri entegre etmektedir:</p>
       <ul>
-          <li><strong>Firebase Analytics</strong> (Google): anonim kullanım analitikleri</li>
+          <li><strong>Firebase Analytics</strong> (Google): ödeme bilgisi içermeyen abonelik planı olayları dahil anonim kullanım analitikleri</li>
           <li><strong>Firebase Crashlytics</strong> (Google): çökme raporlama</li>
           <li><strong>Firebase Remote Config</strong> (Google): yalnızca özellik bayrakları</li>
           <li><strong>Apple</strong>: abonelik satın alımları için App Store / StoreKit ve isteğe bağlı iCloud yedekleme için CloudKit; Apple'ın gizlilik politikasına tabidir</li>
@@ -102,8 +108,8 @@
 
       <h2>6. Arka Plan İşleme ve Bildirimler</h2>
       <ul>
-          <li>Uygulama, antrenman tamamlamalarını izlemek ve adım sayılarını widget'lara senkronize etmek için periyodik arka plan görevleri çalıştırabilir</li>
-          <li>Antrenman özetleri, kilometre taşları, seriler ve su hatırlatıcıları için yerel bildirimler gönderilebilir. Uygulama push bildirimi göndermez; yerel bildirimleri bildirim ayarlarından kontrol edebilirsiniz</li>
+          <li>Periyodik arka plan görevleri, yerel bildirimleri iki haftaya kadar önceden planlar ve antrenmanları ile adım sayılarını uygulamanın geçmişine ve widget'lara senkronize eder</li>
+          <li>Antrenman özetleri, adım hedefleri (hedef tamamlandı, az kaldı, hareket vakti), kişisel rekorlar, haftalık, aylık ve yıllık özetler, su hatırlatıcıları ve su serileri, kaçırılan su hedefi bildirimleri, alkolsüz kilometre taşları (varsayılan olarak üstü kapalı bir ifadeyle) ve Sağlık erişimi duraklatıldığında bir uyarı için yerel bildirimler gönderilebilir. Her konuyu uygulamanın Bildirim ayarlarından kontrol edersiniz; iOS, bildirim iznini ilk kurulumdaki plan ekranında veya bir konuyu açtığınızda ister. Bildirim metinleri sağlık değerleri içerebilir ve iOS ayarlarınıza göre kilit ekranında görünebilir. Uygulama push bildirimi göndermez</li>
           <li>Arka planda harici sunuculara veri gönderilmez</li>
       </ul>
 
@@ -112,7 +118,7 @@
 
       <h2>8. Veri Depolama ve Güvenlik</h2>
       <ul>
-          <li><strong>Yerel-öncelikli:</strong> Sağlık verileri, profil fotoğrafı ve tercihler cihazınızda kalır</li>
+          <li><strong>Yerel-öncelikli:</strong> Sağlık verileri, türetilmiş sağlık önbelleği, profil fotoğrafı ve tercihler cihazınızda kalır</li>
           <li><strong>Şifreleme:</strong> Veriler aktarım sırasında (TLS) ve beklemedeyken (iOS Veri Koruması) şifrelenir</li>
           <li><strong>iCloud yedekleme (Velora Pro, isteğe bağlı):</strong> Apple'ın şifrelemesi kullanılarak özel iCloud veritabanınızda saklanır; biz okuyamayız. Ayarlar'dan istediğiniz zaman kapatabilirsiniz</li>
           <li><strong>Özel sunucu yok:</strong> Velora kendi sunucularını işletmez. Tüm sunucu taraflı işlemler Google/Firebase altyapısı ve, satın alımlar ile isteğe bağlı iCloud yedekleme için, Apple tarafından gerçekleştirilir</li>
