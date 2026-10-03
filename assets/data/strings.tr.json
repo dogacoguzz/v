@@ -1,9 +1,12 @@
 {
   "meta": {
-    "title": "Velora · Gerçekten yaşadığın gün için bir koç",
-    "description": "Velora Koç, iPhone'undaki Sağlık verilerini okur; adımların, antrenmanların ve suyun hakkında kısa, sade notlar yazar. Cihazda çalışır, hesap gerekmez.",
-    "ogImageAlt": "Velora: yaşadığın günün koçu. Koç kartı ortalamanın 6.500 adım olduğunu söylüyor ve 7.000 öneriyor. İndirmesi ücretsiz, Pro isteğe bağlı.",
-    "offerDescription": "İndirmesi ücretsiz, Pro isteğe bağlı"
+    "title": "Velora: Health Companion · iPhone için Sağlık Koçu",
+    "description": "Velora, iPhone'undaki Sağlık verilerini okur; adımların, antrenmanların ve suyun için kısa koç notları yazar. Hesap gerekmez, indirmesi ücretsiz.",
+    "ogImageAlt": "Velora: Health Companion. Pro etiketli bir Velora Koç kartı ortalamanın 6.500 adım olduğunu söylüyor ve 7.000 öneriyor. İndirmesi ücretsiz, Koç Velora Pro ile.",
+    "offerDescription": "İndirmesi ücretsiz, Koç Velora Pro ile"
+  },
+  "pro": {
+    "badge": "Pro"
   },
   "nav": {
     "langGroupAria": "Dil",
@@ -21,33 +24,34 @@
   "footer": {
     "copy": "© 2026 Velora",
     "disclaimer": "Velora bir sağlık eşlikçisidir, tıbbi cihaz değildir. Tıbbi tavsiye için bir hekime danış.",
-    "legalAria": "Yasal",
+    "linksAria": "Site bağlantıları",
     "privacy": "Gizlilik Politikası",
     "terms": "Kullanım Koşulları",
     "eula": "EULA"
   },
   "legal": {
     "privacy": {
-      "title": "Gizlilik Politikası · Velora",
+      "title": "Gizlilik Politikası · Velora: Health Companion",
       "description": "Velora verilerinizi nasıl işler: her şey cihazınızda kalır, hiçbir şey satılmaz ve her izni siz kontrol edersiniz."
     },
     "terms": {
-      "title": "Kullanım Koşulları · Velora",
+      "title": "Kullanım Koşulları · Velora: Health Companion",
       "description": "Velora iOS uygulamasını kullanırken geçerli olan koşullar."
     }
   },
   "guides": {
     "breadcrumb": "Rehberler",
     "indexTitle": "Rehberler",
-    "indexMetaTitle": "Adım, su, alkol ve antrenman rehberi · Velora",
+    "indexMetaTitle": "iPhone Sağlık Rehberleri: Adım, Su, Alkol · Velora: Health Companion",
     "indexDescription": "Günlük adım, su, alkol ve antrenman hakkında kaynaklı kısa cevaplar ve adımdan mesafe hesaplayıcı.",
     "indexIntro": "Adım, su, alkol ve antrenmanla ilgili gündelik sorulara kısa cevaplar. Her rehber kaynaklarını ve en son ne zaman gözden geçirildiğini gösterir.",
     "indexCoach": {
       "title": "Bu sayıları kendi gününde gör",
       "line": "Bugün 7.200 adım attın, ortalamanın üstündesin.",
-      "body": "Velora adımlarını ve antrenmanlarını Sağlık uygulamasından okur, suyunu ve içeceklerini takip eder. Velora Koç bunları kısa yorumlara ve hedef önerilerine çevirir."
+      "body": "Velora adımlarını Sağlık uygulamasından okur, suyunu ve içeceklerini takip eder ve her biri için kısa bir not yazar. Velora Pro, her antrenmandan sonra Koç ipuçları ve hedeflerin için yapay zekâ koç satırları ekler."
     },
-    "titleSuffix": " · Velora",
+    "titleSuffix": " · Velora: Health Companion",
+    "related": "İlgili rehberler",
     "sources": "Kaynaklar",
     "lastReviewed": "Son gözden geçirme: {date}",
     "note": "Genel bilgi amaçlıdır, tıbbi tavsiye değildir. Kendi sağlığınla ilgili soruların için bir doktora danış.",
@@ -100,7 +104,8 @@
       "cardNote": "Öğle yürüyüşü yaklaşık 1.300 adım ekledi.",
       "toGoBefore": "Hedefine doğru ilerliyorsun,",
       "toGoAfter": "adım kaldı.",
-      "coach2": "Bugün en çok öğle yürüyüşün ekledi."
+      "coach2": "Bugün en çok öğle yürüyüşün ekledi.",
+      "guide": "Günde kaç adım atmak yeterli?"
     },
     "t1810": {
       "title": "Akşam koşusu, sade bir dille özetlendi.",
@@ -126,7 +131,9 @@
       "logged": "Kaydedildi",
       "coach1": "Her zamankinden iki bardak eksik.",
       "coach2": "Bu akşam tek bir içki kaydedildi.",
-      "glassesAria": "Her zamanki 8 bardak sudan 6'sı"
+      "glassesAria": "Her zamanki 8 bardak sudan 6'sı",
+      "guideWater": "Günde ne kadar su içmelisin?",
+      "guideAlcohol": "Alkol sporu ve toparlanmayı etkiler mi?"
     },
     "t2300": {
       "title": "Bugün bu iPhone'da kaldı.",
@@ -138,7 +145,7 @@
       "accountTitle": "Hesap yok",
       "accountText": "Uygulamayı aç ve başla. Kaydolacak bir şey yok.",
       "aiTitle": "Koç, cihazda",
-      "aiText": "Koç, destekleniyorsa iPhone'undaki Apple Intelligence ile yazar; değilse daha basit, hazır cümleler kullanır.",
+      "aiText": "Koç, iPhone'undaki Apple Intelligence ile yazar; bu yüzden Apple Intelligence'ın desteklendiği ve açık olduğu bir cihaz gerekir. Adım ve su notların onsuz da çalışır.",
       "icloudTitle": "Kendi iCloud'un, Pro ile",
       "icloudText": "iCloud yedekleme Pro'ya dahildir ve bize değil, kendi iCloud hesabına gider."
     },
@@ -152,8 +159,40 @@
       "swaps": "Egzersiz alternatifleri",
       "analysis": "Program analizi"
     },
+    "about": {
+      "title": "Velora nedir?",
+      "text": "Velora: Health Companion bir iPhone uygulamasıdır. iPhone'unda zaten olan Sağlık verilerini okur; adımların, suyun ve içeceklerin hakkında kısa, sade notlar yazar. Velora Pro, her antrenmandan sonra Koç ipuçları ve hedeflerin için yapay zekâ koç satırları ekler. İndirmesi ücretsiz, hesap gerekmez. Genel sağlıklı yaşam bilgisidir, tıbbi tavsiye değildir.",
+      "notAffiliated": "Velora adlı diğer ürünlerle bağlantısı yoktur.",
+      "faqTitle": "Sorular",
+      "faq": {
+        "free": {
+          "q": "Velora ücretsiz mi?",
+          "a": "Velora'yı indirmek ücretsiz. Adımların ve suyun için notlar, ana ekran selamı ve kendi geçmişine göre adım hedefi önerisi ücretsiz. Velora Pro isteğe bağlı; her antrenmandan sonra Koç ipuçlarını, hedeflerin için yapay zekâ koç satırlarını, iCloud yedeğini ve ek uygulama ikonlarını ekler."
+        },
+        "account": {
+          "q": "Hesap açmam gerekiyor mu?",
+          "a": "Hayır. Velora hesapsız çalışır. Uygulamayı aç ve başla."
+        },
+        "data": {
+          "q": "Sağlık verilerim iPhone'umdan çıkıyor mu?",
+          "a": "Sağlık verilerin cihazında okunur ve sunucularımıza asla gönderilmez. Velora Pro ile iCloud yedeğin bize değil, kendi iCloud hesabına gider."
+        },
+        "devices": {
+          "q": "Koç hangi iPhone'larda çalışır?",
+          "a": "Velora bir iPhone uygulamasıdır. Velora Koç, Apple Intelligence ile yazar; bu yüzden Apple Intelligence'ın desteklendiği ve açık olduğu bir iPhone gerekir. Adım ve su notların onsuz da çalışır."
+        },
+        "languages": {
+          "q": "Velora Türkçe kullanılabiliyor mu?",
+          "a": "Evet. Uygulama ve bu site Türkçe ve İngilizce."
+        },
+        "medical": {
+          "q": "Velora tıbbi bir cihaz mı?",
+          "a": "Hayır. Velora genel sağlıklı yaşam bilgisi verir, tıbbi tavsiye değildir. Tıbbi soruların için bir doktora danış."
+        }
+      }
+    },
     "close": {
-      "price": "İndirmesi ücretsiz · Pro isteğe bağlı",
+      "price": "İndirmesi ücretsiz · Koç Velora Pro ile",
       "qrCaption": "Bilgisayardan mı bakıyorsun? iPhone kameranla tarat.",
       "titleHtml": "<em>Kendi</em> gününe başla.",
       "qrAlt": "Velora'yı App Store'da açan QR kodu"

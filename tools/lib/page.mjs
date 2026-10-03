@@ -17,6 +17,9 @@ export const APP_STORE_ID = '6748447208';
 export const APP_STORE_PROVIDER_TOKEN = '127971636';
 export const MAX_CAMPAIGN_LENGTH = 40;
 export const SKIP_TARGET_ID = 'main';
+export const APP_NAME = 'Velora: Health Companion';
+export const ORG_ID = `${SITE}/#org`;
+export const WEBSITE_ID = `${SITE}/#website`;
 
 const OG_LOCALES = { en: 'en_US', tr: 'tr_TR' };
 
@@ -48,6 +51,17 @@ export function storeUrl(locale, page, placement) {
   const ct = campaignToken(locale, page, placement);
   return `https://apps.apple.com/app/id${APP_STORE_ID}?pt=${APP_STORE_PROVIDER_TOKEN}&ct=${ct}&mt=8`;
 }
+
+// The publisher node every page's JSON-LD graph shares; logo stays unhashed so the URL is stable.
+export const organization = (locale) => ({
+  '@type': 'Organization',
+  '@id': ORG_ID,
+  name: APP_NAME,
+  alternateName: 'Velora',
+  url: `${SITE}/`,
+  logo: `${SITE}/images/apple-touch-icon.png`,
+  sameAs: [storeUrl(locale, 'home', 'schema')],
+});
 
 export function smartBannerMeta(locale, page) {
   const ct = campaignToken(locale, page, 'banner');
@@ -152,10 +166,15 @@ export function renderPartial(name, vars = {}, { dir = PARTIALS_DIR } = {}) {
   return html;
 }
 
-export function chromeVars(locale, strings, page) {
+// The language switch links to the page's own hreflang alternates, or to each locale home.
+export function chromeVars(locale, strings, page, alternates) {
   assertLocale(locale);
   const p = LOCALE_PATHS[locale];
+  const langHref = Object.fromEntries(LOCALES.map((l) => [l, alternates?.[l] ?? LOCALE_PATHS[l].home]));
+  // A bare "/" sends TR browsers back to /tr/, so the EN home link from a TR page carries ?lang=en.
+  if (locale !== 'en' && langHref.en === '/') langHref.en = '/?lang=en';
   return {
+    langHref,
     nav: strings.nav,
     footer: strings.footer,
     homeHref: p.home,
@@ -172,7 +191,7 @@ export function chromeVars(locale, strings, page) {
 export function composePage({ locale, page, strings, head, body, bodyAttrs = {}, partialsDir = PARTIALS_DIR }) {
   assertLocale(locale);
   const headHtml = typeof head === 'string' ? head : composeHead({ locale, ...head });
-  const vars = chromeVars(locale, strings, page);
+  const vars = chromeVars(locale, strings, page, typeof head === 'string' ? undefined : head.alternates);
   const nav = markLangSwitch(renderPartial('nav', vars, { dir: partialsDir }), locale);
   const footer = renderPartial('footer', vars, { dir: partialsDir });
   const attrs = Object.entries(bodyAttrs).map(([k, v]) => ` ${k}="${escapeAttr(v)}"`).join('');

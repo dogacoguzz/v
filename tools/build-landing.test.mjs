@@ -1,13 +1,14 @@
 import assert from 'node:assert/strict';
-import { readFileSync } from 'node:fs';
+import { existsSync, readFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import test from 'node:test';
 import { fileURLToPath } from 'node:url';
 import {
-  APP_NAME, OUTPUT_PATHS, QR_PATHS, SOURCE_PATH, leftoverEnglish, qrSvg, renderLanding, storeLinks,
+  OUTPUT_PATHS, QR_PATHS, SOURCE_PATH, faqEntries, leftoverEnglish, localizeBody, pageChecks, qrSvg,
+  renderLanding, storeLinks,
 } from './build-landing.mjs';
 import { BUILDERS } from './build.mjs';
-import { SITE, hashedAssetPath, storeUrl } from './lib/page.mjs';
+import { APP_NAME, SITE, hashedAssetPath, storeUrl } from './lib/page.mjs';
 import { keyDiff } from './lib/prerender.mjs';
 import { encodeText, formatBits, reedSolomon } from './lib/qr.mjs';
 
@@ -19,6 +20,12 @@ const committed = { en: read(OUTPUT_PATHS.en), tr: read(OUTPUT_PATHS.tr) };
 const render = (locale, overrides = {}) =>
   renderLanding({ locale, source, strings: strings[locale], stringsEn: strings.en, rootDir: ROOT, ...overrides });
 const clone = (o) => JSON.parse(JSON.stringify(o));
+const graphOf = (html) => {
+  const blocks = [...html.matchAll(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/g)];
+  assert.equal(blocks.length, 1);
+  return JSON.parse(blocks[0][1])['@graph'];
+};
+const node = (graph, type) => graph.find((n) => n['@type'] === type);
 
 // --- Build wiring and determinism ---
 
@@ -60,8 +67,8 @@ test('every apps.apple.com link in tr/index.html carries a tr-home- campaign tok
     const ct = new URL(href.replace(/&amp;/g, '&')).searchParams.get('ct');
     assert.match(ct ?? '', /^tr-home-[a-z]+$/, href);
   }
-  const placements = links.map((h) => /ct=tr-home-([a-z]+)/.exec(h)[1]).sort();
-  assert.deepEqual(placements, ['close', 'hero', 'nav', 'schema']);
+  const placements = links.map((h) => /ct=tr-home-([a-z]+)/.exec(h)[1]);
+  assert.deepEqual([...new Set(placements)].sort(), ['close', 'hero', 'nav', 'schema']);
   assert.match(committed.tr, /<meta name="apple-itunes-app" content="app-id=\d+, affiliate-data=pt=[^&"]+&amp;ct=tr-home-banner" \/>/);
 });
 
@@ -108,8 +115,7 @@ test('og:image, twitter:image and the JSON-LD image carry the og.jpg content has
     const html = committed[locale];
     assert.ok(html.includes(`<meta property="og:image" content="${og}" />`), `${locale} og:image`);
     assert.ok(html.includes(`<meta name="twitter:image" content="${og}" />`), `${locale} twitter:image`);
-    const ld = JSON.parse(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/.exec(html)[1]);
-    assert.equal(ld.image, og, `${locale} JSON-LD image`);
+    assert.equal(node(graphOf(html), 'MobileApplication').image, og, `${locale} JSON-LD image`);
   }
 });
 
@@ -153,6 +159,63 @@ test('TR numbers match what day.js prints with Intl.NumberFormat("tr")', () => {
   }
 });
 
+// --- Pro moments, identity and links (AE1, R1, R3, R6) ---
+
+const moment = (html, id) => new RegExp(`<section[^>]*id="${id}"[\\s\\S]*?</section>`).exec(html)[0];
+
+test('AE1: the 06:40 AI coach line and the 18:10 workout card carry the Pro badge; free moments do not', () => {
+  const badge = (locale) => `<span class="pro-badge" data-i18n="pro.badge">${strings[locale].pro.badge}</span>`;
+  for (const locale of ['en', 'tr']) {
+    const html = committed[locale];
+    assert.ok(moment(html, 't0640').includes(badge(locale)), `${locale} 06:40`);
+    assert.ok(moment(html, 't1810').includes(badge(locale)), `${locale} 18:10`);
+    for (const id of ['coach', 't1240', 't2130', 't2300']) assert.ok(!moment(html, id).includes('pro-badge'), `${locale} ${id}`);
+    assert.equal((html.match(/class="pro-badge"/g) || []).length, 2);
+  }
+  assert.equal(strings.en.day.close.price, 'Free to download · Coach with Velora Pro');
+});
+
+test('the H1 is the headline only; the 06:40 stamp sits outside it', () => {
+  for (const locale of ['en', 'tr']) {
+    const h1 = /<h1\b[^>]*>([\s\S]*?)<\/h1>/.exec(committed[locale])[1];
+    assert.ok(!/\d\d:\d\d/.test(h1), `${locale}: ${h1}`);
+    assert.equal(h1, strings[locale].day.hero.titleHtml);
+    assert.match(moment(committed[locale], 't0640'), /<p class="hero__time tnum" data-stamp>06:40<\/p>/);
+  }
+});
+
+test('the landing has a visible What is Velora block with the not-affiliated line', () => {
+  for (const locale of ['en', 'tr']) {
+    const about = /<section class="about"[\s\S]*?<\/section>/.exec(committed[locale])[0];
+    assert.ok(about.includes(strings[locale].day.about.text));
+    assert.ok(about.includes(strings[locale].day.about.notAffiliated));
+  }
+  assert.equal(strings.en.day.about.notAffiliated, 'Not affiliated with other products named Velora.');
+});
+
+test('titles carry the canonical name, iPhone and the category, within 70 characters', () => {
+  for (const locale of ['en', 'tr']) {
+    const title = /<title>([^<]+)<\/title>/.exec(committed[locale])[1];
+    assert.ok(title.startsWith(`${APP_NAME} · `), title);
+    assert.match(title, /iPhone/);
+    assert.match(title, locale === 'en' ? /Health/ : /Sağlık/);
+    assert.ok([...title].length <= 70, `${title.length} characters`);
+  }
+});
+
+test('in-body guide links point at real guide pages in the page locale', () => {
+  for (const locale of ['en', 'tr']) {
+    const links = [...committed[locale].matchAll(/<ul class="moment__links">([\s\S]*?)<\/ul>/g)]
+      .flatMap((m) => [...m[1].matchAll(/<a href="([^"]+)"/g)].map((l) => l[1]));
+    assert.equal(links.length, 3);
+    for (const href of links) {
+      assert.ok(href.startsWith(locale === 'en' ? '/guides/' : '/tr/rehber/'), `${locale}: ${href}`);
+      assert.ok(existsSync(join(ROOT, href, 'index.html')), `${locale}: ${href} has no page`);
+    }
+  }
+  assert.throws(() => localizeBody('<a href="/x/" data-href-en="/x/">x</a>', 'tr', strings.tr), /data-href-tr/);
+});
+
 test('Coach lines stay under 12 words and start with a word in both locales (R9)', () => {
   const coachKeys = ['hero.coachLine', 't0730.coach', 't1240.coach2', 't1810.coach1', 't1810.coach2', 't1810.coach3', 't2130.coach1', 't2130.coach2'];
   for (const locale of ['en', 'tr']) {
@@ -175,23 +238,66 @@ test('no em dash in either locale or page', () => {
 
 // --- JSON-LD ---
 
-test('JSON-LD is a SoftwareApplication with a free offer, a Pro note and no ratings, per locale', () => {
+test('JSON-LD is one @graph: Organization, WebSite, MobileApplication and FAQPage, per locale', () => {
   for (const locale of ['en', 'tr']) {
-    const blocks = [...committed[locale].matchAll(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/g)];
-    assert.equal(blocks.length, 1);
-    const ld = JSON.parse(blocks[0][1]);
+    const ld = JSON.parse(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/.exec(committed[locale])[1]);
     assert.equal(ld['@context'], 'https://schema.org');
-    assert.equal(ld['@type'], 'SoftwareApplication');
-    assert.equal(ld.name, APP_NAME);
-    assert.equal(ld.operatingSystem, 'iOS');
-    assert.equal(ld.applicationCategory, 'HealthApplication');
-    assert.equal(ld.inLanguage, locale);
-    assert.equal(ld.description, strings[locale].meta.description);
-    assert.deepEqual(ld.offers, { '@type': 'Offer', price: '0', priceCurrency: 'USD', description: strings[locale].meta.offerDescription });
-    assert.match(ld.offers.description, locale === 'en' ? /^Free to download, Pro optional$/ : /Pro isteğe bağlı/);
-    assert.equal(ld.downloadUrl, storeUrl(locale, 'home', 'schema'));
-    assert.ok(!('aggregateRating' in ld) && !('review' in ld));
+    const graph = graphOf(committed[locale]);
+    assert.deepEqual(graph.map((n) => n['@type']), ['Organization', 'WebSite', 'MobileApplication', 'FAQPage']);
+
+    const org = node(graph, 'Organization');
+    assert.equal(org['@id'], `${SITE}/#org`);
+    assert.equal(org.name, APP_NAME);
+    assert.equal(org.logo, `${SITE}/images/apple-touch-icon.png`);
+    assert.deepEqual(org.sameAs, [storeUrl(locale, 'home', 'schema')]);
+    assert.ok(!org.sameAs.some((u) => u.includes('github.com')));
+    assert.ok(!('founder' in org) && !('email' in org), 'developer name and support email wait for F-08');
+
+    const site = node(graph, 'WebSite');
+    assert.equal(site.name, APP_NAME);
+    assert.deepEqual(site.publisher, { '@id': org['@id'] });
+
+    const app = node(graph, 'MobileApplication');
+    assert.equal(app.name, APP_NAME);
+    assert.equal(app.operatingSystem, 'iOS');
+    assert.equal(app.applicationCategory, 'HealthApplication');
+    assert.equal(app.inLanguage, locale);
+    assert.equal(app.description, strings[locale].meta.description);
+    assert.equal(app.downloadUrl, storeUrl(locale, 'home', 'schema'));
+    assert.deepEqual(app.publisher, { '@id': org['@id'] });
+    assert.ok(!('aggregateRating' in app) && !('review' in app));
   }
+});
+
+test('F-04 open: the only offer is the free download, with the stage 1 Coach line', () => {
+  for (const locale of ['en', 'tr']) {
+    const app = node(graphOf(committed[locale]), 'MobileApplication');
+    assert.deepEqual(app.offers, { '@type': 'Offer', price: '0', priceCurrency: 'USD', description: strings[locale].meta.offerDescription });
+    assert.match(app.offers.description, locale === 'en' ? /^Free to download, Coach with Velora Pro$/ : /^İndirmesi ücretsiz, Koç Velora Pro ile$/);
+  }
+  const ldRe = /(<script type="application\/ld\+json">)[\s\S]*?(<\/script>)/;
+  const ld = { '@context': 'https://schema.org', '@graph': graphOf(committed.en) };
+  const app = node(ld['@graph'], 'MobileApplication');
+  app.offers = [app.offers, { '@type': 'Offer', price: '4.99', priceCurrency: 'USD' }];
+  const tampered = committed.en.replace(ldRe, (_, open, close) => `${open}${JSON.stringify(ld)}${close}`);
+  const checks = pageChecks(tampered, { locale: 'en', stringsEn: strings.en, strings: strings.en });
+  assert.notEqual(checks['JSON-LD lists only the free offer'], true);
+  assert.equal(pageChecks(committed.en, { locale: 'en', stringsEn: strings.en, strings: strings.en })['JSON-LD lists only the free offer'], true);
+});
+
+test('FAQPage matches the visible questions and answers word for word', () => {
+  for (const locale of ['en', 'tr']) {
+    const faq = node(graphOf(committed[locale]), 'FAQPage');
+    const entries = faqEntries(source, strings[locale]);
+    assert.ok(entries.length >= 4 && entries.length <= 6);
+    assert.deepEqual(faq.mainEntity.map((q) => q.name), entries.map((e) => e.q));
+    for (const [i, { key, q, a }] of entries.entries()) {
+      assert.equal(faq.mainEntity[i].acceptedAnswer.text, a);
+      assert.ok(committed[locale].includes(`<dt data-i18n="day.about.faq.${key}.q">${q}</dt>`), `${locale} ${key} question`);
+      assert.ok(committed[locale].includes(`<dd data-i18n="day.about.faq.${key}.a">${a}</dd>`), `${locale} ${key} answer`);
+    }
+  }
+  assert.throws(() => faqEntries(source.replace(/data-i18n="day\.about\.faq\.[a-z]+\.q"/g, ''), strings.en), /4 to 6/);
 });
 
 // --- QR code ---

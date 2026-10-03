@@ -1,0 +1,37 @@
+# Velora: Health Companion
+
+> Velora: Health Companion is an iPhone app. It reads the Health data already on your iPhone and writes short, plain notes about your steps, water and drinks. Velora Pro adds Coach tips after every workout and AI coach lines on your goals. Free to download, no account needed. General wellness information, not medical advice.
+
+Not affiliated with other products named Velora.
+
+## Facts
+
+- Is Velora free? Velora is free to download. Notes on your steps and water, the Home greeting and step goal suggestions from your own history are free. Velora Pro is optional and adds Coach tips after every workout, AI coach lines on your goals, iCloud backup and extra app icons.
+- Do I need an account? No. Velora works without an account. Open the app and go.
+- Does my Health data leave my iPhone? Your Health data is read on your device and never sent to our servers. With Velora Pro, iCloud backup goes to your own iCloud account, not to us.
+- Which iPhones does Coach work on? Velora is an iPhone app. Velora Coach writes with Apple Intelligence, so it needs an iPhone where Apple Intelligence is available and turned on. Notes on your steps and water work without it.
+- Is Velora available in Turkish? Yes. The app and this site are in English and Turkish.
+- Is Velora a medical device? No. Velora gives general wellness information, not medical advice. Talk to a doctor about medical questions.
+
+## Pages
+
+- [Velora: Health Companion · On-Device Health Coach for iPhone](https://velorahealthcompanion.com/)
+- [Velora: Health Companion · iPhone için Sağlık Koçu](https://velorahealthcompanion.com/tr/)
+- [Privacy Policy · Velora: Health Companion](https://velorahealthcompanion.com/privacy-policy/)
+- [Gizlilik Politikası · Velora: Health Companion](https://velorahealthcompanion.com/tr/privacy-policy/)
+- [Terms of Service · Velora: Health Companion](https://velorahealthcompanion.com/terms-of-service/)
+- [Kullanım Koşulları · Velora: Health Companion](https://velorahealthcompanion.com/tr/terms-of-service/)
+- [iPhone Health Guides: Steps, Water, Alcohol · Velora: Health Companion](https://velorahealthcompanion.com/guides/)
+- [iPhone Sağlık Rehberleri: Adım, Su, Alkol · Velora: Health Companion](https://velorahealthcompanion.com/tr/rehber/)
+- [How many steps a day do you need?](https://velorahealthcompanion.com/guides/daily-step-goal/)
+- [Günde kaç adım atmak yeterli?](https://velorahealthcompanion.com/tr/rehber/gunluk-adim-hedefi/)
+- [How much water do you need a day?](https://velorahealthcompanion.com/guides/how-much-water/)
+- [Günde ne kadar su içmelisin?](https://velorahealthcompanion.com/tr/rehber/ne-kadar-su/)
+- [Does alcohol affect training and recovery?](https://velorahealthcompanion.com/guides/alcohol-and-training/)
+- [Alkol sporu ve toparlanmayı etkiler mi?](https://velorahealthcompanion.com/tr/rehber/alkol-ve-antrenman/)
+- [Steps to distance calculator](https://velorahealthcompanion.com/guides/steps-to-distance/)
+- [Adımdan mesafe hesaplayıcı](https://velorahealthcompanion.com/tr/rehber/adim-mesafe/)
+
+## Get the app
+
+- App Store: https://apps.apple.com/app/id6748447208?pt=127971636&ct=en-llms-link&mt=8

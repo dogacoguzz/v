@@ -172,8 +172,8 @@ test('applyI18nStrings leaves html, alt and aria-label nodes untouched when thei
 });
 
 test('markLangSwitch flips aria-current to the given locale', () => {
-  const src = '<button type="button" data-locale="en" aria-current="true">EN</button>'
-    + '<button type="button" data-locale="tr" aria-current="false">TR</button>';
+  const src = '<a href="/" hreflang="en" lang="en" data-locale="en" aria-current="true">EN</a>'
+    + '<a href="/tr/" hreflang="tr" lang="tr" data-locale="tr" aria-current="false">TR</a>';
   const tr = markLangSwitch(src, 'tr');
   assert.ok(tr.includes('data-locale="en" aria-current="false"'));
   assert.ok(tr.includes('data-locale="tr" aria-current="true"'));
@@ -217,8 +217,9 @@ test('composePage keeps English chrome, root brand href and EN canonical for loc
   assert.ok(page.includes('<a class="skip-link" href="#main">Skip to content</a>'));
   assert.ok(page.includes('role="group" aria-label="Language"'));
   assert.ok(page.includes('ct=en-legal-nav'));
-  assert.deepEqual(footerHrefs(page), ['/privacy-policy/', '/terms-of-service/', '/eula']);
-  assert.ok(!page.includes('href="/tr/privacy-policy/"'));
+  assert.deepEqual(footerHrefs(page), ['/guides/', '/privacy-policy/', '/terms-of-service/', '/eula']);
+  assert.ok(page.includes('<a href="/tr/privacy-policy/" hreflang="tr" lang="tr" data-locale="tr" aria-current="false">TR</a>'));
+  assert.equal((page.match(/href="\/tr\/privacy-policy\/"/g) || []).length, 1, 'only the language switch links to TR');
   assert.ok(page.includes('data-locale="en" aria-current="true"'));
   assert.ok(page.includes('data-locale="tr" aria-current="false"'));
   assert.ok(!/(?:href|src)="(?:assets|images)\//.test(page));
@@ -241,7 +242,7 @@ test('composePage builds the locale-specific head and chrome around the body', (
   assert.ok(page.includes('role="group" aria-label="Dil"'));
   assert.ok(page.includes('<a class="skip-link" href="#main">İçeriğe atla</a>'));
   assert.ok(page.includes('ct=tr-legal-nav'));
-  assert.deepEqual(footerHrefs(page), ['/tr/privacy-policy/', '/tr/terms-of-service/', '/eula']);
+  assert.deepEqual(footerHrefs(page), ['/tr/rehber/', '/tr/privacy-policy/', '/tr/terms-of-service/', '/eula']);
   assert.ok(page.includes('data-locale="tr" aria-current="true"'));
   assert.ok(page.includes('<main id="main">\n    <article class="legal">\n      <h1>Başlık</h1>\n      <p>Metin</p>\n    </article>\n  </main>'));
   assert.ok(!page.includes('sections.css'));
@@ -378,11 +379,23 @@ test('build fails naming the partial and writes nothing when a chrome partial is
   }
 });
 
-test('footer links resolve to the locale legal pages and /eula on every page', () => {
+test('footer links resolve to the locale guides, legal pages and /eula on every page', () => {
   for (const p of OUTPUT_PATHS) {
     const page = readFileSync(join(ROOT, p), 'utf8');
     const prefix = p.startsWith('tr/') ? '/tr' : '';
-    assert.deepEqual(footerHrefs(page), [`${prefix}/privacy-policy/`, `${prefix}/terms-of-service/`, '/eula'], p);
+    const guides = prefix ? '/tr/rehber/' : '/guides/';
+    assert.deepEqual(footerHrefs(page), [guides, `${prefix}/privacy-policy/`, `${prefix}/terms-of-service/`, '/eula'], p);
+  }
+});
+
+test('legal titles carry the canonical name and stay within 70 characters', () => {
+  for (const locale of ['en', 'tr']) {
+    const strings = loadStrings(locale);
+    for (const kind of ['privacy', 'terms']) {
+      const title = strings.legal[kind].title;
+      assert.ok(title.endsWith(' · Velora: Health Companion'), title);
+      assert.ok([...title].length <= 70, title);
+    }
   }
 });
 

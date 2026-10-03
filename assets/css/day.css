@@ -211,6 +211,27 @@ body[data-phase="night"] .rail__sun { background: transparent; box-shadow: inset
 
 .moment__copy--wide h2 { max-width: 20ch; }
 
+.moment__links {
+  display: grid;
+  gap: 6px;
+  margin: 18px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.moment__links a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  font-weight: 600;
+  color: var(--coach);
+  text-decoration: underline;
+  text-decoration-thickness: 2px;
+  text-underline-offset: 4px;
+}
+
+.moment__links a:hover { color: var(--text-main); }
+
 /* ---------- Cards ---------- */
 
 .coach-card {
@@ -224,6 +245,7 @@ body[data-phase="night"] .rail__sun { background: transparent; box-shadow: inset
 
 .coach-card__head {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
   gap: 10px;
   margin-bottom: 12px;
@@ -333,6 +355,9 @@ html.day-ready .day [data-pop].in {
 .hero__title {
   grid-area: title;
   align-self: end;
+}
+
+.hero__headline {
   font-weight: 800;
   font-size: clamp(2.6rem, 6vw, 5.5rem);
   line-height: 0.95;
@@ -966,6 +991,51 @@ html.day-ready .intake .glass::after {
   transform: rotate(var(--tilt, 0deg));
 }
 
+/* ---------- About and questions ---------- */
+
+.day .about {
+  padding-block: 72px 20px;
+  border-top: 2px dashed var(--line);
+}
+
+.about h2 { font-size: clamp(1.9rem, 3.4vw, 2.75rem); }
+
+.about__text {
+  max-width: 62ch;
+  margin-top: 14px;
+  font-size: var(--fs-lead);
+  color: var(--text-secondary);
+}
+
+.about__note {
+  margin-top: 12px;
+  font-size: var(--fs-small);
+  color: var(--text-secondary);
+}
+
+.about__faq-title {
+  margin-top: 40px;
+  font-size: var(--fs-h3);
+}
+
+.faq {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 22px 40px;
+  max-width: 980px;
+  margin: 18px 0 0;
+}
+
+.faq dt {
+  font-weight: 700;
+  color: var(--text-main);
+}
+
+.faq dd {
+  margin: 4px 0 0;
+  color: var(--text-secondary);
+}
+
 /* ---------- Close ---------- */
 
 .day .close {
@@ -1139,11 +1209,12 @@ html.day-ready .intake .glass::after {
 
   .moment__grid--flip > :first-child { order: 0; }
   .runwrap__side .coach-card { margin-top: 0; }
-  .nightnotes { grid-template-columns: minmax(0, 1fr); }
+  .nightnotes,
+  .faq { grid-template-columns: minmax(0, 1fr); }
 }
 
 @media (max-width: 520px) {
-  .hero__title { font-size: 2.45rem; }
+  .hero__headline { font-size: 2.45rem; }
   .hero__time { margin-bottom: 10px; }
   .day .hero .lede { font-size: 1rem; }
   .hero__actions { margin-top: 20px; }

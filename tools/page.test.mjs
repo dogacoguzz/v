@@ -5,7 +5,9 @@ import { tmpdir } from 'node:os';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import {
+  APP_NAME,
   APP_STORE_PROVIDER_TOKEN,
+  ORG_ID,
   SITE,
   assetHash,
   composeHead,
@@ -13,6 +15,7 @@ import {
   externalOrigins,
   hashAssetRefs,
   hashedAssetPath,
+  organization,
   renderPartial,
   shouldRedirectToTr,
   smartBannerMeta,
@@ -57,6 +60,15 @@ test('storeUrl carries pt, ct=<locale>-<page>-<placement> and mt=8', () => {
   assert.equal(url.searchParams.get('pt'), APP_STORE_PROVIDER_TOKEN);
   assert.equal(url.searchParams.get('ct'), 'tr-home-hero');
   assert.equal(url.searchParams.get('mt'), '8');
+});
+
+test('organization is one node per locale with a stable id and the locale App Store link', () => {
+  for (const locale of ['en', 'tr']) {
+    const org = organization(locale);
+    assert.equal(org['@id'], ORG_ID);
+    assert.equal(org.name, APP_NAME);
+    assert.deepEqual(org.sameAs, [storeUrl(locale, 'home', 'schema')]);
+  }
 });
 
 test('storeUrl throws when ct exceeds 40 characters', () => {
@@ -144,8 +156,9 @@ test('composed TR page wires lang, data-locale, skip link, chrome and locale hre
   assert.match(page, /<a class="skip-link" href="#main">İçeriğe atla<\/a>/);
   assert.match(page, /<main id="main">/);
   assert.match(page, /<a href="\/tr\/" class="brand-mark"/);
-  assert.match(page, /<button type="button" data-locale="tr" aria-current="true">/);
-  assert.match(page, /<button type="button" data-locale="en" aria-current="false">/);
+  assert.match(page, /<a href="\/tr\/privacy-policy\/" hreflang="tr" lang="tr" data-locale="tr" aria-current="true">TR<\/a>/);
+  assert.match(page, /<a href="\/privacy-policy\/" hreflang="en" lang="en" data-locale="en" aria-current="false">EN<\/a>/);
+  assert.ok(!page.includes('<button'), 'the language switch is plain links, crawlable without JS');
   assert.match(page, /href="\/tr\/rehber\/"/);
   assert.match(page, /href="\/tr\/privacy-policy\/"/);
   assert.match(page, /href="\/tr\/terms-of-service\/"/);
@@ -153,6 +166,30 @@ test('composed TR page wires lang, data-locale, skip link, chrome and locale hre
   assert.match(page, /ct=tr-privacy-nav/);
   assert.ok(page.includes(strings.tr.footer.disclaimer));
   assert.ok(!page.includes('{{'), 'no unresolved placeholder');
+});
+
+test('the EN home link on a TR page carries ?lang=en while the hreflang alternate stays bare', () => {
+  const page = composePage({
+    locale: 'tr', page: 'home', strings: strings.tr, bodyAttrs: {}, body: '<p>x</p>',
+    head: { title: 't', description: 'd', canonicalPath: '/tr/', alternates: { en: '/', tr: '/tr/' } },
+  });
+  assert.match(page, /<a href="\/\?lang=en" hreflang="en" lang="en" data-locale="en" aria-current="false">/);
+  assert.match(page, /<link rel="alternate" hreflang="en" href="https:\/\/velorahealthcompanion\.com\/" \/>/);
+});
+
+test('the language switch falls back to each locale home when the head has no alternates', () => {
+  const page = composePage({
+    locale: 'en', page: 'home', strings: strings.en, head: '<title>t</title>', body: '<p>x</p>',
+  });
+  assert.match(page, /<a href="\/" hreflang="en" lang="en" data-locale="en" aria-current="true">/);
+  assert.match(page, /<a href="\/tr\/" hreflang="tr" lang="tr" data-locale="tr" aria-current="false">/);
+});
+
+test('the footer links to the locale guides index before the legal pages', () => {
+  const footer = /<footer[\s\S]*<\/footer>/.exec(trPage())[0];
+  const hrefs = [...footer.matchAll(/<a href="([^"]+)"/g)].map((m) => m[1]);
+  assert.deepEqual(hrefs, ['/tr/rehber/', '/tr/privacy-policy/', '/tr/terms-of-service/', '/eula']);
+  assert.match(footer, /aria-label="Site bağlantıları"/);
 });
 
 test('composed pages load nothing from an external origin except apps.apple.com', () => {

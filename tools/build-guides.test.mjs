@@ -19,7 +19,7 @@ import { TOP_LEVEL_ALLOWLIST } from './build-legal.mjs';
 import { assertClean } from './lib/validate.mjs';
 import { MESSAGE_KEYS } from '../assets/js/tools/steps-distance-core.js';
 import { keyParity } from './lib/prerender.mjs';
-import { assetHash, hashedAssetPath } from './lib/page.mjs';
+import { assetHash, hashedAssetPath, organization } from './lib/page.mjs';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
 const SITE = 'https://velorahealthcompanion.com';
@@ -33,6 +33,7 @@ const header = (locale, overrides = {}) => ({
   order: 1,
   title: locale === 'en' ? 'Sample guide' : 'Örnek rehber',
   description: locale === 'en' ? 'A sample guide.' : 'Örnek bir rehber.',
+  datePublished: '2026-09-29',
   lastReviewed: '2026-09-29',
   coach: { title: 'Coach title', line: 'Try 7,000 steps today.', body: 'Coach body.' },
   sources: [{ title: 'A primary source', url: 'https://example.org/paper' }],
@@ -106,6 +107,39 @@ test('the Coach line follows the app output rules: under 12 words, one number, o
   assert.throws(() => parseGuide(fragment('en', { coach: { title: 't', body: 'b', line: 'Your average is 6,500 steps. Try 7,000.' } }), 'x.en.html'), /one number/);
   assert.throws(() => parseGuide(fragment('en', { coach: { title: 't', body: 'b', line: 'You walked a lot more this week than you usually do on weekdays.' } }), 'x.en.html'), /12 words/);
   assert.throws(() => parseGuide(fragment('en', { coach: { title: 't', body: 'b', line: '7,000 steps is a good next goal.' } }), 'x.en.html'), /open with a word/);
+});
+
+test('datePublished is a real date on or before lastReviewed', () => {
+  assert.throws(() => parseGuide(fragment('en', { datePublished: undefined }), 'x.en.html'), /datePublished/);
+  assert.throws(() => parseGuide(fragment('en', { datePublished: '2026-02-30' }), 'x.en.html'), /datePublished/);
+  assert.throws(() => parseGuide(fragment('en', { datePublished: '2026-10-01' }), 'x.en.html'), /datePublished/);
+  assert.doesNotThrow(() => parseGuide(fragment('en', { datePublished: '2026-09-01' }), 'x.en.html'));
+});
+
+test('pro is a boolean and related lists 2 or 3 slugs', () => {
+  assert.throws(() => parseGuide(fragment('en', { pro: 'yes' }), 'x.en.html'), /pro/);
+  assert.throws(() => parseGuide(fragment('en', { related: ['one'] }), 'x.en.html'), /related/);
+  assert.throws(() => parseGuide(fragment('en', { related: ['a', 'b', 'c', 'd'] }), 'x.en.html'), /related/);
+  assert.throws(() => parseGuide(fragment('en', { related: ['Bad Slug', 'b'] }), 'x.en.html'), /related/);
+  assert.doesNotThrow(() => parseGuide(fragment('en', { pro: true, related: ['a', 'b'] }), 'x.en.html'));
+});
+
+test('related guides must exist, differ from the guide, appear once and match across locales', () => {
+  const other = (locale, overrides = {}) => fragment(locale, {
+    slug: { en: 'other-guide', tr: 'diger-rehber' }, ctPage: 'g-other', order: 2, ...overrides,
+  });
+  const files = (enRelated, trRelated = enRelated) => ({
+    ...pair({ related: enRelated }, { related: trRelated }),
+    'other-guide.en.html': other('en', { related: ['sample-guide', 'third-guide'] }),
+    'other-guide.tr.html': other('tr', { related: ['sample-guide', 'third-guide'] }),
+    'third-guide.en.html': fragment('en', { slug: { en: 'third-guide', tr: 'ucuncu' }, ctPage: 'g-third', order: 3 }),
+    'third-guide.tr.html': fragment('tr', { slug: { en: 'third-guide', tr: 'ucuncu' }, ctPage: 'g-third', order: 3 }),
+  });
+  assert.doesNotThrow(() => loadGuides(seed(join(tmpDir(), 'c'), files(['other-guide', 'third-guide']))));
+  assert.throws(() => loadGuides(seed(join(tmpDir(), 'c'), files(['other-guide', 'missing-guide']))), /missing-guide/);
+  assert.throws(() => loadGuides(seed(join(tmpDir(), 'c'), files(['sample-guide', 'other-guide']))), /sample-guide/);
+  assert.throws(() => loadGuides(seed(join(tmpDir(), 'c'), files(['other-guide', 'other-guide']))), /twice/);
+  assert.throws(() => loadGuides(seed(join(tmpDir(), 'c'), files(['other-guide', 'third-guide'], ['third-guide', 'other-guide']))), /related differ/);
 });
 
 test('a campaign page id that would push ct past 40 characters fails', () => {
@@ -182,7 +216,10 @@ test('EN and TR guides link to each other with hreflang, and the language switch
       assert.ok(page.includes(`<link rel="alternate" hreflang="x-default" href="${SITE}${en}" />`), own);
       // boot.js sends the language switch to the page's own hreflang alternate.
       assert.match(page, /<script type="module" src="\/assets\/js\/boot\.js\?v=[0-9a-f]{8}"><\/script>/);
-      assert.match(page, new RegExp(`<button type="button" data-locale="${locale}" aria-current="true">`));
+      assert.ok(page.includes(`<a href="${own}" hreflang="${locale}" lang="${locale}" data-locale="${locale}" aria-current="true">`), own);
+      const other = locale === 'en' ? 'tr' : 'en';
+      const otherPath = other === 'en' ? en : tr;
+      assert.ok(page.includes(`<a href="${otherPath}" hreflang="${other}" lang="${other}" data-locale="${other}" aria-current="false">`), own);
     }
   }
 });
@@ -217,6 +254,95 @@ test('each guide ends with a Coach CTA, a last-reviewed date and its sources', (
       assert.ok(meta.sources.every((s) => s.url.startsWith('https://')));
     }
   }
+});
+
+test('every guide links to 2 or 3 other guides in its own locale, never to itself', () => {
+  const { guides, read } = built();
+  for (const g of guides) {
+    for (const locale of ['en', 'tr']) {
+      const own = guidePath(locale, g[locale].meta.slug[locale]);
+      const section = /<section class="guide-related"[\s\S]*?<\/section>/.exec(read(fileFor(own)))?.[0] ?? '';
+      const links = [...section.matchAll(/<a href="([^"]+)">([^<]+)<\/a>/g)];
+      assert.ok(links.length >= 2 && links.length <= 3, `${own}: ${links.length} related links`);
+      for (const [, href, title] of links) {
+        assert.notEqual(href, own);
+        const target = guides.find((o) => guidePath(locale, o[locale].meta.slug[locale]) === href);
+        assert.ok(target, `${own}: ${href} is not a ${locale} guide`);
+        assert.equal(title, target[locale].meta.title.replace(/&/g, '&amp;'));
+      }
+    }
+  }
+});
+
+test('AE1: only the CTAs that show an AI goal suggestion carry the Pro badge', () => {
+  const { guides, read } = built();
+  const pro = guides.filter((g) => g.en.meta.pro).map((g) => g.en.meta.slug.en);
+  assert.deepEqual(pro.sort(), ['daily-step-goal', 'steps-to-distance']);
+  for (const g of guides) {
+    for (const locale of ['en', 'tr']) {
+      const cta = /<aside class="guide-cta"[\s\S]*?<\/aside>/.exec(read(fileFor(guidePath(locale, g[locale].meta.slug[locale]))))[0];
+      assert.equal(cta.includes('<span class="pro-badge">Pro</span>'), !!g.en.meta.pro, `${locale} ${g.en.meta.slug.en}`);
+    }
+  }
+  for (const locale of ['en', 'tr']) assert.ok(!read(fileFor(indexPath(locale))).includes('pro-badge'), `${locale} index CTA`);
+});
+
+test('guide JSON-LD: Article with dates, image and publisher id, plus a breadcrumb of real URLs', () => {
+  const { guides, read } = built();
+  const og = `${SITE}${hashedAssetPath('/images/og.jpg', ROOT)}`;
+  const urls = new Set(outputPaths(guides).map((p) => `${SITE}/${p.replace(/index\.html$/, '')}`));
+  urls.add(`${SITE}/`).add(`${SITE}/tr/`);
+  for (const g of guides) {
+    for (const locale of ['en', 'tr']) {
+      const { meta } = g[locale];
+      const own = guidePath(locale, meta.slug[locale]);
+      const blocks = [...read(fileFor(own)).matchAll(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/g)];
+      assert.equal(blocks.length, 1);
+      const graph = JSON.parse(blocks[0][1])['@graph'];
+      const org = graph.find((n) => n['@type'] === 'Organization');
+      const article = graph.find((n) => n['@type'] === 'Article');
+      const crumbs = graph.find((n) => n['@type'] === 'BreadcrumbList').itemListElement;
+      assert.equal(org['@id'], `${SITE}/#org`);
+      assert.deepEqual(org, organization(locale));
+      assert.equal(article.headline, meta.title);
+      assert.equal(article.datePublished, meta.datePublished);
+      assert.equal(article.dateModified, meta.lastReviewed);
+      assert.equal(article.image, og);
+      assert.equal(article.mainEntityOfPage, `${SITE}${own}`);
+      assert.deepEqual(article.publisher, { '@id': org['@id'] });
+      assert.deepEqual(article.author, { '@id': org['@id'] });
+      assert.deepEqual(crumbs.map((c) => c.position), [1, 2, 3]);
+      assert.equal(crumbs.at(-1).item, `${SITE}${own}`);
+      for (const c of crumbs) assert.ok(urls.has(c.item), c.item);
+    }
+  }
+});
+
+test('guides index JSON-LD: CollectionPage of every guide plus a two-step breadcrumb', () => {
+  const { guides, read } = built();
+  for (const locale of ['en', 'tr']) {
+    const graph = JSON.parse(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/.exec(read(fileFor(indexPath(locale))))[1])['@graph'];
+    const page = graph.find((n) => n['@type'] === 'CollectionPage');
+    assert.equal(page.url, `${SITE}${indexPath(locale)}`);
+    assert.deepEqual(page.hasPart.map((a) => a.url), guides.map((g) => `${SITE}${guidePath(locale, g[locale].meta.slug[locale])}`));
+    const crumbs = graph.find((n) => n['@type'] === 'BreadcrumbList').itemListElement;
+    assert.deepEqual(crumbs.map((c) => c.item), [`${SITE}${locale === 'en' ? '/' : '/tr/'}`, `${SITE}${indexPath(locale)}`]);
+  }
+});
+
+test('guide and index titles carry the canonical name and stay within 70 characters', () => {
+  const { guides, paths, read } = built();
+  for (const p of paths) {
+    const title = /<title>([^<]+)<\/title>/.exec(read(p))[1].replace(/&amp;/g, '&');
+    assert.ok(title.endsWith(' · Velora: Health Companion'), `${p}: ${title}`);
+    assert.ok([...title].length <= 70, `${p}: ${[...title].length} characters`);
+  }
+  for (const locale of ['en', 'tr']) {
+    const index = /<title>([^<]+)<\/title>/.exec(read(fileFor(indexPath(locale))))[1];
+    assert.match(index, /iPhone/);
+    assert.match(index, locale === 'en' ? /Health/ : /Sağlık/);
+  }
+  assert.equal(guides.length * 2 + 2, paths.length);
 });
 
 test('pages load styles, scripts and images only from the site itself', () => {
