@@ -12,7 +12,7 @@ import { mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 import {
-  LOCALES, LOCALE_PATHS, SITE, composePage, escapeAttr, fontPreloads, hashAssetRefs, hashedAssetPath, storeUrl,
+  APP_NAME, LOCALES, LOCALE_PATHS, ORG_ID, SITE, WEBSITE_ID, composePage, organization, escapeAttr, fontPreloads, hashAssetRefs, hashedAssetPath, storeUrl,
   trRedirectScript,
 } from './lib/page.mjs';
 import { applyI18nStrings, flattenKeys, keyDiff } from './lib/prerender.mjs';
@@ -25,7 +25,6 @@ export const PAGE = 'home';
 export const SOURCE_PATH = 'index.html';
 export const OUTPUT_PATHS = { en: 'index.html', tr: 'tr/index.html' };
 export const QR_PATHS = { en: 'images/qr-en.svg', tr: 'images/qr-tr.svg' };
-export const APP_NAME = 'Velora: Health Companion';
 const ALTERNATES = { en: LOCALE_PATHS.en.home, tr: LOCALE_PATHS.tr.home };
 const OG_IMAGE = '/images/og.jpg';
 const THEME_COLOR = '#101417';
@@ -68,10 +67,16 @@ export function localizeBody(body, locale, strings) {
   const { html, missing } = applyI18nStrings(body, strings);
   if (missing.length) throw new Error(`strings.${locale}.json: missing key(s) ${missing.join(', ')}`);
   const srcAttr = `data-src-${locale}`;
+  const hrefAttr = `data-href-${locale}`;
   return html
     .replace(/<img\b[^>]*>/g, (tag) => {
       const variant = new RegExp(`\\s${srcAttr}="([^"]+)"`).exec(tag);
       return variant ? tag.replace(/(\ssrc=")[^"]*(")/, `$1${variant[1]}$2`) : tag;
+    })
+    .replace(/<a\b[^>]*\sdata-href-[a-z]+="[^"]*"[^>]*>/g, (tag) => {
+      const variant = new RegExp(`\\s${hrefAttr}="([^"]+)"`).exec(tag);
+      if (!variant) throw new Error(`${SOURCE_PATH}: localized link without ${hrefAttr}: ${tag}`);
+      return tag.replace(/(\shref=")[^"]*(")/, `$1${variant[1]}$2`);
     })
     .replace(STORE_HREF, (_, href) => {
       const placement = /[?&](?:amp;)?ct=[a-z]+-[a-z0-9]+-([a-z0-9-]+)/.exec(href)?.[1];
@@ -82,24 +87,65 @@ export function localizeBody(body, locale, strings) {
 
 // --- Head ---
 
-export function jsonLd(locale, strings, ogImage) {
+const FAQ_KEY = /data-i18n="day\.about\.faq\.([a-z]+)\.q"/g;
+
+// FAQ entries in source order; the visible <dl> and FAQPage read the same strings.
+export function faqEntries(source, strings) {
+  const keys = [...source.matchAll(FAQ_KEY)].map((m) => m[1]);
+  if (keys.length < 4 || keys.length > 6) throw new Error(`${SOURCE_PATH}: expected 4 to 6 FAQ questions, found ${keys.length}`);
+  return keys.map((key) => {
+    const entry = strings.day.about?.faq?.[key];
+    if (!entry?.q || !entry?.a) throw new Error(`strings: day.about.faq.${key} needs q and a`);
+    return { key, q: entry.q, a: entry.a };
+  });
+}
+
+// Subscription offers wait for verified store prices (F-04): only the free download is listed.
+export function jsonLd(locale, strings, ogImage, source) {
+  const url = `${SITE}${ALTERNATES[locale]}`;
   return {
     '@context': 'https://schema.org',
-    '@type': 'SoftwareApplication',
-    name: APP_NAME,
-    operatingSystem: 'iOS',
-    applicationCategory: 'HealthApplication',
-    inLanguage: locale,
-    url: `${SITE}${ALTERNATES[locale]}`,
-    downloadUrl: storeUrl(locale, PAGE, 'schema'),
-    image: `${SITE}${ogImage}`,
-    description: strings.meta.description,
-    offers: {
-      '@type': 'Offer',
-      price: '0',
-      priceCurrency: 'USD',
-      description: strings.meta.offerDescription,
-    },
+    '@graph': [
+      organization(locale),
+      {
+        '@type': 'WebSite',
+        '@id': WEBSITE_ID,
+        url: `${SITE}/`,
+        name: APP_NAME,
+        inLanguage: [...LOCALES],
+        publisher: { '@id': ORG_ID },
+      },
+      {
+        '@type': 'MobileApplication',
+        '@id': `${SITE}/#app`,
+        name: APP_NAME,
+        operatingSystem: 'iOS',
+        applicationCategory: 'HealthApplication',
+        inLanguage: locale,
+        url,
+        downloadUrl: storeUrl(locale, PAGE, 'schema'),
+        image: `${SITE}${ogImage}`,
+        description: strings.meta.description,
+        publisher: { '@id': ORG_ID },
+        offers: {
+          '@type': 'Offer',
+          price: '0',
+          priceCurrency: 'USD',
+          description: strings.meta.offerDescription,
+        },
+      },
+      {
+        '@type': 'FAQPage',
+        '@id': `${url}#faq`,
+        url,
+        inLanguage: locale,
+        mainEntity: faqEntries(source, strings).map(({ q, a }) => ({
+          '@type': 'Question',
+          name: q,
+          acceptedAnswer: { '@type': 'Answer', text: a },
+        })),
+      },
+    ],
   };
 }
 
@@ -133,7 +179,7 @@ export function renderLanding({ locale, source, strings, stringsEn, rootDir = RO
       stylesheets: STYLESHEETS,
       modules: MODULES,
       extraHead: locale === 'en' ? [trRedirectScript()] : [],
-      jsonLd: jsonLd(locale, strings, ogImage),
+      jsonLd: jsonLd(locale, strings, ogImage, source),
     },
     body,
   });
@@ -158,9 +204,12 @@ export function pageChecks(html, { locale, stringsEn, strings }) {
   const home = `${SITE}${ALTERNATES[locale]}`;
   const ct = new RegExp(`[?&](?:amp;)?ct=${locale}-${PAGE}-[a-z0-9-]+(?:&|$)`);
   const links = storeLinks(html);
-  const ld = /<script type="application\/ld\+json">([\s\S]*?)<\/script>/.exec(html)?.[1];
-  let parsed = null;
-  try { parsed = JSON.parse(ld); } catch (_) { /* reported below */ }
+  const blocks = [...html.matchAll(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/g)];
+  let graph = [];
+  try { graph = blocks.length === 1 ? JSON.parse(blocks[0][1])['@graph'] ?? [] : []; } catch (_) { /* reported below */ }
+  const types = graph.map((n) => n['@type']);
+  const app = graph.find((n) => n['@type'] === 'MobileApplication');
+  const offers = [app?.offers ?? []].flat();
   const leftovers = locale === 'en' ? [] : leftoverEnglish(html, stringsEn, strings);
   return {
     'lang and data-locale': html.includes(`<html lang="${locale}" data-locale="${locale}">`),
@@ -169,7 +218,8 @@ export function pageChecks(html, { locale, stringsEn, strings }) {
     'every App Store link has a campaign token': links.length >= 4 && links.every((l) => ct.test(l)) || `bad: ${links.filter((l) => !ct.test(l)).join(' ') || 'too few links'}`,
     'smart banner campaign': html.includes(`ct=${locale}-${PAGE}-banner`),
     'locale badge and QR': html.includes(`/images/badge-appstore-${locale}.svg?v=`) && html.includes(`/images/qr-${locale}.svg?v=`),
-    'JSON-LD SoftwareApplication with a free offer': parsed?.['@type'] === 'SoftwareApplication' && parsed?.offers?.price === '0',
+    'JSON-LD graph: Organization, WebSite, MobileApplication, FAQPage': ['Organization', 'WebSite', 'MobileApplication', 'FAQPage'].every((t) => types.includes(t)) || `types: ${types.join(', ')}`,
+    'JSON-LD lists only the free offer': offers.length === 1 && offers[0].price === '0' || `${offers.length} offer(s)`,
     'redirect script only on /': html.includes("location.replace('/tr/'") === (locale === 'en'),
     'og image is content-hashed': /<meta property="og:image" content="[^"]+\?v=[0-9a-f]{8}" \/>/.test(html),
     'no inline js class script': !html.includes("classList.add('js')"),

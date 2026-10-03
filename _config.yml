@@ -1,0 +1,11 @@
+# GitHub Pages (Jekyll): publish only the static site; dev tooling stays out of the bundle.
+exclude:
+  - package.json
+  - package-lock.json
+  - tools
+  - tests
+  - content
+  - playwright.config.mjs
+  - lighthouse
+  - README.md
+  - node_modules

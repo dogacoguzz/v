@@ -1,9 +1,12 @@
 {
   "meta": {
-    "title": "Velora · A coach for the day you actually had",
-    "description": "Velora Coach reads the Health data on your iPhone and writes short, plain notes about your steps, workouts and water. On-device, no account.",
-    "ogImageAlt": "Velora: a coach for the day you actually had. The Coach card says your average is 6,500 steps and suggests 7,000. Free to download, Pro optional.",
-    "offerDescription": "Free to download, Pro optional"
+    "title": "Velora: Health Companion · On-Device Health Coach for iPhone",
+    "description": "Velora reads Apple Health on your iPhone and writes short coach notes on your steps, workouts and water. No account needed. Free to download.",
+    "ogImageAlt": "Velora: Health Companion. A Velora Coach card marked Pro says your average is 6,500 steps and suggests 7,000. Free to download, Coach with Velora Pro.",
+    "offerDescription": "Free to download, Coach with Velora Pro"
+  },
+  "pro": {
+    "badge": "Pro"
   },
   "nav": {
     "langGroupAria": "Language",
@@ -21,33 +24,34 @@
   "footer": {
     "copy": "© 2026 Velora",
     "disclaimer": "Velora is a wellness companion, not a medical device. Consult a clinician for medical advice.",
-    "legalAria": "Legal",
+    "linksAria": "Site links",
     "privacy": "Privacy Policy",
     "terms": "Terms of Service",
     "eula": "EULA"
   },
   "legal": {
     "privacy": {
-      "title": "Privacy Policy · Velora",
+      "title": "Privacy Policy · Velora: Health Companion",
       "description": "How Velora handles your data: everything stays on your device, nothing is sold, and you control every permission."
     },
     "terms": {
-      "title": "Terms of Service · Velora",
+      "title": "Terms of Service · Velora: Health Companion",
       "description": "The terms that apply when you use the Velora iOS app."
     }
   },
   "guides": {
     "breadcrumb": "Guides",
     "indexTitle": "Guides",
-    "indexMetaTitle": "Guides on steps, water, alcohol and training · Velora",
+    "indexMetaTitle": "iPhone Health Guides: Steps, Water, Alcohol · Velora: Health Companion",
     "indexDescription": "Short, sourced answers about daily steps, water, alcohol and training, plus a steps to distance calculator.",
     "indexIntro": "Short answers to everyday questions about steps, water, alcohol and training. Each guide lists its sources and the date it was last reviewed.",
     "indexCoach": {
       "title": "See these numbers for your own day",
       "line": "You walked 7,200 steps today, above your average.",
-      "body": "Velora reads your steps and workouts from Apple Health and tracks your water and drinks. Velora Coach turns them into short insights and goal suggestions."
+      "body": "Velora reads your steps from Apple Health and tracks your water and drinks, with a short note on each. Velora Pro adds Coach tips after every workout and AI coach lines on your goals."
     },
-    "titleSuffix": " · Velora",
+    "titleSuffix": " · Velora: Health Companion",
+    "related": "Related guides",
     "sources": "Sources",
     "lastReviewed": "Last reviewed {date}",
     "note": "General information, not medical advice. For questions about your own health, talk to a doctor.",
@@ -100,7 +104,8 @@
       "cardNote": "A walk after lunch added about 1,300.",
       "toGoBefore": "On pace for your goal, with",
       "toGoAfter": "to go.",
-      "coach2": "Your lunch walk added the most so far."
+      "coach2": "Your lunch walk added the most so far.",
+      "guide": "How many steps a day do you need?"
     },
     "t1810": {
       "title": "An evening run, read back in plain words.",
@@ -126,7 +131,9 @@
       "logged": "Logged",
       "coach1": "Two glasses short of your usual.",
       "coach2": "A single drink logged this evening.",
-      "glassesAria": "6 of your usual 8 glasses of water"
+      "glassesAria": "6 of your usual 8 glasses of water",
+      "guideWater": "How much water do you need a day?",
+      "guideAlcohol": "Does alcohol affect training and recovery?"
     },
     "t2300": {
       "title": "Today stayed on this iPhone.",
@@ -138,7 +145,7 @@
       "accountTitle": "No account",
       "accountText": "Open the app and go. There is nothing to sign up for.",
       "aiTitle": "Coach, on-device",
-      "aiText": "Coach writes with Apple Intelligence on your iPhone where it is available, and uses simpler built-in lines everywhere else.",
+      "aiText": "Coach writes with Apple Intelligence on your iPhone, so it needs a device where Apple Intelligence is available and turned on. Notes on your steps and water work without it.",
       "icloudTitle": "Your own iCloud, with Pro",
       "icloudText": "iCloud backup is part of Pro and goes to your own iCloud account, not to us."
     },
@@ -152,8 +159,40 @@
       "swaps": "Exercise swaps",
       "analysis": "Program analysis"
     },
+    "about": {
+      "title": "What is Velora?",
+      "text": "Velora: Health Companion is an iPhone app. It reads the Health data already on your iPhone and writes short, plain notes about your steps, water and drinks. Velora Pro adds Coach tips after every workout and AI coach lines on your goals. Free to download, no account needed. General wellness information, not medical advice.",
+      "notAffiliated": "Not affiliated with other products named Velora.",
+      "faqTitle": "Questions",
+      "faq": {
+        "free": {
+          "q": "Is Velora free?",
+          "a": "Velora is free to download. Notes on your steps and water, the Home greeting and step goal suggestions from your own history are free. Velora Pro is optional and adds Coach tips after every workout, AI coach lines on your goals, iCloud backup and extra app icons."
+        },
+        "account": {
+          "q": "Do I need an account?",
+          "a": "No. Velora works without an account. Open the app and go."
+        },
+        "data": {
+          "q": "Does my Health data leave my iPhone?",
+          "a": "Your Health data is read on your device and never sent to our servers. With Velora Pro, iCloud backup goes to your own iCloud account, not to us."
+        },
+        "devices": {
+          "q": "Which iPhones does Coach work on?",
+          "a": "Velora is an iPhone app. Velora Coach writes with Apple Intelligence, so it needs an iPhone where Apple Intelligence is available and turned on. Notes on your steps and water work without it."
+        },
+        "languages": {
+          "q": "Is Velora available in Turkish?",
+          "a": "Yes. The app and this site are in English and Turkish."
+        },
+        "medical": {
+          "q": "Is Velora a medical device?",
+          "a": "No. Velora gives general wellness information, not medical advice. Talk to a doctor about medical questions."
+        }
+      }
+    },
     "close": {
-      "price": "Free to download · Pro optional",
+      "price": "Free to download · Coach with Velora Pro",
       "qrCaption": "On a computer? Scan with your iPhone camera.",
       "titleHtml": "Start your <em>own</em> day.",
       "qrAlt": "QR code that opens Velora on the App Store"

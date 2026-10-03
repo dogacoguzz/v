@@ -70,7 +70,7 @@ export function applyI18nStrings(html, strings) {
 
 export function markLangSwitch(html, locale) {
   return html.replace(
-    /(<button type="button" data-locale="(en|tr)" aria-current=")(?:true|false)(")/g,
-    (_, open, btnLocale, close) => `${open}${btnLocale === locale ? 'true' : 'false'}${close}`
+    /(<a href="[^"]*" hreflang="(en|tr)" lang="\2" data-locale="\2" aria-current=")(?:true|false)(")/g,
+    (_, open, linkLocale, close) => `${open}${linkLocale === locale ? 'true' : 'false'}${close}`
   );
 }

@@ -269,6 +269,29 @@ body[data-page="guide"] main {
 .guide-sources__reviewed { margin-top: var(--space-4); font-family: var(--font-sans); font-size: var(--fs-label); color: var(--text-tertiary); }
 .guide-sources__note { margin-top: var(--space-2); color: var(--text-tertiary); }
 
+/* Related guides */
+
+.guide-related {
+  max-width: 70ch;
+  margin-top: var(--space-6);
+}
+
+.guide-related h2 { font-size: var(--fs-h3); }
+.guide-related ul { margin: var(--space-3) 0 0; padding: 0; list-style: none; display: grid; gap: var(--space-2); }
+
+.guide-related a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  font-weight: 600;
+  color: var(--coach);
+  text-decoration: underline;
+  text-decoration-thickness: 2px;
+  text-underline-offset: 4px;
+}
+
+.guide-related a:hover { color: var(--text-main); }
+
 /* Coach call to action */
 
 .guide-cta {
@@ -283,6 +306,9 @@ body[data-page="guide"] main {
 .guide-cta > * + * { margin-top: var(--space-3); }
 
 .guide-cta__label {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
   font-family: var(--font-sans);
   font-size: var(--fs-small);
   font-weight: 600;

@@ -48,11 +48,11 @@ const fontFaceQuery = (css) => q(new RegExp(`url\\('/assets/fonts/${FONT}(\\?v=[
 const preloadQuery = (html) => q(new RegExp(`rel="preload" href="/assets/fonts/${FONT}(\\?v=[0-9a-f]{8})"`), html);
 const bootRef = (html) => q(/src="\/assets\/js\/boot\.js\?v=([0-9a-f]{8})"/, html);
 
-test('assets run first and the sitemap last in npm run build', () => {
+test('assets run first, then the pages, the sitemap and llms.txt last in npm run build', () => {
   const names = BUILDERS.map((b) => b.name);
   assert.equal(names[0], 'assets');
-  assert.equal(names.at(-1), 'sitemap');
-  assert.deepEqual([...names].sort(), ['assets', 'guides', 'landing', 'legal', 'sitemap']);
+  assert.deepEqual(names.slice(-2), ['sitemap', 'llms']);
+  assert.deepEqual([...names].sort(), ['assets', 'guides', 'landing', 'legal', 'llms', 'sitemap']);
 });
 
 test('siteAssetFiles lists every CSS and JS file, nested ones included, plus 404.html', () => {

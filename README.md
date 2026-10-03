@@ -176,6 +176,17 @@ The zone is proxied (orange cloud) for the apex; `www` is a proxied 301 to the a
    404 status for unknown paths and no long cache on the 404 response. It exits non-zero
    on any miss.
 
+## IndexNow
+
+After a deploy, notify Bing and other IndexNow engines of the sitemap URLs. Only after
+Bing Webmaster Tools is verified (gate F-10). The key file `<key>.txt` in the repo root is
+served as a plain file and must stay there; keep it out of any Jekyll exclude list.
+
+```bash
+npm run indexnow -- --dry-run   # print the JSON body, no request
+npm run indexnow                # POST to https://api.indexnow.org/indexnow
+```
+
 ## Local quality suite
 
 | Command | What it proves |

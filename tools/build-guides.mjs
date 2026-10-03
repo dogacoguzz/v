@@ -10,8 +10,10 @@
 //     "ctPage": "g-steps",              campaign page id: ct = <locale>-<ctPage>-<placement>, max 40 chars
 //     "order": 1,                       position on the index pages
 //     "title": "...", "description": "...",
-//     "lastReviewed": "2026-09-29",
+//     "datePublished": "2026-09-29", "lastReviewed": "2026-09-29",
 //     "coach": { "title": "...", "line": "...", "body": "..." },   line follows the app's Coach rules
+//     "pro": true,                      optional; the CTA shows a Pro (paid Coach) moment and carries the badge
+//     "related": ["how-much-water"],    optional; 2 or 3 EN slugs of other guides
 //     "sources": [{ "title": "...", "url": "https://..." }],
 //     "tool": "steps-distance"          optional; the body then holds exactly one div.guide-tool
 //   }
@@ -19,7 +21,7 @@
 //   <p>Answer first.</p> ...
 //
 // The header is stripped before output. Both locales of a guide must exist and agree on slug,
-// ctPage, order and tool. The builder renders the h1 from the title, so the body carries none.
+// ctPage, order, tool, pro, related and datePublished. The builder renders the h1 from the title, so the body carries none.
 //
 //   npm run build   (or: node tools/build-guides.mjs)
 
@@ -27,7 +29,7 @@ import { existsSync, mkdirSync, readdirSync, readFileSync, writeFileSync } from 
 import { dirname, join } from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 import {
-  LOCALES, LOCALE_PATHS, SITE, composePage, escapeAttr, escapeText, fontPreloads, hashAssetRefs, hashedAssetPath,
+  APP_NAME, LOCALES, LOCALE_PATHS, ORG_ID, SITE, WEBSITE_ID, composePage, organization, escapeAttr, escapeText, fontPreloads, hashAssetRefs, hashedAssetPath,
   storeUrl,
 } from './lib/page.mjs';
 import { EM_DASH, SEGMENT, count, indent, reindent, reportChecks } from './lib/util.mjs';
@@ -72,6 +74,10 @@ export function assertCoachLine(line, label) {
 }
 
 const isText = (v) => typeof v === 'string' && v.trim() !== '';
+const isDate = (v) => {
+  const d = /^\d{4}-\d{2}-\d{2}$/.test(v ?? '') ? new Date(`${v}T00:00:00Z`) : null;
+  return !!d && !Number.isNaN(d.getTime()) && d.toISOString().slice(0, 10) === v;
+};
 
 function validateMeta(meta, locale, file) {
   const need = (ok, msg) => { if (!ok) throw new Error(`${file}: ${msg}`); };
@@ -82,9 +88,9 @@ function validateMeta(meta, locale, file) {
   need(Number.isFinite(meta.order), 'order must be a number');
   need(isText(meta.title), 'title is required');
   need(isText(meta.description) && meta.description.length <= 180, 'description is required (180 characters max)');
-  const date = /^\d{4}-\d{2}-\d{2}$/.test(meta.lastReviewed ?? '') ? new Date(`${meta.lastReviewed}T00:00:00Z`) : null;
-  need(date && !Number.isNaN(date.getTime()) && date.toISOString().slice(0, 10) === meta.lastReviewed,
-    'lastReviewed must be a YYYY-MM-DD date');
+  need(isDate(meta.lastReviewed), 'lastReviewed must be a YYYY-MM-DD date');
+  need(isDate(meta.datePublished) && meta.datePublished <= meta.lastReviewed,
+    'datePublished must be a YYYY-MM-DD date on or before lastReviewed');
   need(Array.isArray(meta.sources) && meta.sources.length > 0, 'sources must list at least one primary source');
   meta.sources.forEach((s, i) => {
     need(s && isText(s.title) && /^https:\/\/[^\s"<>]+$/.test(s.url ?? ''), `sources[${i}] needs a title and an https url`);
@@ -92,6 +98,9 @@ function validateMeta(meta, locale, file) {
   need(meta.coach && isText(meta.coach.title) && isText(meta.coach.body), 'coach.title and coach.body are required');
   assertCoachLine(meta.coach.line, file);
   need(meta.tool === undefined || Object.hasOwn(TOOLS, meta.tool), `unknown tool "${meta.tool}"`);
+  need(meta.pro === undefined || typeof meta.pro === 'boolean', 'pro must be true or false');
+  need(meta.related === undefined || (Array.isArray(meta.related) && meta.related.length >= 2 && meta.related.length <= 3
+    && meta.related.every((slug) => SEGMENT.test(slug ?? ''))), 'related must list 2 or 3 guide slugs');
 }
 
 export function parseGuide(source, file = 'guide') {
@@ -129,10 +138,17 @@ export function loadGuides(contentDir = CONTENT_DIR) {
     const { en, tr } = pair;
     if (base !== en.meta.slug.en) throw new Error(`guide "${base}": file name must be the EN slug "${en.meta.slug.en}"`);
     if (JSON.stringify(en.meta.slug) !== JSON.stringify(tr.meta.slug)) throw new Error(`guide "${base}": EN and TR slug headers differ`);
-    for (const key of ['ctPage', 'order', 'tool']) {
-      if (en.meta[key] !== tr.meta[key]) throw new Error(`guide "${base}": EN and TR ${key} differ`);
+    for (const key of ['ctPage', 'order', 'tool', 'pro', 'related', 'datePublished']) {
+      if (JSON.stringify(en.meta[key]) !== JSON.stringify(tr.meta[key])) throw new Error(`guide "${base}": EN and TR ${key} differ`);
     }
     guides.push(pair);
+  }
+  const slugs = new Set(guides.map((g) => g.en.meta.slug.en));
+  for (const { en: { meta } } of guides) {
+    for (const slug of meta.related ?? []) {
+      if (slug === meta.slug.en || !slugs.has(slug)) throw new Error(`guide "${meta.slug.en}": related "${slug}" is not another guide`);
+    }
+    if (new Set(meta.related ?? []).size !== (meta.related ?? []).length) throw new Error(`guide "${meta.slug.en}": related lists a guide twice`);
   }
   for (const key of ['ctPage', 'order']) {
     const seen = guides.map((g) => g.en.meta[key]);
@@ -150,10 +166,11 @@ function reviewedLine(template, iso, locale) {
   return `${escapeText(before)}<time datetime="${iso}">${escapeText(formatDate(iso, locale))}</time>${escapeText(after)}`;
 }
 
-function coachCta({ locale, ctPage, coach, strings }) {
+function coachCta({ locale, ctPage, coach, pro = false, strings }) {
   const { width, height } = BADGE_SIZE[locale];
+  const badge = pro ? ` <span class="pro-badge">${escapeText(strings.pro.badge)}</span>` : '';
   return `<aside class="guide-cta" aria-labelledby="guide-cta-title">
-  <p class="guide-cta__label">${escapeText(strings.guides.coachLabel)}</p>
+  <p class="guide-cta__label">${escapeText(strings.guides.coachLabel)}${badge}</p>
   <h2 id="guide-cta-title">${escapeText(coach.title)}</h2>
   <p class="guide-cta__line">${escapeText(coach.line)}</p>
   <p class="guide-cta__body">${escapeText(coach.body)}</p>
@@ -163,8 +180,23 @@ function coachCta({ locale, ctPage, coach, strings }) {
 </aside>`;
 }
 
-function guideBody({ locale, meta, body, strings }) {
+function relatedGuides({ locale, meta, guides, strings }) {
+  if (!meta.related?.length) return '';
+  const items = meta.related.map((slug) => {
+    const { meta: other } = guides.find((g) => g.en.meta.slug.en === slug)[locale];
+    return `    <li><a href="${guidePath(locale, other.slug[locale])}">${escapeText(other.title)}</a></li>`;
+  }).join('\n');
+  return `<section class="guide-related" aria-labelledby="guide-related-title">
+  <h2 id="guide-related-title">${escapeText(strings.guides.related)}</h2>
+  <ul>
+${items}
+  </ul>
+</section>`;
+}
+
+function guideBody({ locale, meta, body, guides, strings }) {
   const g = strings.guides;
+  const related = relatedGuides({ locale, meta, guides, strings });
   const sources = meta.sources
     .map((s) => `      <li><a href="${escapeAttr(s.url)}" rel="noopener noreferrer">${escapeText(s.title)}</a></li>`)
     .join('\n');
@@ -184,7 +216,7 @@ ${sources}
     <p class="guide-sources__reviewed">${reviewedLine(g.lastReviewed, meta.lastReviewed, locale)}</p>
     <p class="guide-sources__note">${escapeText(g.note)}</p>
   </section>
-${indent(coachCta({ locale, ctPage: meta.ctPage, coach: meta.coach, strings }), '  ')}
+${related ? `${indent(related, '  ')}\n` : ''}${indent(coachCta({ locale, ctPage: meta.ctPage, coach: meta.coach, pro: meta.pro, strings }), '  ')}
 </article>`;
 }
 
@@ -206,20 +238,61 @@ ${indent(coachCta({ locale, ctPage: INDEX_CT_PAGE, coach: g.indexCoach, strings 
 </section>`;
 }
 
-const articleJsonLd = ({ locale, meta, url }) => ({
+const breadcrumb = (locale, strings, crumbs) => ({
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    { name: 'Velora', path: LOCALE_PATHS[locale].home },
+    { name: strings.guides.breadcrumb, path: indexPath(locale) },
+    ...crumbs,
+  ].map(({ name, path }, i) => ({ '@type': 'ListItem', position: i + 1, name, item: `${SITE}${path}` })),
+});
+
+const articleJsonLd = ({ locale, meta, path, image, strings }) => ({
   '@context': 'https://schema.org',
-  '@type': 'Article',
-  headline: meta.title,
-  description: meta.description,
-  inLanguage: locale,
-  dateModified: meta.lastReviewed,
-  mainEntityOfPage: url,
-  author: { '@type': 'Organization', name: 'Velora', url: `${SITE}/` },
-  publisher: { '@type': 'Organization', name: 'Velora', url: `${SITE}/` },
-  citation: meta.sources.map((s) => s.url),
+  '@graph': [
+    organization(locale),
+    {
+      '@type': 'Article',
+      headline: meta.title,
+      description: meta.description,
+      inLanguage: locale,
+      datePublished: meta.datePublished,
+      dateModified: meta.lastReviewed,
+      image: `${SITE}${image}`,
+      mainEntityOfPage: `${SITE}${path}`,
+      author: { '@id': ORG_ID },
+      publisher: { '@id': ORG_ID },
+      citation: meta.sources.map((s) => s.url),
+    },
+    breadcrumb(locale, strings, [{ name: meta.title, path }]),
+  ],
+});
+
+const indexJsonLd = ({ locale, guides, strings }) => ({
+  '@context': 'https://schema.org',
+  '@graph': [
+    organization(locale),
+    {
+      '@type': 'CollectionPage',
+      '@id': `${SITE}${indexPath(locale)}`,
+      url: `${SITE}${indexPath(locale)}`,
+      name: strings.guides.indexTitle,
+      description: strings.guides.indexDescription,
+      inLanguage: locale,
+      isPartOf: { '@id': WEBSITE_ID },
+      publisher: { '@id': ORG_ID },
+      hasPart: guides.map(({ [locale]: { meta } }) => ({
+        '@type': 'Article',
+        headline: meta.title,
+        url: `${SITE}${guidePath(locale, meta.slug[locale])}`,
+      })),
+    },
+    breadcrumb(locale, strings, []),
+  ],
 });
 
 function renderPage({ locale, ctPage, strings, title, description, alternates, body, modules, jsonLd, rootDir }) {
+  const ogImage = hashedAssetPath(OG_IMAGE, rootDir);
   const html = composePage({
     locale,
     page: ctPage,
@@ -230,19 +303,19 @@ function renderPage({ locale, ctPage, strings, title, description, alternates, b
       description,
       canonicalPath: alternates[locale],
       alternates,
-      ogImage: hashedAssetPath(OG_IMAGE, rootDir),
+      ogImage,
       bannerPage: ctPage,
       preloads: fontPreloads(rootDir),
       stylesheets: STYLESHEETS,
       modules,
-      jsonLd,
+      jsonLd: jsonLd(ogImage),
     },
     body,
   });
   return hashAssetRefs(html, rootDir);
 }
 
-export function composeGuidePage({ locale, guide, strings, rootDir = ROOT }) {
+export function composeGuidePage({ locale, guide, guides = [guide], strings, rootDir = ROOT }) {
   const { meta, body } = guide[locale];
   const alternates = { en: guidePath('en', meta.slug.en), tr: guidePath('tr', meta.slug.tr) };
   return renderPage({
@@ -252,9 +325,9 @@ export function composeGuidePage({ locale, guide, strings, rootDir = ROOT }) {
     title: `${meta.title}${strings.guides.titleSuffix}`,
     description: meta.description,
     alternates,
-    body: guideBody({ locale, meta, body, strings }),
+    body: guideBody({ locale, meta, body, guides, strings }),
     modules: ['/assets/js/boot.js', ...(meta.tool ? [`/${TOOLS[meta.tool]}`] : [])],
-    jsonLd: articleJsonLd({ locale, meta, url: `${SITE}${alternates[locale]}` }),
+    jsonLd: (image) => articleJsonLd({ locale, meta, path: alternates[locale], image, strings }),
     rootDir,
   });
 }
@@ -269,12 +342,22 @@ export function composeIndexPage({ locale, guides, strings, rootDir = ROOT }) {
     alternates: { en: indexPath('en'), tr: indexPath('tr') },
     body: indexBody({ locale, guides, strings }),
     modules: ['/assets/js/boot.js'],
+    jsonLd: () => indexJsonLd({ locale, guides, strings }),
     rootDir,
   });
 }
 
-export function pageChecks({ page, locale, canonicalPath, ctPage }) {
+const ldTypes = (page) => {
+  try {
+    return JSON.parse(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/.exec(page)?.[1])['@graph'].map((n) => n['@type']);
+  } catch (_) {
+    return [];
+  }
+};
+
+export function pageChecks({ page, locale, canonicalPath, ctPage, ld }) {
   return {
+    'JSON-LD graph types': JSON.stringify(ldTypes(page)) === JSON.stringify(ld) || `got ${ldTypes(page).join(', ')}`,
     'exactly one h1': count(page, /<h1\b/g) === 1,
     'data-locale matches lang': page.includes(`<html lang="${locale}" data-locale="${locale}">`),
     'canonical matches path': page.includes(`<link rel="canonical" href="${SITE}${canonicalPath}" />`),
@@ -297,6 +380,7 @@ function loadStrings(rootDir) {
     if (!g) throw new Error(`strings.${l}.json has no "guides" object`);
     if (JSON.stringify(g).includes(EM_DASH)) throw new Error(`strings.${l}.json guides: em dash (U+2014) is not allowed`);
     assertCoachLine(g.indexCoach?.line, `strings.${l}.json guides.indexCoach`);
+    if (!isText(strings[l].pro?.badge)) throw new Error(`strings.${l}.json has no pro.badge`);
   }
   return strings;
 }
@@ -311,14 +395,16 @@ export function build({ outDir = ROOT, contentDir = CONTENT_DIR, rootDir = ROOT,
     for (const locale of LOCALES) {
       const { meta } = guide[locale];
       const canonicalPath = guidePath(locale, meta.slug[locale]);
-      const page = composeGuidePage({ locale, guide, strings: strings[locale], rootDir });
-      pages.push({ path: fileFor(canonicalPath), page, checks: pageChecks({ page, locale, canonicalPath, ctPage: meta.ctPage }) });
+      const page = composeGuidePage({ locale, guide, guides, strings: strings[locale], rootDir });
+      const ld = ['Organization', 'Article', 'BreadcrumbList'];
+      pages.push({ path: fileFor(canonicalPath), page, checks: pageChecks({ page, locale, canonicalPath, ctPage: meta.ctPage, ld }) });
     }
   }
   for (const locale of LOCALES) {
     const canonicalPath = indexPath(locale);
     const page = composeIndexPage({ locale, guides, strings: strings[locale], rootDir });
-    pages.push({ path: fileFor(canonicalPath), page, checks: pageChecks({ page, locale, canonicalPath, ctPage: INDEX_CT_PAGE }) });
+    const ld = ['Organization', 'CollectionPage', 'BreadcrumbList'];
+    pages.push({ path: fileFor(canonicalPath), page, checks: pageChecks({ page, locale, canonicalPath, ctPage: INDEX_CT_PAGE, ld }) });
   }
 
   reportChecks(pages, log);

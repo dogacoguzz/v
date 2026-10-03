@@ -79,15 +79,32 @@ const LANG_SWITCH = [
 for (const [from, locale, to] of LANG_SWITCH) {
   test(`language switch on ${from} goes to its ${locale} counterpart ${to}`, async ({ page }) => {
     await page.goto(from);
-    await expect(page.locator(`.lang-switch button[data-locale="${locale}"]`)).toHaveAttribute('aria-current', 'false');
+    const link = page.locator(`.lang-switch a[data-locale="${locale}"]`);
+    await expect(link).toHaveAttribute('aria-current', 'false');
+    await expect(link).toHaveAttribute('href', to);
     await Promise.all([
       page.waitForURL((url) => url.pathname === to),
-      page.locator(`.lang-switch button[data-locale="${locale}"]`).click(),
+      link.click(),
     ]);
     await expect(page.locator('html')).toHaveAttribute('data-locale', locale);
     expect(await page.evaluate(() => localStorage.getItem('velora-lang'))).toBe(locale);
   });
 }
+
+test('a modified click on the other language leaves the saved locale alone', async ({ page }) => {
+  await page.goto('/privacy-policy/');
+  await page.evaluate(() => localStorage.setItem('velora-lang', 'en'));
+  await page.locator('.lang-switch a[data-locale="tr"]').click({ modifiers: ['ControlOrMeta'] });
+  await page.waitForTimeout(300);
+  expect(new URL(page.url()).pathname).toBe('/privacy-policy/');
+  expect(await page.evaluate(() => localStorage.getItem('velora-lang'))).toBe('en');
+});
+
+test('the EN home switch link on the TR home carries ?lang=en', async ({ page }) => {
+  await page.goto('/tr/');
+  await expect(page.locator('.lang-switch a[data-locale="en"]')).toHaveAttribute('href', '/?lang=en');
+  await expect(page.locator('link[rel="alternate"][hreflang="en"]')).toHaveAttribute('href', 'https://velorahealthcompanion.com/');
+});
 
 test('a TR browser with blocked storage can switch from /tr/ to the EN home and stay there', async ({ browser }) => {
   const context = await browser.newContext({ locale: 'tr-TR' });
@@ -102,13 +119,28 @@ test('a TR browser with blocked storage can switch from /tr/ to the EN home and 
 
   await Promise.all([
     page.waitForURL((url) => url.pathname === '/'),
-    page.locator('.lang-switch button[data-locale="en"]').click(),
+    page.locator('.lang-switch a[data-locale="en"]').click(),
   ]);
   await page.waitForLoadState('load');
   await page.waitForTimeout(300);
   expect(new URL(page.url()).pathname).toBe('/');
   await expect(page.locator('html')).toHaveAttribute('data-locale', 'en');
   await expect(page.locator('link[rel="canonical"]')).toHaveAttribute('href', 'https://velorahealthcompanion.com/');
+  await context.close();
+});
+
+test('without JavaScript the language switch is a plain link to the counterpart page', async ({ browser }) => {
+  const context = await browser.newContext({ javaScriptEnabled: false });
+  const page = await context.newPage();
+  for (const [from, locale, to] of [['/privacy-policy/', 'tr', '/tr/privacy-policy/'], ['/tr/rehber/ne-kadar-su/', 'en', '/guides/how-much-water/']]) {
+    await page.goto(from);
+    await Promise.all([
+      page.waitForURL((url) => url.pathname === to),
+      page.locator(`.lang-switch a[data-locale="${locale}"]`).click(),
+    ]);
+    await expect(page.locator('html')).toHaveAttribute('data-locale', locale);
+    await expect(page.locator(`.lang-switch a[data-locale="${locale}"]`)).toHaveAttribute('aria-current', 'true');
+  }
   await context.close();
 });
 

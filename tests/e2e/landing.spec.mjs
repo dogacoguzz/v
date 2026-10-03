@@ -122,6 +122,16 @@ for (const home of HOMES) {
   });
 }
 
+for (const home of HOMES) {
+  test(`AE1 ${home}: the Pro badge shows on the 06:40 and 18:10 Coach cards only`, async ({ page }) => {
+    await page.goto(home);
+    await expect(page.locator('#t0640 .coach-card .pro-badge')).toBeVisible();
+    await expect(page.locator('#t1810 .coach-card .pro-badge')).toHaveText('Pro');
+    for (const id of ['coach', 't1240', 't2130', 't2300']) await expect(page.locator(`#${id} .pro-badge`)).toHaveCount(0);
+    await expect(page.locator('h1')).not.toContainText('06:40');
+  });
+}
+
 test.describe('landing axe (EN)', () => {
   for (const id of MOMENTS) {
     test(`no serious or critical violations at moment ${id}`, async ({ page }) => {

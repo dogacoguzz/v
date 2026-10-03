@@ -60,7 +60,10 @@
   border-radius: var(--radius-pill);
 }
 
-.lang-switch button {
+.lang-switch a {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   height: 32px;
   min-width: 44px;
   padding: 0 12px;
@@ -73,11 +76,25 @@
   transition: color var(--t-fast), background-color var(--t-fast);
 }
 
-.lang-switch button:hover { color: var(--text-main); }
+.lang-switch a:hover { color: var(--text-main); }
 
-.lang-switch button[aria-current="true"] {
+.lang-switch a[aria-current="true"] {
   background: var(--coach);
   color: var(--coach-ink);
+}
+
+/* One Pro marker for every paid Coach moment: landing cards and guide CTAs. */
+.pro-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 5px 9px;
+  border-radius: var(--radius-pill);
+  background: var(--coach);
+  color: var(--coach-ink);
+  font-weight: 700;
+  font-size: var(--fs-label);
+  line-height: 1;
+  letter-spacing: 0.02em;
 }
 
 /* Apple artwork: only the link moves, never the image. */
